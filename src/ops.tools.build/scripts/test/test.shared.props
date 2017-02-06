@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="Run"
+    ToolsVersion="11.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <SharedTestPreSettings>$(MSBuildThisFileDirectory)test.settings.pre.props</SharedTestPreSettings>
+        <SharedTestPostSettings>$(MSBuildThisFileDirectory)test.settings.post.props</SharedTestPostSettings>
+
+        <RepositoryTestSettings>$(MSBuildThisFileDirectory)$(RepositorySettingsFilePrefix).test.props</RepositoryTestSettings>
+    </PropertyGroup>
+
+    <!--
+        Import the properties first so that the repository sepcific settings file can use those defaults
+        and yet still overwrite them as necessary.
+    -->
+    <Import Project="$(SharedTestPreSettings)" />
+
+    <!--
+        Import the repository specific settings file. This file is expected to be found in the workspace directory
+    -->
+    <Import Project="$(RepositoryTestSettings)"
+            Condition="Exists('$(RepositoryTestSettings)')" />
+
+    <!--
+        Import the itemgroups last so that the repository sepcific settings file can set values itself
+        without adding to the standard ones.
+    -->
+    <Import Project="$(SharedTestPostSettings)" />
+
+
+
+
+
+    <!--
+        *************************************
+        *                                   *
+        *     SHARED TOOLS                  *
+        *                                   *
+        *************************************
+    -->
+
+    <!-- Overrides for the tools paths -->
+    <PropertyGroup>
+        <!-- Currently there are no test specific tools -->
+    </PropertyGroup>
+
+
+
+
+
+    <!--
+        *****************************************
+        *                                       *
+        *     NBUILDKIT SPECIFIC SETTINGS       *
+        *                                       *
+        *****************************************
+    -->
+
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsTestSettings>true</ExistsTestSettings>
+
+        <!-- Defines the version number of the configuration file -->
+        <NBuildKitConfigurationVersion>1.0</NBuildKitConfigurationVersion>
+    </PropertyGroup>
+</Project>

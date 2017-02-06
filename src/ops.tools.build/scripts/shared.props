@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="Run"
+    ToolsVersion="11.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <SharedPreSettings>$(MSBuildThisFileDirectory)settings.pre.props</SharedPreSettings>
+        <SharedPostSettings>$(MSBuildThisFileDirectory)settings.post.props</SharedPostSettings>
+
+        <RepositorySharedSettings>$(MSBuildThisFileDirectory)$(RepositorySettingsFilePrefix).props</RepositorySharedSettings>
+    </PropertyGroup>
+
+    <!--
+        Import the properties first so that the repository sepcific settings file can use those defaults
+        and yet still overwrite them as necessary.
+    -->
+    <Import Project="$(SharedPreSettings)" />
+
+    <!--
+        Import the repository specific settings file. This file is expected to be found in the workspace directory
+    -->
+    <Import Project="$(RepositorySharedSettings)"
+            Condition="Exists('$(RepositorySharedSettings)')" />
+
+    <!--
+        Import the itemgroups last so that the repository sepcific settings file can set values itself
+        without adding to the standard ones.
+    -->
+    <Import Project="$(SharedPostSettings)" />
+
+
+
+
+
+    <!--
+        *****************************************
+        *                                       *
+        *     NBUILDKIT SPECIFIC SETTINGS       *
+        *                                       *
+        *****************************************
+    -->
+
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsSettings>true</ExistsSettings>
+
+        <!-- Defines the version number of the configuration file -->
+        <NBuildKitConfigurationVersion>1.0</NBuildKitConfigurationVersion>
+    </PropertyGroup>
+
+    <!--
+        Defines the minimum and maximum versions for nBuildKit which are used to grab the correct nBuildKit packages from
+        NuGet if no package is specified in the packages.config file.
+    -->
+    <PropertyGroup>
+        <NBuildKitMinimumVersion Condition=" '$(NBuildKitMinimumVersion)' == '' ">0.9.0</NBuildKitMinimumVersion>
+        <NBuildKitMaximumVersion Condition=" '$(NBuildKitMaximumVersion)' == '' ">0.10.0</NBuildKitMaximumVersion>
+    </PropertyGroup>
+</Project>
