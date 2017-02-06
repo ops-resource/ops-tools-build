@@ -227,14 +227,14 @@
         <MSBuild
             BuildInParallel="False"
             Projects="$(DirEntryPoint)\run.msbuild"
-            Properties="DirWorkspace=$(DirWorkspace);DirOpsConfiguration=$(DirWorkspace);TargetToExecute=$(TargetToExecute)"
+            Properties="DirWorkspace=$(DirWorkspace);DirOpsConfiguration=$(DirWorkspace)"
             RebaseOutputs="False"
             RemoveProperties=""
             RunEachTargetSeparately="True"
             SkipNonexistentProjects="False"
             StopOnFirstFailure="True"
             TargetAndPropertyListSeparators=""
-            Targets=""
+            Targets="$(TargetToExecute)"
             ToolsVersion="$(MSBuildToolsVersion)"
             UnloadProjectsOnCompletion="True"
             UseResultsCache="True">
