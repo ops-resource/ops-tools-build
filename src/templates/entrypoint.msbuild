@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="Help"
+    ToolsVersion="11.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Directories -->
+        <!--
+            The workspace directory is defined as the directory that is the top-level directory in which all the
+            files for the build, test, deploy stage can be found. During the process there should never be a need
+            to go any futher up the directory hierarchy to find files.
+        -->
+        <DirWorkspace Condition=" '$(DirWorkspace)' == '' ">$(MSBuildProjectDirectory)</DirWorkspace>
+        <!--
+            The default directory that the NuGet packages are expanded into
+        -->
+        <DirPackagesOpsScripts Condition=" '$(DirPackagesOpsScripts)' == '' ">$(DirWorkspace)\packages</DirPackagesOpsScripts>
+
+        <!-- Files -->
+        <!--
+            The file that contains all the NuGet packages that are used by the non-compilation parts
+            of the build and deploy process. NuGet package files that are used by the compilation parts
+            of the build process are expected to be handled by the compilation process.
+        -->
+        <NuGetPackageFile>$(MSBuildProjectDirectory)\packages.config</NuGetPackageFile>
+        <!--
+            The file that contains all the NuGet configuration settings for the current project. This file
+            is used to determine where the package directory is located if no such directory is defined.
+        -->
+        <FileNugetConfig>$(MSBuildProjectDirectory)\nuget.config</FileNugetConfig>
+
+        <!-- Required packages -->
+        <!--
+            The name of the NuGet package that contains the scripts and configuration files used to find the build
+            scripts and start the build process.
+        -->
+        <NuGetPackageEntryPoint Condition=" '$(NuGetPackageEntryPoint)' == '' ">Ops.Tools.Build</NuGetPackageEntryPoint>
+
+        <!-- External tools -->
+        <!--
+            The full path to the NuGet command line application. Expected to be found via the PATH environment variable.
+        -->
+        <ToolsExternalNuGetPath Condition=" '$(ToolsExternalNuGetPath)' == '' ">NuGet.exe</ToolsExternalNuGetPath>
+
+        <!--
+            For MsBuild versions 4.0 through to 12.0 the tasks dll was in an assembly that contains the version in the file name.
+            However starting with version 14 that is no longer the case so have to differentiate between these cases.
+        -->
+        <MsBuildTasksAssembly>$(MSBuildToolsPath)\Microsoft.Build.Tasks.v$(MSBuildToolsVersion).dll</MsBuildTasksAssembly>
+        <MsBuildTasksAssembly Condition="!Exists('$(MsBuildTasksAssembly)')">$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll</MsBuildTasksAssembly>
+    </PropertyGroup>
+
+    <!--
+        Import the environment specific settings. These settings may be different for different environments, e.g. there might be a difference
+        between a dev machine and a build machine, so the loading of these files is done slightly differently than other settings files.
+
+        We check the following locations in order:
+        * A user specified location as indicated by the variable: $(FileEnvironment)
+        * An user environment variable named NBUILDKIT_USER_ENVIRONMENT_FILE
+        * A machine environment variable named NBUILDKIT_MACHINE_ENVIRONMENT_FILE
+        * The the workspace
+        * The default environment settings file provided by nBuildkit
+
+        The user can override the location where the file should be loaded from by specifying the 'UseEnvironmentFrom' property and setting it to
+        one of the following values:
+        * File      - Load the environment information from the user specified file, if it exists
+        * User      - Load the environment information from file pointed to by the user environment variable
+                      NBUILDKIT_USER_ENVIRONMENT_FILE, if it exists
+        * Machine   - Load the environment information from file pointed to by the machine environment variable
+                      NBUILDKIT_MACHINE_ENVIRONMENT_FILE, if it exists
+        * Workspace - Load the environment information from the file in the workspace, if it exists
+
+        If no files are found then the default environment settings file provided by nBuildkit will be loaded.
+    -->
+    <Import
+        Condition="Exists('$(FileEnvironment)') AND (('$(UseEnvironmentFrom)' == 'File')  OR (('$(UseEnvironmentFrom)' == '') AND ('$(ExistsEnvironmentSettings)' != 'true'))) "
+        Project="$(FileEnvironment)" />
+    <Import
+        Condition="Exists('$(NBUILDKIT_USER_ENVIRONMENT_FILE)') AND (('$(UseEnvironmentFrom)' == 'User')  OR (('$(UseEnvironmentFrom)' == '') AND ('$(ExistsEnvironmentSettings)' != 'true'))) "
+        Project="$(NBUILDKIT_USER_ENVIRONMENT_FILE)" />
+    <Import
+        Condition="Exists('$(NBUILDKIT_MACHINE_ENVIRONMENT_FILE)') AND (('$(UseEnvironmentFrom)' == 'Machine')  OR (('$(UseEnvironmentFrom)' == '') AND ('$(ExistsEnvironmentSettings)' != 'true'))) "
+        Project="$(NBUILDKIT_MACHINE_ENVIRONMENT_FILE)" />
+    <Import
+        Condition="Exists('$(DirWorkspace)\environment.props') AND (('$(UseEnvironmentFrom)' == 'Workspace')  OR (('$(UseEnvironmentFrom)' == '') AND ('$(ExistsEnvironmentSettings)' != 'true'))) "
+        Project="$(DirWorkspace)\environment.props" />
+    <Import
+        Condition="Exists('$(DirEntryPointMsBuild)\shared.environment.props') AND '$(ExistsSharedEnvironmentSettings)' != 'true' "
+        Project="$(DirEntryPointMsBuild)\shared.environment.props" />
+
+    <!--
+        Import the environment specific settings for the build server. These settings contain information about the active build server
+        and should only be loaded when a build is running on a build server.
+
+        We check the following locations in order:
+        * A user specified directory as indicated by the $(DirBuildServerSettings)
+        * A user or machine environment variable named NBUILDKIT_BUILDSERVER_ENVIRONMENT_DIR
+
+        It is expected that both point to a directory containing the 'buildserver.environment.props' file.
+    -->
+    <PropertyGroup Condition=" '$(ExistsBuildServerEnvironmentSettings)' != 'true' ">
+        <FileBuildServerSettings Condition=" '$(FileBuildServerSettings)' == '' AND '$(DirBuildServerSettings)' != '' AND Exists('$(DirBuildServerSettings)\buildserver.environment.props') ">$(DirBuildServerSettings)\buildserver.environment.props</FileBuildServerSettings>
+        <FileBuildServerSettings Condition=" '$(FileBuildServerSettings)' == '' AND '$(NBUILDKIT_BUILDSERVER_ENVIRONMENT_DIR)' != '' AND Exists('$(NBUILDKIT_BUILDSERVER_ENVIRONMENT_DIR)\buildserver.environment.props') ">$(NBUILDKIT_BUILDSERVER_ENVIRONMENT_DIR)\buildserver.environment.props</FileBuildServerSettings>
+        <FileBuildServerSettings Condition=" '$(FileBuildServerSettings)' == '' ">UNDEFINED</FileBuildServerSettings>
+    </PropertyGroup>
+    <Import
+        Condition="Exists('$(FileBuildServerSettings)') AND '$(ExistsBuildServerEnvironmentSettings)' != 'true' "
+        Project="$(FileBuildServerSettings)" />
+
+    <!--
+        Display the help text for the current script and then exit.
+    -->
+    <Target Name="Help">
+        <Message Text="Ops.Tools.Build" />
+        <Message Text="Copyright 2016 Ops-Resource." />
+        <Message Text="" />
+        <Message Text="The following targets exist:" />
+        <Message Text="" />
+
+        <Message Text="- Build: Executes the build sequence. Build steps are as defined by the 'BuildStepsToExecute' in the 'ops.build.props' file." />
+        <Message Text="  Additional properties that can be specified are:" />
+        <Message Text="  * FileEnvironment    - The full path to an MsBuild properties file that contains the environment settings for the current environment." />
+        <Message Text="                         This file should at least contain a property called 'ExistsEnvironmentSettings' for which the value should be set to true." />
+        <Message Text="  * UseEnvironmentFrom - A property that indicates where the environment.props file should be loaded from." />
+        <Message Text="                         Valid options are:" />
+        <Message Text="                         - 'File'      - Load the environment information from the user specified file, if it exists." />
+        <Message Text="                         - 'User'      - Load the environment information from file pointed to by the user environment variable" />
+        <Message Text="                                         NBUILDKIT_USER_ENVIRONMENT_FILE, if it exists" />
+        <Message Text="                         - 'Machine'   - Load the environment information from file pointed to by the machine environment variable" />
+        <Message Text="                                         NBUILDKIT_MACHINE_ENVIRONMENT_FILE, if it exists" />
+        <Message Text="                         - 'Workspace' - Load the environment information from the file in the workspace, if it exists" />
+
+        <Message Text="- Test: Executes the test sequence. Test steps are defined by the 'TestStepsToExecute' in the 'ops.test.props' file." />
+        <Message Text="  Additional properties that can be specified are:" />
+        <Message Text="  * FileEnvironment    - The full path to an MsBuild properties file that contains the environment settings for the current environment." />
+        <Message Text="                         This file should at least contain a property called 'ExistsEnvironmentSettings' for which the value should be set to true." />
+        <Message Text="  * UseEnvironmentFrom - A property that indicates where the environment.props file should be loaded from." />
+        <Message Text="                         Valid options are:" />
+        <Message Text="                         - 'File'      - Load the environment information from the user specified file, if it exists." />
+        <Message Text="                         - 'User'      - Load the environment information from file pointed to by the user environment variable" />
+        <Message Text="                                         NBUILDKIT_USER_ENVIRONMENT_FILE, if it exists" />
+        <Message Text="                         - 'Machine'   - Load the environment information from file pointed to by the machine environment variable" />
+        <Message Text="                                         NBUILDKIT_MACHINE_ENVIRONMENT_FILE, if it exists" />
+        <Message Text="                         - 'Workspace' - Load the environment information from the file in the workspace, if it exists" />
+
+        <Message Text="- Deploy: Executes the deploy sequence. Deploy steps are as defined by the 'DeployStepsToExecute' in the 'ops.deploy.props' file." />
+        <Message Text="  Additional properties that can be specified are:" />
+        <Message Text="  * FileEnvironment    - The full path to an MsBuild properties file that contains the environment settings for the current environment." />
+        <Message Text="                         This file should at least contain a property called 'ExistsEnvironmentSettings' for which the value should be set to true." />
+        <Message Text="  * UseEnvironmentFrom - A property that indicates where the environment.props file should be loaded from." />
+        <Message Text="                         Valid options are:" />
+        <Message Text="                         - 'File'      - Load the environment information from the user specified file, if it exists." />
+        <Message Text="                         - 'User'      - Load the environment information from file pointed to by the user environment variable" />
+        <Message Text="                                         NBUILDKIT_USER_ENVIRONMENT_FILE, if it exists" />
+        <Message Text="                         - 'Machine'   - Load the environment information from file pointed to by the machine environment variable" />
+        <Message Text="                                         NBUILDKIT_MACHINE_ENVIRONMENT_FILE, if it exists" />
+        <Message Text="                         - 'Workspace' - Load the environment information from the file in the workspace, if it exists" />
+
+        <Message Text="" />
+        <Message Text="Additionally the following environment variables may be defined:" />
+        <Message Text="- NBUILDKIT_USER_ENVIRONMENT_FILE    - A user level environment variable that defines the full path to an MsBuild properties file that contains the environment settings." />
+        <Message Text="                                       This file should at least contain a property called 'ExistsEnvironmentSettings' for which the value should be set to true." />
+        <Message Text="- NBUILDKIT_MACHINE_ENVIRONMENT_FILE - A machine level environment variable that defines the full path to an MsBuild properties file that contains the environment settings." />
+        <Message Text="                                       This file should at least contain a property called 'ExistsEnvironmentSettings' for which the value should be set to true." />
+
+        <Message Text="- Help: Displays this text." />
+    </Target>
+
+    <!--
+        Invoke the build steps as defined by the 'ops.build.props' file by invoking the 'build' target
+        on the 'run.msbuild' script in the 'Ops.Tools.Build' NuGet package
+        and passing the path to the workspace directory and the configuration files. Parameters provided by the
+        user are passed through by default.
+    -->
+    <Target
+        DependsOnTargets="_EntryPoint_SetTargets_Build"
+        Name="Build">
+        <CallTarget Targets="_EntryPoint_ConfigureAndRun" />
+    </Target>
+
+    <Target
+        Name="_EntryPoint_SetTargets_Build">
+        <PropertyGroup>
+            <TargetToExecute>Build</TargetToExecute>
+        </PropertyGroup>
+    </Target>
+
+    <!--
+        Invoke the test steps as defined by the 'ops.test.props' file by invoking the 'test' target
+        on the 'run.msbuild' script in the 'Ops.Tools.Build' NuGet package
+        and passing the path to the workspace directory and the configuration files. Parameters provided by the
+        user are passed through by default.
+    -->
+    <Target
+        DependsOnTargets="_EntryPoint_SetTargets_Test"
+        Name="Test">
+        <CallTarget Targets="_EntryPoint_ConfigureAndRun" />
+    </Target>
+
+    <Target Name="_EntryPoint_SetTargets_Test">
+        <PropertyGroup>
+            <TargetToExecute>Test</TargetToExecute>
+        </PropertyGroup>
+    </Target>
+
+    <!--
+        Invoke the deploy steps as defined by the 'ops.deploy.props' file by invoking the 'deploy' target
+        on the 'run.msbuild' script in the 'Ops.Tools.Build' NuGet package
+        and passing the path to the workspace directory and the configuration files. Parameters provided by the
+        user are passed through by default.
+    -->
+    <Target
+        DependsOnTargets="_EntryPoint_SetTargets_Deploy"
+        Name="Deploy">
+        <CallTarget Targets="_EntryPoint_ConfigureAndRun" />
+    </Target>
+
+    <Target Name="_EntryPoint_SetTargets_Deploy">
+        <PropertyGroup>
+            <TargetToExecute>Deploy</TargetToExecute>
+        </PropertyGroup>
+    </Target>
+
+    <Target
+        DependsOnTargets="_EntryPoint_LocateEntryPoint"
+        Name="_EntryPoint_ConfigureAndRun">
+        <MSBuild
+            BuildInParallel="False"
+            Projects="$(DirEntryPoint)\run.msbuild"
+            Properties="DirWorkspace=$(DirWorkspace);DirOpsConfiguration=$(DirWorkspace);TargetToExecute=$(TargetToExecute)"
+            RebaseOutputs="False"
+            RemoveProperties=""
+            RunEachTargetSeparately="True"
+            SkipNonexistentProjects="False"
+            StopOnFirstFailure="True"
+            TargetAndPropertyListSeparators=""
+            Targets=""
+            ToolsVersion="$(MSBuildToolsVersion)"
+            UnloadProjectsOnCompletion="True"
+            UseResultsCache="True">
+        </MSBuild>
+    </Target>
+
+    <!--
+        Get the full path to the Ops.Tools.Build package directory so that we can start the build / test / deploy process.
+    -->
+    <Target
+        DependsOnTargets="_EntryPoint_LocatePackagesDir;_EntryPoint_LocateEntryPointViaPackagesConfig;_EntryPoint_LocateEntryPointViaHighestAvailableVersion"
+        Name="_EntryPoint_LocateEntryPoint">
+        <Message Text="DirEntryPoint after search: $(DirEntryPoint)" />
+
+        <Error
+            Condition="!Exists('$(DirEntryPoint)')"
+            Text="Unable to find the directory containing the $(NuGetPackageEntryPoint) NuGet package." />
+    </Target>
+
+    <!--
+        Get the full path to the packages directory.
+    -->
+    <Target Name="_EntryPoint_LocatePackagesDir">
+        <!-- Determine if a packages folder exists at the same level as this script. If so use that  -->
+        <CreateProperty
+            Condition="Exists('$(DirPackagesOpsScripts)')"
+            Value="$(DirPackagesOpsScripts)">
+            <Output
+                PropertyName="DirPackages"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <!-- Get the location of the packages directory from the local nuget.config file -->
+        <XmlPeek
+            Condition="!Exists('$(DirPackages)')"
+            Query="//add[@key='repositorypath']/@value"
+            XmlInputPath="$(FileNugetConfig)">
+            <Output
+                ItemName="DirNuGetPackages"
+                TaskParameter="Result" />
+        </XmlPeek>
+
+        <!--
+            If the DirNuGetPackages has a root (i.e. a drive letter) then we assume it is an absolute path. Just use
+            it that way.
+        -->
+        <CreateProperty
+            Condition=" '$(DirNuGetPackages)' != '' AND $([System.IO.Path]::IsPathRooted('%(DirNuGetPackages.Identity)'))"
+            Value="$([System.IO.Path]::GetFullPath('%(DirNuGetPackages.Identity)'))" >
+            <Output
+                PropertyName="DirPackages"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <!--
+            If the DirNuGetPackages has no root (i.e. no drive letter) then we assume it is a relative path. Base it on
+            the directory that the nuget.config file is in.
+        -->
+        <CreateProperty
+            Condition=" '@(DirNuGetPackages)' != '' AND !$([System.IO.Path]::IsPathRooted('%(DirNuGetPackages.Identity)'))"
+            Value="$([System.IO.Path]::GetFullPath('$(DirWorkspace)\%(DirNuGetPackages.Identity)'))">
+            <Output
+                PropertyName="DirPackages"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <Message
+            Condition=" '$(DirPackages)' != '' "
+            Text="Package directory at: $(DirPackages)" />
+
+        <!-- No packages folder found. Note this and move on -->
+        <Warning
+            Condition=" '$(DirPackages)' == '' "
+            Text="Unable to find the packages folder." />
+    </Target>
+
+    <Target
+        Condition="Exists('$(DirPackages)')"
+        Name="_EntryPoint_LocateEntryPointViaPackagesConfig">
+        <XmlPeek
+            Condition="Exists('$(NuGetPackageFile)')"
+            Query="//package[@id='$(NuGetPackageEntryPoint)']/@version"
+            XmlInputPath="$(NuGetPackageFile)">
+            <Output
+                ItemName="VersionEntryPointPackage"
+                TaskParameter="Result" />
+        </XmlPeek>
+        <Message Text="Version: @(VersionEntryPointPackage)" />
+
+        <CreateProperty
+            Condition=" '@(VersionEntryPointPackage)' != '' "
+            Value="%(VersionEntryPointPackage.Identity)">
+            <Output
+                PropertyName="NuGetVersionEntryPoint"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <!--
+            If the packages directory exists then we assume that the package is in there. If that is not the case we'll get a
+            non-existing path but that will lead to an error.
+        -->
+        <CreateProperty
+            Condition="Exists('$(DirPackages)') AND '$(NuGetVersionEntryPoint)' != '' "
+            Value="$(DirPackages)\$(NuGetPackageEntryPoint).$(NuGetVersionEntryPoint)\build">
+            <Output
+                PropertyName="DirEntryPoint"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <Message Text="DirEntryPoint after searching packages.config: $(DirEntryPoint)" />
+    </Target>
+
+    <Target
+        Condition="!Exists('$(DirEntryPoint)')"
+        Name="_EntryPoint_LocateEntryPointViaHighestAvailableVersion">
+
+        <GetHighestSuitableVersionFromNuGet
+            NuGetPath="$(ToolsExternalNuGetPath)"
+            PackageName="$(NuGetPackageEntryPoint)"
+            Sources="@(NuGetSources)">
+            <Output
+                PropertyName="NuGetVersionEntryPoint"
+                TaskParameter="Version" />
+        </GetHighestSuitableVersionFromNuGet>
+        <InstallPackageFromNuGet
+            NuGetPath="$(ToolsExternalNuGetPath)"
+            PackageDirectory="$(DirPackages)"
+            PackageName="$(NuGetPackageEntryPoint)"
+            Sources="@(NuGetSources)"
+            Version="$(NuGetVersionEntryPoint)"/>
+
+        <CreateProperty
+            Condition="Exists('$(DirPackages)')"
+            Value="$(DirPackages)\$(NuGetPackageEntryPoint).$(NuGetVersionEntryPoint)\build">
+            <Output
+                PropertyName="DirEntryPoint"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <Message Text="DirEntryPoint after getting highest allowed version: $(DirEntryPoint)" />
+    </Target>
+
+    <UsingTask
+        AssemblyFile="$(MsBuildTasksAssembly)"
+        TaskFactory="CodeTaskFactory"
+        TaskName="GetHighestSuitableVersionFromNuGet" >
+        <ParameterGroup>
+            <PackageName
+                ParameterType="System.String"
+                Required="true" />
+            <NuGetPath
+                ParameterType="System.String"
+                Required="true" />
+            <Sources
+                ParameterType="Microsoft.Build.Framework.ITaskItem[]"
+                Required="false" />
+            <Version
+                ParameterType="System.String"
+                Output="true" />
+        </ParameterGroup>
+        <Task>
+            <Using Namespace="System.Linq"/>
+            <Code
+                Type="Method"
+                Language="cs">
+                <![CDATA[
+                    public override bool Execute()
+                    {
+                        if ((Sources == null) || (Sources.Length == 0))
+                        {
+                            Log.LogMessage(
+                                MessageImportance.Low,
+                                string.Format(
+                                    System.Globalization.CultureInfo.InvariantCulture,
+                                    "Getting versions for {0} from default sources",
+                                    PackageName));
+                        }
+                        else
+                        {
+                            Log.LogMessage(
+                                MessageImportance.Low,
+                                string.Format(
+                                    System.Globalization.CultureInfo.InvariantCulture,
+                                    "Getting versions for {0} from: {1} ",
+                                    PackageName,
+                                    string.Join(", ", Sources.Select(t => t.ItemSpec))));
+                        }
+
+                        try
+                        {
+                            var builder = new System.Text.StringBuilder();
+                            {
+                                builder.Append(string.Format("list \"{0}\" ", PackageName));
+                                builder.Append("-NonInteractive ");
+
+                                // If the user has specified any sources to install from then only search those sources.
+                                if (Sources != null)
+                                {
+                                    foreach (var source in Sources)
+                                    {
+                                        // Make sure we remove the back-slash because if we don't then
+                                        // the closing quote will be eaten by the command line parser. Note that
+                                        // this is only necessary because we're dealing with a directory
+                                        builder.Append(string.Format("-Source \"{0}\" ", source.ItemSpec.TrimEnd('\\')));
+                                    }
+                                }
+                            }
+
+                            var info = new System.Diagnostics.ProcessStartInfo
+                            {
+                                FileName = NuGetPath,
+                                Arguments = builder.ToString(),
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                            };
+
+                            Log.LogMessage(
+                                MessageImportance.Low,
+                                "Executing {0} with arguments: {1}",
+                                NuGetPath,
+                                info.Arguments);
+
+                            var text = new System.Collections.Generic.List<string>();
+                            var process = new System.Diagnostics.Process();
+                            process.StartInfo = info;
+                            process.OutputDataReceived +=
+                                (s, e) =>
+                                {
+                                    if (!string.IsNullOrWhiteSpace(e.Data))
+                                    {
+                                        text.Add(e.Data);
+                                    }
+                                };
+                            process.ErrorDataReceived +=
+                                (s, e) =>
+                                {
+                                    if (!string.IsNullOrWhiteSpace(e.Data))
+                                    {
+                                        Log.LogError(e.Data);
+                                    }
+                                };
+                            process.Start();
+
+                            process.BeginOutputReadLine();
+                            process.BeginErrorReadLine();
+                            process.WaitForExit();
+
+                            if (process.ExitCode != 0)
+                            {
+                                Log.LogError(
+                                    string.Format(
+                                        "{0} exited with a non-zero exit code. Exit code was: {1}",
+                                        System.IO.Path.GetFileName(process.StartInfo.FileName),
+                                        process.ExitCode));
+                                return false;
+                            }
+
+                            Log.LogMessage(
+                                MessageImportance.Low,
+                                "{0} produced the following output: {1}",
+                                NuGetPath,
+                                string.Join(Environment.NewLine, text));
+
+                            // Expecting something like:
+                            // A 1.2.3
+                            // A.B 1.2.3
+                            // A.C 4.5.6
+                            // A.C.D 7.8.9
+                            // A.E 0.0.1
+                            //
+                            // So find the exact package name by searching for the string that has the package name
+                            // followed by a space
+                            var packageNameInText = PackageName + " ";
+
+                            var versionAsString = string.Empty;
+                            foreach(var line in text)
+                            {
+                                if (line.StartsWith(packageNameInText))
+                                {
+                                    versionAsString = line.Substring(packageNameInText.Length);
+                                    break;
+                                }
+                            }
+
+                            if (string.IsNullOrEmpty(versionAsString))
+                            {
+                                Log.LogError("Failed to find the correct package version.");
+                                return false;
+                            }
+
+                            Version = (new Version(versionAsString)).ToString(3);
+                        }
+                        catch(Exception e)
+                        {
+                            Log.LogError(e.ToString());
+                        }
+
+                        // Log.HasLoggedErrors is true if the task logged any errors -- even if they were logged
+                        // from a task's constructor or property setter. As long as this task is written to always log an error
+                        // when it fails, we can reliably return HasLoggedErrors.
+                        return !Log.HasLoggedErrors;
+                    }
+                ]]>
+            </Code>
+        </Task>
+    </UsingTask>
+
+    <UsingTask
+        AssemblyFile="$(MsBuildTasksAssembly)"
+        TaskFactory="CodeTaskFactory"
+        TaskName="InstallPackageFromNuGet">
+        <ParameterGroup>
+            <PackageName
+                ParameterType="System.String"
+                Required="true" />
+            <Version
+                ParameterType="System.String"
+                Required="true" />
+            <NuGetPath
+                ParameterType="System.String"
+                Required="true" />
+            <PackageDirectory
+                ParameterType="System.String"
+                Required="true" />
+            <Sources
+                ParameterType="Microsoft.Build.Framework.ITaskItem[]"
+                Required="false" />
+        </ParameterGroup>
+        <Task>
+            <Code
+                Type="Method"
+                Language="cs">
+                <![CDATA[
+                    public override bool Execute()
+                    {
+                        var builder = new System.Text.StringBuilder();
+                        {
+                            builder.Append(string.Format("install \"{0}\" ", PackageName));
+                            builder.Append(string.Format("-Version \"{0}\" ", Version));
+
+                            builder.Append("-NonInteractive -Verbosity detailed -NoCache ");
+
+                            // Make sure we remove the back-slash because if we don't then
+                            // the closing quote will be eaten by the command line parser. Note that
+                            // this is only necessary because we're dealing with a directory
+                            builder.Append(string.Format("-OutputDirectory \"{0}\" ", PackageDirectory.TrimEnd('\\')));
+
+                            // If the user has specified any sources to install from then only search those sources.
+                            if (Sources != null)
+                            {
+                                foreach (var source in Sources)
+                                {
+                                    // Make sure we remove the back-slash because if we don't then
+                                    // the closing quote will be eaten by the command line parser. Note that
+                                    // this is only necessary because we're dealing with a directory
+                                    builder.Append(string.Format("-Source \"{0}\" ", source.ItemSpec.TrimEnd('\\')));
+                                }
+                            }
+                        }
+
+                        var info = new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = NuGetPath,
+                            Arguments = builder.ToString(),
+                            UseShellExecute = false,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true,
+                        };
+                        var process = new System.Diagnostics.Process();
+                        process.StartInfo = info;
+                        process.OutputDataReceived +=
+                            (s, e) =>
+                            {
+                                if (!string.IsNullOrWhiteSpace(e.Data))
+                                {
+                                    Log.LogMessage(MessageImportance.Normal, e.Data);
+                                }
+                            };
+                        process.ErrorDataReceived +=
+                            (s, e) =>
+                            {
+                                if (!string.IsNullOrWhiteSpace(e.Data))
+                                {
+                                    Log.LogError(e.Data);
+                                }
+                            };
+                        process.Start();
+
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+                        process.WaitForExit();
+
+                        if (process.ExitCode != 0)
+                        {
+                            Log.LogError(
+                                string.Format(
+                                    "{0} exited with a non-zero exit code. Exit code was: {1}",
+                                    System.IO.Path.GetFileName(process.StartInfo.FileName),
+                                    process.ExitCode));
+                            return false;
+                        }
+
+                        // Log.HasLoggedErrors is true if the task logged any errors -- even if they were logged
+                        // from a task's constructor or property setter. As long as this task is written to always log an error
+                        // when it fails, we can reliably return HasLoggedErrors.
+                        return !Log.HasLoggedErrors;
+                    }
+                ]]>
+            </Code>
+        </Task>
+    </UsingTask>
+
+    <PropertyGroup>
+        <OpsVersion>$VersionOpsTools$</OpsVersion>
+    </PropertyGroup>
+</Project>
