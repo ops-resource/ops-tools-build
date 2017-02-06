@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="Help"
+    ToolsVersion="11.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+        This file is a special version of the standard 'entrypoint.msbuild' script as defined in the src\templates
+        directory. It is special in that for this case we don't need to figure out which version of the build scripts
+        we will be running because we will always run the version which we are going to build / package, i.e. we're
+        bootstrapping the build for the build scripts with the build scripts ...
+    -->
+    <PropertyGroup>
+        <!-- Directories -->
+        <!--
+            The workspace directory is defined as the directory that is the top-level directory in which all the
+            files for the build, test, deploy stage can be found. During the process there should never be a need
+            to go any futher up the directory hierarchy to find files.
+        -->
+        <DirWorkspace Condition=" '$(DirWorkspace)' == '' ">$(MSBuildProjectDirectory)</DirWorkspace>
+        <!--
+            The directories for the build scripts in the local workspace. These are used because we are bootstrapping
+            the build of the build scripts with the build scripts ...
+        -->
+        <DirEntryPoint>$(DirWorkspace)\src\ops.tools.build\scripts</DirEntryPoint>
+    </PropertyGroup>
+
+    <!--
+        Import the environment specific settings. These settings may be different for different environments, e.g. there might be a difference
+        between a dev machine and a build machine, so the loading of these files is done slightly differently than other settings files.
+
+        We check the following locations in order:
+        * A user specified location as indicated by the variable: $(FileEnvironment)
+        * An user environment variable named NBUILDKIT_USER_ENVIRONMENT_FILE
+        * A machine environment variable named NBUILDKIT_MACHINE_ENVIRONMENT_FILE
+        * The the workspace
+        * The default environment settings file provided by nBuildkit
+
+        The user can override the location where the file should be loaded from by specifying the 'UseEnvironmentFrom' property and setting it to
+        one of the following values:
+        * File      - Load the environment information from the user specified file, if it exists
+        * User      - Load the environment information from file pointed to by the user environment variable
+                      NBUILDKIT_USER_ENVIRONMENT_FILE, if it exists
+        * Machine   - Load the environment information from file pointed to by the machine environment variable
+                      NBUILDKIT_MACHINE_ENVIRONMENT_FILE, if it exists
+        * Workspace - Load the environment information from the file in the workspace, if it exists
+
+        If no files are found then the default environment settings file provided by nBuildkit will be loaded.
+    -->
+    <Import
+        Condition="Exists('$(FileEnvironment)') AND (('$(UseEnvironmentFrom)' == 'File')  OR (('$(UseEnvironmentFrom)' == '') AND ('$(ExistsEnvironmentSettings)' != 'true'))) "
+        Project="$(FileEnvironment)" />
+    <Import
+        Condition="Exists('$(NBUILDKIT_USER_ENVIRONMENT_FILE)') AND (('$(UseEnvironmentFrom)' == 'User')  OR (('$(UseEnvironmentFrom)' == '') AND ('$(ExistsEnvironmentSettings)' != 'true'))) "
+        Project="$(NBUILDKIT_USER_ENVIRONMENT_FILE)" />
+    <Import
+        Condition="Exists('$(NBUILDKIT_MACHINE_ENVIRONMENT_FILE)') AND (('$(UseEnvironmentFrom)' == 'Machine')  OR (('$(UseEnvironmentFrom)' == '') AND ('$(ExistsEnvironmentSettings)' != 'true'))) "
+        Project="$(NBUILDKIT_MACHINE_ENVIRONMENT_FILE)" />
+    <Import
+        Condition="Exists('$(DirWorkspace)\environment.props') AND (('$(UseEnvironmentFrom)' == 'Workspace')  OR (('$(UseEnvironmentFrom)' == '') AND ('$(ExistsEnvironmentSettings)' != 'true'))) "
+        Project="$(DirWorkspace)\environment.props" />
+    <Import
+        Condition="Exists('$(DirPipelineEntryPointMsBuild)\shared.environment.props') AND '$(ExistsSharedEnvironmentSettings)' != 'true' "
+        Project="$(DirPipelineEntryPointMsBuild)\shared.environment.props" />
+
+    <!--
+        Import the environment specific settings for the build server. These settings contain information about the active build server
+        and should only be loaded when a build is running on a build server.
+
+        We check the following locations in order:
+        * A user specified directory as indicated by the $(DirBuildServerSettings)
+        * A user or machine environment variable named NBUILDKIT_BUILDSERVER_ENVIRONMENT_DIR
+
+        It is expected that both point to a directory containing the 'buildserver.environment.props' file.
+    -->
+    <PropertyGroup Condition=" '$(ExistsBuildServerEnvironmentSettings)' != 'true' ">
+        <FileBuildServerSettings Condition=" '$(FileBuildServerSettings)' == '' AND '$(DirBuildServerSettings)' != '' AND Exists('$(DirBuildServerSettings)\buildserver.environment.props') ">$(DirBuildServerSettings)\buildserver.environment.props</FileBuildServerSettings>
+        <FileBuildServerSettings Condition=" '$(FileBuildServerSettings)' == '' AND '$(NBUILDKIT_BUILDSERVER_ENVIRONMENT_DIR)' != '' AND Exists('$(NBUILDKIT_BUILDSERVER_ENVIRONMENT_DIR)\buildserver.environment.props') ">$(NBUILDKIT_BUILDSERVER_ENVIRONMENT_DIR)\buildserver.environment.props</FileBuildServerSettings>
+        <FileBuildServerSettings Condition=" '$(FileBuildServerSettings)' == '' ">UNDEFINED</FileBuildServerSettings>
+    </PropertyGroup>
+    <Import
+        Condition="Exists('$(FileBuildServerSettings)') AND '$(ExistsBuildServerEnvironmentSettings)' != 'true' "
+        Project="$(FileBuildServerSettings)" />
+
+    <!--
+        Display the help text for the current script and then exit.
+    -->
+    <Target Name="Help">
+        <Message Text="Ops-Tools-Build (Special edition) - Build system" />
+        <Message Text="Copyright 2016 Ops-Resource." />
+        <Message Text="" />
+        <Message Text="The following targets exist:" />
+        <Message Text="" />
+
+        <Message Text="- Build: Executes the build sequence. Build steps are as defined by the 'BuildStepsToExecute' in the 'build.settings.props' file." />
+        <Message Text="  Additional properties that can be specified are:" />
+        <Message Text="  * DirWorkspace           - The full path to the directory that is the top-level directory in which all the files for the" />
+        <Message Text="                             build, test, deploy stage can be found. During the process there should never be a need to go" />
+        <Message Text="                             any futher up the directory hierarchy to find files." />
+        <Message Text="  * DirUserSettings        - The full path to the directory in which the configuration files, like settings.props, are located." />
+        <Message Text="  * DirBuildServerSettings - The full path to the directory in which the build server specific configuration files are located." />
+        <Message Text="  * GroupsToExecute        - A comma separated list of groups for which the build steps should be executed." />
+        <Message Text="                             Available groups are Clean and the groups defined in the BuildStepsToExecute list." />
+        <Message Text="  * FileEnvironment        - The full path to an MsBuild properties file that contains the environment settings for the current environment." />
+        <Message Text="                             This file should at least contain a property called 'ExistsEnvironmentSettings' for which the value should be set to true." />
+        <Message Text="  * UseEnvironmentFrom     - A property that indicates where the environment.props file should be loaded from." />
+        <Message Text="                             Valid options are:" />
+        <Message Text="                             - 'File'      - Load the environment information from the user specified file, if it exists." />
+        <Message Text="                             - 'User'      - Load the environment information from file pointed to by the user environment variable" />
+        <Message Text="                                             NBUILDKIT_USER_ENVIRONMENT_FILE, if it exists" />
+        <Message Text="                             - 'Machine'   - Load the environment information from file pointed to by the machine environment variable" />
+        <Message Text="                                             NBUILDKIT_MACHINE_ENVIRONMENT_FILE, if it exists" />
+        <Message Text="                             - 'Workspace' - Load the environment information from the file in the workspace, if it exists" />
+
+        <Message Text="- Test: Executes the test sequence. Test steps are defined by the 'TestStepsToExecute' in the 'test.settings.props' file." />
+        <Message Text="  Additional properties that can be specified are:" />
+        <Message Text="  * DirWorkspace           - The full path to the directory that is the top-level directory in which all the files for the" />
+        <Message Text="                             build, test, deploy stage can be found. During the process there should never be a need to go" />
+        <Message Text="                             any futher up the directory hierarchy to find files." />
+        <Message Text="  * DirUserSettings        - The full path to the directory in which the configuration files, like settings.props, are located." />
+        <Message Text="  * DirBuildServerSettings - The full path to the directory in which the build server specific configuration files are located." />
+        <Message Text="  * GroupsToExecute        - A comma separated list of groups for which the build steps should be executed." />
+        <Message Text="                             Available groups are Clean and the groups defined in the TestStepsToExecute list." />
+        <Message Text="  * FileEnvironment        - The full path to an MsBuild properties file that contains the environment settings for the current environment." />
+        <Message Text="                             This file should at least contain a property called 'ExistsEnvironmentSettings' for which the value should be set to true." />
+        <Message Text="  * UseEnvironmentFrom     - A property that indicates where the environment.props file should be loaded from." />
+        <Message Text="                             Valid options are:" />
+        <Message Text="                             - 'File'      - Load the environment information from the user specified file, if it exists." />
+        <Message Text="                             - 'User'      - Load the environment information from file pointed to by the user environment variable" />
+        <Message Text="                                             NBUILDKIT_USER_ENVIRONMENT_FILE, if it exists" />
+        <Message Text="                             - 'Machine'   - Load the environment information from file pointed to by the machine environment variable" />
+        <Message Text="                                             NBUILDKIT_MACHINE_ENVIRONMENT_FILE, if it exists" />
+        <Message Text="                             - 'Workspace' - Load the environment information from the file in the workspace, if it exists" />
+
+        <Message Text="- Deploy: Executes the deploy sequence. Deploy steps are as defined by the 'DeployStepsToExecute' in the 'deploy.settings.props' file." />
+        <Message Text="  Additional properties that can be specified are:" />
+        <Message Text="  * DirWorkspace           - The full path to the directory that is the top-level directory in which all the files for the" />
+        <Message Text="                             build, test, deploy stage can be found. During the process there should never be a need to go" />
+        <Message Text="                             any futher up the directory hierarchy to find files." />
+        <Message Text="  * DirUserSettings        - The full path to the directory in which the configuration files, like settings.props, are located." />
+        <Message Text="  * DirBuildServerSettings - The full path to the directory in which the build server specific configuration files are located." />
+        <Message Text="  * GroupsToExecute        - A comma separated list of groups for which the build steps should be executed." />
+        <Message Text="                             Available groups are Clean and the groups defined in the DeployStepsToExecute list." />
+        <Message Text="  * FileEnvironment        - The full path to an MsBuild properties file that contains the environment settings for the current environment." />
+        <Message Text="                             This file should at least contain a property called 'ExistsEnvironmentSettings' for which the value should be set to true." />
+        <Message Text="  * UseEnvironmentFrom     - A property that indicates where the environment.props file should be loaded from." />
+        <Message Text="                             Valid options are:" />
+        <Message Text="                             - 'File'      - Load the environment information from the user specified file, if it exists." />
+        <Message Text="                             - 'User'      - Load the environment information from file pointed to by the user environment variable" />
+        <Message Text="                                             NBUILDKIT_USER_ENVIRONMENT_FILE, if it exists" />
+        <Message Text="                             - 'Machine'   - Load the environment information from file pointed to by the machine environment variable" />
+        <Message Text="                                             NBUILDKIT_MACHINE_ENVIRONMENT_FILE, if it exists" />
+        <Message Text="                             - 'Workspace' - Load the environment information from the file in the workspace, if it exists" />
+
+        <Message Text="" />
+        <Message Text="Additionally the following environment variables may be defined:" />
+        <Message Text="- NBUILDKIT_USER_ENVIRONMENT_FILE        - A user level environment variable that defines the full path to an MsBuild properties file that contains the environment settings." />
+        <Message Text="                                           This file should at least contain a property called 'ExistsEnvironmentSettings' for which the value should be set to true." />
+        <Message Text="- NBUILDKIT_MACHINE_ENVIRONMENT_FILE     - A machine level environment variable that defines the full path to an MsBuild properties file that contains the environment settings." />
+        <Message Text="                                           This file should at least contain a property called 'ExistsEnvironmentSettings' for which the value should be set to true." />
+        <Message Text="- NBUILDKIT_BUILDSERVER_ENVIRONMENT_DIR  - A user or machine level environment variable that defines the directory path to an MsBuild properties file that contains the" />
+        <Message Text="                                           environment settings for the build server." />
+        <Message Text="                                           This file should at least contain two properties: One property called 'ExistsBuildServerEnvironmentSettings' for which the" />
+        <Message Text="                                           value should be set to true, and a property called 'VersionBuildServerEnvironmentSettings' for which the value should be set to ." />
+        <Message Text="                                           value should be set to the version of the settings file." />
+
+        <Message Text="- Help: Displays this text." />
+    </Target>
+
+    <!--
+        Invoke the build steps as defined by the 'ops.build.props' file by invoking the 'build' target
+        on the 'run.msbuild' script and passing the path to the workspace directory and the configuration files.
+        Parameters provided by the user are passed through by default.
+    -->
+    <Target
+        DependsOnTargets="_EntryPoint_SetTargets_Build;_EntryPoint_Run"
+        Name="Build" >
+    </Target>
+
+    <Target Name="_EntryPoint_SetTargets_Build">
+        <PropertyGroup>
+            <TargetToExecute>Build</TargetToExecute>
+        </PropertyGroup>
+    </Target>
+
+    <!--
+        Invoke the test steps as defined by the 'ops.test.props' file by invoking the 'test' target
+        on the 'run.msbuild' script and passing the path to the workspace directory and the configuration files.
+        Parameters provided by the user are passed through by default.
+    -->
+    <Target
+        DependsOnTargets="_EntryPoint_SetTargets_Test;_EntryPoint_Run"
+        Name="Test" >
+    </Target>
+
+    <Target Name="_EntryPoint_SetTargets_Test">
+        <PropertyGroup>
+            <TargetToExecute>Test</TargetToExecute>
+        </PropertyGroup>
+    </Target>
+
+    <!--
+        Invoke the deploy steps as defined by the 'ops.deploy.props' file by invoking the 'deploy' target
+        on the 'run.msbuild' script and passing the path to the workspace directory and the configuration files.
+        Parameters provided by the user are passed through by default.
+    -->
+    <Target
+        DependsOnTargets="_EntryPoint_SetTargets_Deploy;_EntryPoint_Run"
+        Name="Deploy" >
+    </Target>
+
+    <Target Name="_EntryPoint_SetTargets_Deploy">
+        <PropertyGroup>
+            <TargetToExecute>Deploy</TargetToExecute>
+        </PropertyGroup>
+    </Target>
+
+    <Target Name="_EntryPoint_Run">
+        <!--
+            Override the paths to the scripts so that we can bootstrap ourselves
+        -->
+        <PropertyGroup>
+            <DirMsBuildScripts>$(MSBuildProjectDirectory)\src\ops.tools.build</DirMsBuildScripts>
+            <DirToolsOps>$(DirMsBuildScripts)\scripts</DirToolsOps>
+            <DirToolsOpsExtensions>$(DirMsBuildScripts)\extensions</DirToolsOpsExtensions>
+            <DirToolsOpsTransformations>$(DirMsBuildScripts)\transformations</DirToolsOpsTransformations>
+            <ToolsOpsPaths>
+                DirToolsOps=$(DirToolsOps);
+                DirToolsOpsExtensions=$(DirToolsOpsExtensions);
+                DirToolsOpsTransformations=$(DirToolsOpsTransformations);
+            </ToolsOpsPaths>
+        </PropertyGroup>
+
+        <MSBuild
+            BuildInParallel="False"
+            Projects="$(DirEntryPoint)\run.msbuild"
+            Properties="DirWorkspace=$(DirWorkspace);DirOpsConfiguration=$(DirWorkspace);$(ToolsOpsPaths)"
+            RebaseOutputs="False"
+            RemoveProperties=""
+            RunEachTargetSeparately="True"
+            SkipNonexistentProjects="False"
+            StopOnFirstFailure="True"
+            TargetAndPropertyListSeparators=""
+            Targets="$(TargetToExecute)"
+            ToolsVersion="$(MSBuildToolsVersion)"
+            UnloadProjectsOnCompletion="True"
+            UseResultsCache="True">
+        </MSBuild>
+    </Target>
+</Project>
