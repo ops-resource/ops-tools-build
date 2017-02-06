@@ -1,0 +1,5 @@
+packages/
+build/configurations/
+build/deploy/
+build/temp/
+build/logs/gitversion.log
