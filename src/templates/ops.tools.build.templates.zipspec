@@ -5,8 +5,8 @@
         <file src="${DirWorkspace}\readme.txt" target="" />
         <file src="${DirWorkspace}\license" target="" />
         <file
-            exclude="${DirSrc}\templates\*.zipspec"
-            src="${DirSrc}\templates\*.*"
+            exclude="${DirTemp}\templates\*.zipspec"
+            src="${DirTemp}\templates\*.*"
             target="" />
     </files>
 </archive>

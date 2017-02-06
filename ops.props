@@ -123,6 +123,14 @@
             <Template>${VersionMajor}.${VersionMinor}</Template>
         </TemplateVersion>
         -->
+
+        <!--
+            The template for the version number that will be used as the version of the pipeline for which the
+            configuration files are written.
+        -->
+        <TemplateVersion Include="VersionOpsTools">
+            <Template>${VersionMajor}.${VersionMinor}</Template>
+        </TemplateVersion>
     </ItemGroup>
 
     <!--

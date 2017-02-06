@@ -529,16 +529,46 @@
 
         Additional parameters can be provided through the 'TemplateTokens' ItemGroup below.
     -->
-    <ItemGroup>
+    <PropertyGroup>
         <!--
-        <BuildFilesToGenerate Include="$(DirBuildTemp)\MyFile.txt">
-            <Encoding>UTF-8</Encoding>
-            <Expression>(MyRegex)</Expression>
-            <ReplacementValue>MyAdditionalTemplateValue</ReplacementValue>
-            <Template>$(DirTemplates)\MyOtherTemplatefile.txt</Template>
-            <Token>MyAdditionalTemplateParameter</Token>
-        </BuildFilesToGenerate>
+            Replaced all instances of $TOKEN$ with the value for TOKEN. The regular expession
+            is rather mangled because XML doesn't like < and > and MsBuild doesn't
+            like $ (%24), * (%2A), ? (%3F)
         -->
+        <MsBuildFileReplacementToken>(%3F&lt;token&gt;\%24(?&lt;identifier&gt;\w%2A)\%24)</MsBuildFileReplacementToken>
+    </PropertyGroup>
+    <ItemGroup>
+        <BuildFilesToGenerate Include="$(DirBuildTemp)\templates\entrypoint.msbuild">
+            <Encoding>UTF-8</Encoding>
+            <Expression>$(MsBuildFileReplacementToken)</Expression>
+            <Template>$(DirSrc)\templates\entrypoint.msbuild</Template>
+        </BuildFilesToGenerate>
+
+        <BuildFilesToGenerate Include="$(DirBuildTemp)\templates\ops.artefacts.props">
+            <Encoding>UTF-8</Encoding>
+            <Expression>$(MsBuildFileReplacementToken)</Expression>
+            <Template>$(DirSrc)\templates\ops.artefacts.props</Template>
+        </BuildFilesToGenerate>
+        <BuildFilesToGenerate Include="$(DirBuildTemp)\templates\ops.build.props">
+            <Encoding>UTF-8</Encoding>
+            <Expression>$(MsBuildFileReplacementToken)</Expression>
+            <Template>$(DirSrc)\templates\ops.build.props</Template>
+        </BuildFilesToGenerate>
+        <BuildFilesToGenerate Include="$(DirBuildTemp)\templates\ops.deploy.props">
+            <Encoding>UTF-8</Encoding>
+            <Expression>$(MsBuildFileReplacementToken)</Expression>
+            <Template>$(DirSrc)\templates\ops.deploy.props</Template>
+        </BuildFilesToGenerate>
+        <BuildFilesToGenerate Include="$(DirBuildTemp)\templates\ops.props">
+            <Encoding>UTF-8</Encoding>
+            <Expression>$(MsBuildFileReplacementToken)</Expression>
+            <Template>$(DirSrc)\templates\ops.props</Template>
+        </BuildFilesToGenerate>
+        <BuildFilesToGenerate Include="$(DirBuildTemp)\templates\ops.test.props">
+            <Encoding>UTF-8</Encoding>
+            <Expression>$(MsBuildFileReplacementToken)</Expression>
+            <Template>$(DirSrc)\templates\ops.test.props</Template>
+        </BuildFilesToGenerate>
     </ItemGroup>
 
 
