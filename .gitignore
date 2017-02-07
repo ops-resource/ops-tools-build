@@ -3,3 +3,6 @@ build/configurations/
 build/deploy/
 build/temp/
 build/logs/gitversion.log
+obj/
+.vs
+src/ops.tools.build/tasks/Ops.Tools.Build.Tasks/bin/Debug/Ops.Tools.Build.Tasks.XML

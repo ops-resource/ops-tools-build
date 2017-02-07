@@ -322,7 +322,6 @@
             </PostSteps>
         </BuildStepsToExecute>
 
-        <!--
         <BuildStepsToExecute Include="$(BuildStepsBuildVisualStudioSolution)">
             <Properties>
             </Properties>
@@ -334,9 +333,7 @@
             <PostSteps>
             </PostSteps>
         </BuildStepsToExecute>
-        -->
 
-        <!--
         <BuildStepsToExecute Include="$(BuildStepsUnitTestNUnit)">
             <Properties>
                 Configuration=$(TestConfiguration);
@@ -350,6 +347,7 @@
             <PostSteps>
             </PostSteps>
         </BuildStepsToExecute>
+        <!--
         <BuildStepsToExecute Include="$(BuildStepsUnitTestMsTest)">
             <Properties>
                 Configuration=$(TestConfiguration);
@@ -378,7 +376,6 @@
         </BuildStepsToExecute>
         -->
 
-        <!--
         <BuildStepsToExecute Include="$(BuildStepsAnalyzeBinariesFxCop)">
             <Properties>
                 Configuration=$(TestConfiguration);
@@ -392,7 +389,6 @@
             <PostSteps>
             </PostSteps>
         </BuildStepsToExecute>
-        -->
 
         <BuildStepsToExecute Include="$(BuildStepsPackNuGet)">
             <Properties>
