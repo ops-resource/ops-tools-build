@@ -8,10 +8,10 @@
         <!-- <RedirectBuildOutputToSingleFolder>false</RedirectBuildOutputToSingleFolder> -->
 
         <!-- The build configuration (debug / release / ...) that will be used to run all the unit tests and the static verification on -->
-        <!-- <TestConfiguration>release</TestConfiguration> -->
+        <TestConfiguration>release</TestConfiguration>
 
         <!-- The build configuration (debug / release / ..) that will be used to create the binaries that should be deployed -->
-        <!-- <ProductionConfiguration>release</ProductionConfiguration> -->
+        <ProductionConfiguration>deploy</ProductionConfiguration>
 
         <!-- The platform for which the binaries will be build -->
         <!-- <Platform>Any CPU</Platform> -->
@@ -130,14 +130,6 @@
 
         <!--
         <BuildStepsToExecute Include="$(BuildStepsBuildTargetsAssembly)">
-            <Properties>
-            </Properties>
-            <Groups>
-                Bootstrap;
-            </Groups>
-        </BuildStepsToExecute>
-
-        <BuildStepsToExecute Include="$(BuildStepsGenerateTargetsFile)">
             <Properties>
             </Properties>
             <Groups>
@@ -390,6 +382,28 @@
             </PostSteps>
         </BuildStepsToExecute>
 
+        <BuildStepsToExecute Include="$(BuildStepsBuildILMerge)">
+            <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform)
+            </Properties>
+            <Groups>
+                Package;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </BuildStepsToExecute>
+
+        <BuildStepsToExecute Include="$(BuildStepsGenerateTargetsFile)">
+            <Properties>
+            </Properties>
+            <Groups>
+                Bootstrap;
+            </Groups>
+        </BuildStepsToExecute>
+
         <BuildStepsToExecute Include="$(BuildStepsPackNuGet)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
@@ -576,8 +590,7 @@
         The solution path allows build templates, e.g. '$(DirSrc)\${CompanyName}\${ProductName}\MySolution.sln'
     -->
     <ItemGroup>
-        <!--
-        <SolutionsToBuild Include="$(DirSrc)\*.sln"
+        <SolutionsToBuild Include="$(DirSrc)\ops.tools.build\tasks\*.sln"
                           Condition=" '$(TestConfiguration)' != '$(ProductionConfiguration)' " >
             <Configuration>$(TestConfiguration)</Configuration>
             <Platform>$(Platform)</Platform>
@@ -586,7 +599,7 @@
                 ShouldPerformCodeAnalysis=false;
             </Properties>
         </SolutionsToBuild>
-        <SolutionsToBuild Include="$(DirSrc)\*.sln">
+        <SolutionsToBuild Include="$(DirSrc)\ops.tools.build\tasks\*.sln">
             <Configuration>$(ProductionConfiguration)</Configuration>
             <Platform>$(Platform)</Platform>
             <Targets>Rebuild</Targets>
@@ -594,7 +607,6 @@
                 ShouldPerformCodeAnalysis=false;
             </Properties>
         </SolutionsToBuild>
-        -->
     </ItemGroup>
 
     <PropertyGroup>
@@ -610,7 +622,7 @@
             Note for this file to compile successfully a reference to the Nuclei.Build assembly needs to be added.
             This assembly can be found on NuGet.org (http://www.nuget.org/packages/Nuclei.Build/)
         -->
-        <!--<ShouldGenerateAssemblyBuildInfo>false</ShouldGenerateAssemblyBuildInfo>-->
+        <ShouldGenerateAssemblyBuildInfo>true</ShouldGenerateAssemblyBuildInfo>
     </PropertyGroup>
 
     <!--
@@ -672,7 +684,7 @@
             The version of the .NET framework at which the assemblies should be targeted. This value is set
             for all projects that include the MsBuild.Projects.XXXX NuGet package.
         -->
-        <!--<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>-->
+        <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     </PropertyGroup>
 
 
@@ -713,34 +725,27 @@
         <!--
             The full path to the XML file that contains the custom dictionary for FxCop.
         -->
-        <!--<FxCopCustomDictionary>$(DirWorkspace)\customdictionary.xml</FxCopCustomDictionary>-->
+        <FxCopCustomDictionary>$(DirSrc)\ops.tools.build\tasks\customdictionary.xml</FxCopCustomDictionary>
 
         <!--
             The culture that FxCop should use for the spelling rules.
         -->
-        <!--<FxCopCulture>$(CodeAnalysisCulture)</FxCopCulture>-->
+        <FxCopCulture>en-US</FxCopCulture>
 
         <!--
             A flag that indicates whether any fxcop analysis errors should be marked as errors or as warnings. If FxCop analysis
             errors are marked as errors then any analysis error will stop the build.
         -->
-        <!--<FxCopWarningsAsErrors>false</FxCopWarningsAsErrors>-->
+        <FxCopWarningsAsErrors>true</FxCopWarningsAsErrors>
     </PropertyGroup>
     <ItemGroup>
         <!--
             The locations of the files that should be analyzed by FxCop.
         -->
-        <!--
-        <FxCopFiles Include="$(DirSrc)\**\bin\**\*.dll"
-                    Exclude="$(DirSrc)\**\bin\**\Test.*.dll">
+        <FxCopFiles Include="$(DirSrc)\ops.tools.build\tasks\**\bin\$(Configuration)\ops.tools.build*.dll">
             <TargetFramework>4.5</TargetFramework>
-            <RuleSet>$(DirSrc)\codeanalysis.base.ruleset</RuleSet>
+            <RuleSet>$(DirSrc)\ops.tools.build\tasks\default.ruleset</RuleSet>
         </FxCopFiles>
-        <FxCopFiles Include="$(DirSrc)\**\bin\**\*.exe">
-            <TargetFramework>2.0</TargetFramework>
-            <RuleSet>$(DirSrc)\codeanalysis.base.ruleset</RuleSet>
-        </FxCopFiles>
-        -->
     </ItemGroup>
     <ItemGroup>
         <!--
@@ -790,8 +795,9 @@
         By default nBuildkit and nUnit are ignored.
     -->
     <ItemGroup>
-        <!--<DesignTimeDependencies Include="nBuildKit" />-->
-        <!--<DesignTimeDependencies Include="nUnit" />-->
+        <DesignTimeDependencies Include="nBuildKit" />
+        <DesignTimeDependencies Include="nUnit" />
+        <DesignTimeDependencies Include="StylCop.Analyzers" />
     </ItemGroup>
 
 

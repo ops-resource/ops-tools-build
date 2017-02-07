@@ -19,22 +19,47 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="$DirSrc$\ops.tools.build\scripts\*.msbuild" target="build" />
-        <file src="$DirSrc$\ops.tools.build\scripts\*.props" target="build" />
-        <file src="$DirSrc$\ops.tools.build\scripts\packages.config" target="build" />
+        <file
+            src="$DirSrc$\ops.tools.build\scripts\*.msbuild"
+            target="build" />
+        <file
+            src="$DirSrc$\ops.tools.build\scripts\*.props"
+            target="build" />
+        <file
+            src="$DirSrc$\ops.tools.build\scripts\packages.config"
+            target="build" />
 
-        <file src="$DirSrc$\ops.tools.build\scripts\build\*.msbuild" target="build\build" />
-        <file src="$DirSrc$\ops.tools.build\scripts\build\*.props" target="build\build" />
+        <file
+            src="$DirSrc$\ops.tools.build\scripts\build\*.msbuild"
+            target="build\build" />
+        <file
+            src="$DirSrc$\ops.tools.build\scripts\build\*.props"
+            target="build\build" />
 
-        <file src="$DirSrc$\ops.tools.build\scripts\test\*.msbuild" target="build\test" />
-        <file src="$DirSrc$\ops.tools.build\scripts\test\*.props" target="build\test" />
+        <file
+            src="$DirSrc$\ops.tools.build\scripts\test\*.msbuild"
+            target="build\test" />
+        <file
+            src="$DirSrc$\ops.tools.build\scripts\test\*.props"
+            target="build\test" />
 
-        <file src="$DirSrc$\ops.tools.build\scripts\deploy\*.msbuild" target="build\deploy" />
-        <file src="$DirSrc$\ops.tools.build\scripts\deploy\*.props" target="build\deploy" />
+        <file
+            src="$DirSrc$\ops.tools.build\scripts\deploy\*.msbuild"
+            target="build\deploy" />
+        <file
+            src="$DirSrc$\ops.tools.build\scripts\deploy\*.props"
+            target="build\deploy" />
 
-        <!--<file src="$DirSrc$\ops.tools.build\extensions\*.msbuild" target="build\extensions" /> -->
+        <file
+            src="$DirBin$\*.dll"
+            target="build/extensions" />
+        <file
+            src="$DirBin$\*.targets"
+            target="build/extensions" />
 
-        <file src="$DirSrc$\ops.tools.build\transformations\**\*.*" target="build\transformations" />
+        <file
+            src="$DirSrc$\ops.tools.build\transformations\**\*.*"
+            target="build\transformations" />
 
         <file src="$DirWorkspace$\README.md" />
         <file src="$DirWorkspace$\LICENSE" />

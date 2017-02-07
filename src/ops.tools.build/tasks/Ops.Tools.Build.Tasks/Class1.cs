@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace Ops.Tools.Build.Tasks
 {
+    /// <summary>
+    /// This is not useful.
+    /// </summary>
     public class Class1
     {
     }

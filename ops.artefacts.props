@@ -33,11 +33,9 @@
         The collection that contains all the assembly files that contain custom MsBuild Task definitions.
     -->
     <ItemGroup>
-        <!--
-        <ExtensionAssemblies Include="$(DirBuildBootstrap)\*.Tasks.dll">
-            <ExistsProperty>MyPropertyName</ExistsProperty>
+        <ExtensionAssemblies Include="$(DirBuildBinPlatformConfig)\*.Tasks.dll">
+            <ExistsProperty>ExistsOpsToolsBuildExtensions</ExistsProperty>
         </ExtensionAssemblies>
-        -->
     </ItemGroup>
 
 
@@ -60,15 +58,18 @@
         The item group defining which assemblies should be IL merged.
     -->
     <ItemGroup>
-        <!--
-        <AssembliesToMerge Include="">
-            <AssembliesToExclude></AssembliesToExclude>
-            <AssembliesToInclude></AssembliesToInclude>
-            <Destination></Destination>
-            <KeyFile></KeyFile>
-            <Version></Version>
+        <AssembliesToMerge Include="$(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\Ops.Tools.Build.Tasks.dll">
+            <AssembliesToExclude>
+                $(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\Microsoft.Build*.dll
+            </AssembliesToExclude>
+            <AssembliesToInclude>
+                $(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\*.dll
+            </AssembliesToInclude>
+            <Destination>
+                $(DirBuildBinPlatformConfig)\Ops.Tools.Build.Tasks.dll
+            </Destination>
+            <Version>${VersionSemantic}</Version>
         </AssembliesToMerge>
-        -->
     </ItemGroup>
 
 
