@@ -398,6 +398,8 @@
 
         <BuildStepsToExecute Include="$(BuildStepsGenerateTargetsFile)">
             <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform)
             </Properties>
             <Groups>
                 Bootstrap;
