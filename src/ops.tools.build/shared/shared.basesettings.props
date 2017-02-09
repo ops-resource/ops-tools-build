@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="Run"
+    ToolsVersion="11.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsSharedUserBaseSettings>true</ExistsSharedUserBaseSettings>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <DirToolsOps Condition=" '$(DirToolsOps)' == '' OR !Exists('$(DirToolsOps)') ">$(MSBuildThisFileDirectory.TrimEnd('\'))</DirToolsOps>
+        <DirToolsOpsExtensions Condition=" '$(DirToolsOpsExtensions)' == '' OR !Exists('$(DirToolsOpsExtensions)') ">$(MSBuildThisFileDirectory)extensions</DirToolsOpsExtensions>
+        <DirToolsOpsShared Condition=" '$(DirToolsOpsShared)' == '' OR !Exists('$(DirToolsOpsShared)')">$(MSBuildThisFileDirectory.TrimEnd('\'))</DirToolsOpsShared>
+        <DirToolsOpsTransformations Condition=" '$(DirToolsOpsTransformations)' == '' OR !Exists('$(DirToolsOpsTransformations)') ">$(MSBuildThisFileDirectory)transformations</DirToolsOpsTransformations>
+
+        <DefaultPathProperties>
+            $(DefaultPathProperties);
+            DirToolsOps=$(DirToolsOps);
+            DirToolsOpsExtensions=$(DirToolsOpsExtensions);
+            DirToolsOpsShared=$(DirToolsOpsShared);
+            DirToolsOpsTransformations=$(DirToolsOpsTransformations);
+        </DefaultPathProperties>
+    </PropertyGroup>
+
+    <!-- Import the shared steps file which contains standard pre- and post-step actions -->
+    <Import
+        Condition="Exists('$(DirToolsOps)\shared.steps.msbuild') AND '$(ExistsUserSharedSteps)' != 'true' "
+        Project="$(DirToolsOps)\shared.steps.msbuild" />
+
+    <!--
+        Define the location of the Ops.Tools.Build targets file.
+    -->
+    <PropertyGroup>
+        <FileOpsToolsBuildExtensionsImport>$(DirToolsOpsExtensions)\Ops.Tools.Build.Tasks.targets</FileOpsToolsBuildExtensionsImport>
+    </PropertyGroup>
+</Project>

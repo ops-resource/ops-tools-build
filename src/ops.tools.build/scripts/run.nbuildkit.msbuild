@@ -17,6 +17,7 @@
 
         <DirToolsOps Condition=" '$(DirToolsOps)' == '' ">$(MSBuildThisFileDirectory.TrimEnd('\'))</DirToolsOps>
         <DirToolsOpsExtensions Condition=" '$(DirToolsOpsExtensions)' == '' ">$(MSBuildThisFileDirectory)extensions</DirToolsOpsExtensions>
+        <DirToolsOpsShared Condition=" '$(DirToolsOpsShared)' == '' ">$(DirToolsOps)</DirToolsOpsShared>
         <DirToolsOpsTransformations Condition=" '$(DirToolsOpsTransformations)' == '' ">$(MSBuildThisFileDirectory)transformations</DirToolsOpsTransformations>
 
         <!--
@@ -33,16 +34,31 @@
 
         <!-- Process properties -->
         <NBuildKitProperties>
+            <!-- Workspace directory as found by the entrypoint script -->
             DirWorkspace=$(DirWorkspace);
+
+            <!-- The directory where the settings files are and where they should go -->
             DirUserSettings=$(DirUserSettings);
             DirUserConfiguration=$(DirUserConfiguration);
-            ScriptTransformConfigurations=$(ScriptOpsTransformConfigurations);
-            NBuildKitVersion=$(NBuildKitVersion);
-            FileEnvironment=$(DirUserConfiguration)\ops.environment.props;
+            DirUserShared=$(DirToolsOpsShared);
+
+            <!-- The directories for the current toolset -->
             DirToolsOps=$(DirToolsOps);
             DirToolsOpsExtensions=$(DirToolsOpsExtensions);
+            DirToolsOpsShared=$(DirToolsOpsShared);
             DirToolsOpsTransformations=$(DirToolsOpsTransformations);
+
+            <!-- The environment file -->
+            FileEnvironment=$(DirUserConfiguration)\ops.environment.props;
+
+            <!-- The version of nBuildKit that has been downloaded -->
+            NBuildKitVersion=$(NBuildKitVersion);
+
+            <!-- The prefix for the user settings files -->
             RepositorySettingsFilePrefix=$(RepositorySettingsFilePrefix);
+
+            <!-- The script used to transform the user settings files -->
+            ScriptTransformConfigurations=$(ScriptOpsTransformConfigurations);
         </NBuildKitProperties>
     </PropertyGroup>
 

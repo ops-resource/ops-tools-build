@@ -222,10 +222,12 @@
             <DirMsBuildScripts>$(MSBuildProjectDirectory)\src\ops.tools.build</DirMsBuildScripts>
             <DirToolsOps>$(DirMsBuildScripts)\scripts</DirToolsOps>
             <DirToolsOpsExtensions>$(DirMsBuildScripts)\extensions</DirToolsOpsExtensions>
+            <DirToolsOpsShared>$(DirMsBuildScripts)\shared</DirToolsOpsShared>
             <DirToolsOpsTransformations>$(DirMsBuildScripts)\transformations</DirToolsOpsTransformations>
             <ToolsOpsPaths>
                 DirToolsOps=$(DirToolsOps);
                 DirToolsOpsExtensions=$(DirToolsOpsExtensions);
+                DirToolsOpsShared=$(DirToolsOpsShared);
                 DirToolsOpsTransformations=$(DirToolsOpsTransformations);
             </ToolsOpsPaths>
         </PropertyGroup>
