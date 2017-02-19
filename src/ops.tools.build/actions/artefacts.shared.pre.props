@@ -41,4 +41,22 @@
     <PropertyGroup>
         <!-- <FileGeneratedLicenses>$(DirBuildTemp)\licenses.xml</FileGeneratedLicenses> -->
     </PropertyGroup>
+
+
+
+
+
+
+    <!--
+        *****************************************
+        *                                       *
+        *   OPS.TOOLS.BUILD SPECIFIC SETTINGS   *
+        *                                       *
+        *****************************************
+    -->
+
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsOpsToolsBuildArtefactPreUserSharedSettings>true</ExistsOpsToolsBuildArtefactPreUserSharedSettings>
+    </PropertyGroup>
 </Project>

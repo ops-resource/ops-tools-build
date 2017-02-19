@@ -166,4 +166,22 @@
         </TemplateTokens>
         -->
     </ItemGroup>
+
+
+
+
+
+
+    <!--
+        *****************************************
+        *                                       *
+        *   OPS.TOOLS.BUILD SPECIFIC SETTINGS   *
+        *                                       *
+        *****************************************
+    -->
+
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsOpsToolsBuildPostUserSharedSettings>true</ExistsOpsToolsBuildPostUserSharedSettings>
+    </PropertyGroup>
 </Project>

@@ -197,4 +197,22 @@
         </PesterTestArguments>
         -->
     </ItemGroup>
+
+
+
+
+
+
+    <!--
+        *****************************************
+        *                                       *
+        *   OPS.TOOLS.BUILD SPECIFIC SETTINGS   *
+        *                                       *
+        *****************************************
+    -->
+
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsOpsToolsBuildTestPostUserSharedSettings>true</ExistsOpsToolsBuildTestPostUserSharedSettings>
+    </PropertyGroup>
 </Project>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="Run"
+    ToolsVersion="11.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsBuildImports>true</ExistsBuildImports>
+    </PropertyGroup>
+
+    <Import
+        Condition="Exists('$(MSBuildThisFileDirectory)import.base.props') AND '$(ExistsBaseImports)' != 'true' "
+        Project="$(MSBuildThisFileDirectory)import.base.props" />
+
+    <PropertyGroup>
+        <LoadTemplateTokens Condition=" '$(LoadTemplateTokens)' == '' ">true</LoadTemplateTokens>
+    </PropertyGroup>
+
+    <!-- Import the steps -->
+    <Import
+        Condition="Exists('$(DirNBuildKitMsBuildActions)\build\shared.buildsteps.msbuild') AND '$(ExistsNBuildKitBuildSteps)' != 'true' "
+        Project="$(DirNBuildKitMsBuildActions)\build\shared.buildsteps.msbuild" />
+    <Import
+        Condition="Exists('$(DirOpsToolsBuildActions)\build\shared.buildsteps.msbuild') AND '$(ExistsOpsToolsBuildBuildSteps)' != 'true' "
+        Project="$(DirOpsToolsBuildActions)\build\shared.buildsteps.msbuild" />
+
+    <!-- Import the settings files -->
+    <PropertyGroup>
+        <BuildPropertyFile>$(DirUserSettings)\build.settings.props</BuildPropertyFile>
+     </PropertyGroup>
+    <Import
+        Condition="Exists('$(DirNBuildKitMsBuildActions)\build\build.shared.preuser.props') AND '$(ExistsNBuildKitBuildPreUserSharedSettings)' != 'true' "
+        Project="$(DirNBuildKitMsBuildActions)\build\build.shared.preuser.props" />
+    <Import
+        Condition="Exists('$(DirOpsToolsBuildActions)\build\build.shared.preuser.props') AND '$(ExistsOpsToolsBuildBuildPreUserSharedSettings)' != 'true' "
+        Project="$(DirOpsToolsBuildActions)\build\build.shared.preuser.props" />
+    <Import
+        Condition="Exists('$(BuildPropertyFile)') AND '$(ExistsBuildSettings)' != 'true' "
+        Project="$(BuildPropertyFile)" />
+    <Import
+        Condition="Exists('$(DirOpsToolsBuildActions)\build\build.shared.postuser.props') AND '$(ExistsOpsToolsBuildBuildPostUserSharedSettings)' != 'true' "
+        Project="$(DirOpsToolsBuildActions)\build\build.shared.postuser.props" />
+    <Import
+        Condition="Exists('$(DirNBuildKitMsBuildActions)\build\build.shared.postuser.props') AND '$(ExistsNBuildKitBuildPostUserSharedSettings)' != 'true' "
+        Project="$(DirNBuildKitMsBuildActions)\build\build.shared.postuser.props" />
+
+    <!-- Import the standard template token files -->
+    <Import
+        Condition=" '$(LoadTemplateTokens)' == 'true' "
+        Project="$(DirNBuildKitMsBuildActions)\templatetokens.*.props" />
+    <Import
+        Condition=" '$(LoadTemplateTokens)' == 'true' "
+        Project="$(DirOpsToolsBuildActions)\templatetokens.*.props" />
+    <Import
+        Condition=" '$(LoadTemplateTokens)' == 'true' "
+        Project="$(DirGeneratedPropertiesFiles)\templatetokens.*.props" />
+</Project>

@@ -306,11 +306,12 @@
         The default template parameters, as indicated at the top of this file, are always available.
     -->
     <ItemGroup>
-        <!--
-        <TemplateTokens Include="">
-            <ReplacementValue></ReplacementValue>
+        <TemplateTokens Include="VersionNBuildKitMinimum">
+            <ReplacementValue>$(NBuildKitMinimumVersion)</ReplacementValue>
         </TemplateTokens>
-        -->
+        <TemplateTokens Include="VersionNBuildKitMaximum">
+            <ReplacementValue>$(NBuildKitMaximumVersion)</ReplacementValue>
+        </TemplateTokens>
     </ItemGroup>
 
 
@@ -351,6 +352,27 @@
         <!-- <ToolsExternalPythonPath>UNDEFINED</ToolsExternalPythonPath>
         <ToolsExternalPythonVersion>2.7.9</ToolsExternalPythonVersion> -->
     </PropertyGroup>
+
+
+
+
+
+    <!--
+        *****************************************
+        *                                       *
+        *     NBUILDKIT SPECIFIC SETTINGS       *
+        *                                       *
+        *****************************************
+    -->
+    <!--
+        Defines the minimum and maximum versions for nBuildKit which are used to grab the correct nBuildKit packages from
+        NuGet if no package is specified in the packages.config file.
+    -->
+    <PropertyGroup>
+        <NBuildKitMinimumVersion Condition=" '$(NBuildKitMinimumVersion)' == '' ">0.9.0</NBuildKitMinimumVersion>
+        <NBuildKitMaximumVersion Condition=" '$(NBuildKitMaximumVersion)' == '' ">0.10.0</NBuildKitMaximumVersion>
+    </PropertyGroup>
+
 
 
 

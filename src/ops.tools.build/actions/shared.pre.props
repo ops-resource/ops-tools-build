@@ -141,7 +141,7 @@
             The first year the product was available / created. This is for instance used for:
             * Copyrights
         -->
-        <ProductStartingYear>UNDEFINED</ProductStartingYear>
+        <ProductStartingYear>PRODUCT_STARTING_YEAR_UNDEFINED</ProductStartingYear>
 
         <!--
             The name of the company. This is for instance used for:
@@ -538,5 +538,23 @@
             The full path to the TFS command line executable. Normally expected to be found via the PATH environment variable.
         -->
         <!-- <ToolsExternalTfsPath>tf.exe</ToolsExternalTfsPath> -->
+    </PropertyGroup>
+
+
+
+
+
+
+    <!--
+        *****************************************
+        *                                       *
+        *   OPS.TOOLS.BUILD SPECIFIC SETTINGS   *
+        *                                       *
+        *****************************************
+    -->
+
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsOpsToolsBuildPreUserSharedSettings>true</ExistsOpsToolsBuildPreUserSharedSettings>
     </PropertyGroup>
 </Project>

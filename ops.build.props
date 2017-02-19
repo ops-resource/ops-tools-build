@@ -279,6 +279,8 @@
 
         <BuildStepsToExecute Include="$(BuildStepsPrepareAssemblyInfo)">
             <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform)
             </Properties>
             <Groups>
                 Prepare;

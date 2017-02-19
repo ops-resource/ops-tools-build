@@ -73,4 +73,22 @@
         -->
         <!-- <ToolsExternalGitHubReleasePath>github-release.exe</ToolsExternalGitHubReleasePath> -->
     </PropertyGroup>
+
+
+
+
+
+
+    <!--
+        *****************************************
+        *                                       *
+        *   OPS.TOOLS.BUILD SPECIFIC SETTINGS   *
+        *                                       *
+        *****************************************
+    -->
+
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsOpsToolsBuildDeployPreUserSharedSettings>true</ExistsOpsToolsBuildDeployPreUserSharedSettings>
+    </PropertyGroup>
 </Project>
