@@ -26,7 +26,7 @@
 
     <!-- Import the settings files -->
     <PropertyGroup>
-        <TestPropertyFile>$(DirUserSettings)\test.settings.props</TestPropertyFile>
+        <TestPropertyFile>$(DirUserSettings)\ops.test.props</TestPropertyFile>
     </PropertyGroup>
     <Import
         Condition="Exists('$(DirNBuildKitMsBuildActions)\test\test.shared.preuser.props') AND '$(ExistsNBuildKitTestPreUserSharedSettings)' != 'true' "

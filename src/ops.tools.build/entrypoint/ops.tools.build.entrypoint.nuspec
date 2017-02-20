@@ -39,6 +39,10 @@
             target="build" />
 
         <file
+            src="$DirSrc$\ops.tools.build\entrypoint\transformations\**\*.*"
+            target="build\transformations" />
+
+        <file
             src="$DirWorkspace$\README.md" />
         <file
             src="$DirWorkspace$\LICENSE" />

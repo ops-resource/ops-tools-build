@@ -108,7 +108,6 @@
 
         <DeployStepsToExecute Include="$(DeployStepsRestoreNuGet)">
             <Properties>
-                StageSpecificNuGetPackageFilesToRestore=$(DirNBuildKitMsBuild)\deploy\packages.config
             </Properties>
             <Groups>
                 NuGet;

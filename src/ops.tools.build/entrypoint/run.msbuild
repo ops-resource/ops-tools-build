@@ -4,21 +4,6 @@
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <!-- Directories -->
-        <!--
-            The workspace directory is defined as the directory that is the top-level directory in which all the
-            files for the build, test, deploy stage can be found. During the process there should never be a need
-            to go any futher up the directory hierarchy to find files.
-        -->
-        <DirWorkspace Condition=" '$(DirWorkspace)' == '' ">UNDEFINED</DirWorkspace>
-        <!--
-            The directory in which the transformed user configuration files will be stored while running nBuildKit.
-        -->
-        <DirUserConfiguration Condition=" '$(DirUserConfiguration)' == '' ">$(DirWorkspace)\build\configurations</DirUserConfiguration>
-        <!--
-            The ops configuration directory is defined as the directory that contains the configuration files.
-        -->
-        <DirOpsConfiguration Condition=" '$(DirOpsConfiguration)' == '' ">UNDEFINED</DirOpsConfiguration>
-
         <!-- Files -->
         <FileSharedImports>$(MSBuildThisFileDirectory)import.shared.props</FileSharedImports>
         <FileBuildImports>$(MSBuildThisFileDirectory)import.build.props</FileBuildImports>
@@ -58,12 +43,6 @@
         <MsBuildTasksAssembly>$(MSBuildToolsPath)\Microsoft.Build.Tasks.v$(MSBuildToolsVersion).dll</MsBuildTasksAssembly>
         <MsBuildTasksAssembly Condition="!Exists('$(MsBuildTasksAssembly)')">$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll</MsBuildTasksAssembly>
     </PropertyGroup>
-
-    <Target Name="_Run_SetNBuildKitUserDirectory">
-        <PropertyGroup>
-            <DirUserSettings>$(DirOpsConfiguration)</DirUserSettings>
-        </PropertyGroup>
-    </Target>
 
     <!--
         Invoke the build steps as defined by the 'build.settings.props' file by invoking the 'build' target
@@ -137,12 +116,11 @@
         -->
         <PropertyGroup>
             <Locations>
-                DirUserSettings=$(DirUserSettings);
-                DirUserConfiguration=$(DirUserConfiguration);
                 DirNBuildKitMsBuildActions=$(DirNBuildKitMsBuildActions);
                 DirNBuildKitMsBuildTasks=$(DirNBuildKitMsBuildTasks);
                 DirOpsToolsBuildActions=$(DirOpsToolsBuildActions);
                 DirOpsToolsBuildTasks=$(DirOpsToolsBuildTasks);
+                DirExecutors=$(DirExecutors);
             </Locations>
             <Files>
                 FileSharedImports=$(FileSharedImports);
@@ -152,15 +130,15 @@
 
         <MSBuild
             BuildInParallel="False"
-            Projects="$(DirExecutors)\configureandexecute.msbuild"
-            Properties="DirWorkspace=$(DirWorkspace);$(Locations);$(Files)"
+            Projects="$(MSBuildThisFileDirectory)run.nbuildkit.msbuild"
+            Properties="$(Locations);$(Files);TargetToExecute=$(TargetToExecute);"
             RebaseOutputs="False"
             RemoveProperties=""
             RunEachTargetSeparately="True"
             SkipNonexistentProjects="False"
             StopOnFirstFailure="True"
             TargetAndPropertyListSeparators=""
-            Targets="$(TargetToExecute)"
+            Targets=""
             ToolsVersion="$(MSBuildToolsVersion)"
             UnloadProjectsOnCompletion="True"
             UseResultsCache="True">
@@ -174,12 +152,12 @@
             PackagesDirectory="$(DirPackages)"
             PackageName="$(PackageNameNBuildKitActions)">
             <Output
-                PropertyName="DirPackagesActions"
+                PropertyName="DirNBuildKitMsBuildActionsTemp"
                 TaskParameter="Path" />
         </OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage>
         <CreateProperty
-            Condition="Exists('$(DirPackagesActions)')"
-            Value="$(DirPackagesActions)\build">
+            Condition="Exists('$(DirNBuildKitMsBuildActionsTemp)')"
+            Value="$(DirNBuildKitMsBuildActionsTemp)\build">
             <Output
                 PropertyName="DirNBuildKitMsBuildActions"
                 TaskParameter="Value" />
@@ -190,12 +168,12 @@
             PackagesDirectory="$(DirPackages)"
             PackageName="$(PackageNameNBuildKitExecutors)">
             <Output
-                PropertyName="DirPackagesExecutors"
+                PropertyName="DirExecutorsTemp"
                 TaskParameter="Path" />
         </OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage>
         <CreateProperty
-            Condition="Exists('$(DirPackagesExecutors)')"
-            Value="$(DirPackagesExecutors)\build">
+            Condition="Exists('$(DirExecutorsTemp)')"
+            Value="$(DirExecutorsTemp)\build">
             <Output
                 PropertyName="DirExecutors"
                 TaskParameter="Value" />
@@ -206,12 +184,12 @@
             PackagesDirectory="$(DirPackages)"
             PackageName="$(PackageNameNBuildKitTasks)">
             <Output
-                PropertyName="DirPackagesTasks"
+                PropertyName="DirNBuildKitMsBuildTasksTemp"
                 TaskParameter="Path" />
         </OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage>
         <CreateProperty
-            Condition="Exists('$(DirPackagesTasks)')"
-            Value="$(DirPackagesTasks)\build">
+            Condition="Exists('$(DirNBuildKitMsBuildTasksTemp)')"
+            Value="$(DirNBuildKitMsBuildTasksTemp)\build">
             <Output
                 PropertyName="DirNBuildKitMsBuildTasks"
                 TaskParameter="Value" />
@@ -222,12 +200,12 @@
             PackagesDirectory="$(DirPackages)"
             PackageName="$(PackageNameOpsToolsBuildActions)">
             <Output
-                PropertyName="DirPackagesTasks"
+                PropertyName="DirOpsToolsBuildActionsTemp"
                 TaskParameter="Path" />
         </OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage>
         <CreateProperty
-            Condition="Exists('$(DirPackagesTasks)')"
-            Value="$(DirPackagesTasks)\build">
+            Condition="Exists('$(DirOpsToolsBuildActionsTemp)')"
+            Value="$(DirOpsToolsBuildActionsTemp)\build">
             <Output
                 PropertyName="DirOpsToolsBuildActions"
                 TaskParameter="Value" />
@@ -238,12 +216,12 @@
             PackagesDirectory="$(DirPackages)"
             PackageName="$(PackageNameOpsToolsBuildTasks)">
             <Output
-                PropertyName="DirPackagesTasks"
+                PropertyName="DirOpsToolsBuildTasksTemp"
                 TaskParameter="Path" />
         </OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage>
         <CreateProperty
-            Condition="Exists('$(DirPackagesTasks)')"
-            Value="$(DirPackagesTasks)\build">
+            Condition="Exists('$(DirOpsToolsBuildTasksTemp)')"
+            Value="$(DirOpsToolsBuildTasksTemp)\build">
             <Output
                 PropertyName="DirOpsToolsBuildTasks"
                 TaskParameter="Value" />

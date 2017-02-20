@@ -26,7 +26,7 @@
 
     <!-- Import the settings files -->
     <PropertyGroup>
-        <DeployPropertyFile>$(DirUserSettings)\deploy.settings.props</DeployPropertyFile>
+        <DeployPropertyFile>$(DirUserSettings)\ops.deploy.props</DeployPropertyFile>
     </PropertyGroup>
     <Import
         Condition="Exists('$(DirNBuildKitMsBuildActions)\deploy\deploy.shared.preuser.props') AND '$(ExistsNBuildKitDeployPreUserSharedSettings)' != 'true' "

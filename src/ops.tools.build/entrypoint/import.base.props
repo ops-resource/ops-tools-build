@@ -121,8 +121,8 @@
         Note that we rely on loading the user settings file first so that the 'TemplateVersion' items created by the user are first in their list.
     -->
     <PropertyGroup>
-        <SharedPropertyFile>$(DirUserSettings)\settings.props</SharedPropertyFile>
-        <ArtefactPropertyFile>$(DirUserSettings)\artefacts.settings.props</ArtefactPropertyFile>
+        <SharedPropertyFile>$(DirUserSettings)\ops.props</SharedPropertyFile>
+        <ArtefactPropertyFile>$(DirUserSettings)\ops.artefacts.props</ArtefactPropertyFile>
     </PropertyGroup>
     <Import
         Condition="Exists('$(DirNBuildKitMsBuildActions)\shared.preuser.props') AND '$(ExistsNBuildKitPreUserSharedSettings)' != 'true' "

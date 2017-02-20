@@ -120,7 +120,6 @@
 
         <TestStepsToExecute Include="$(TestStepsPrepareRestoreNuGet)">
             <Properties>
-                StageSpecificNuGetPackageFilesToRestore=$(DirNBuildKitMsBuild)\test\packages.config
             </Properties>
             <Groups>
                 NuGet;

@@ -27,7 +27,7 @@
 
     <!-- Import the settings files -->
     <PropertyGroup>
-        <BuildPropertyFile>$(DirUserSettings)\build.settings.props</BuildPropertyFile>
+        <BuildPropertyFile>$(DirUserSettings)\ops.build.props</BuildPropertyFile>
      </PropertyGroup>
     <Import
         Condition="Exists('$(DirNBuildKitMsBuildActions)\build\build.shared.preuser.props') AND '$(ExistsNBuildKitBuildPreUserSharedSettings)' != 'true' "

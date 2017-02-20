@@ -148,7 +148,6 @@
 
         <BuildStepsToExecute Include="$(BuildStepsPrepareRestoreNuGet)">
             <Properties>
-                StageSpecificNuGetPackageFilesToRestore=$(DirNBuildKitMsBuild)\build\packages.config
             </Properties>
             <Groups>
                 NuGet;
