@@ -4,20 +4,12 @@
     ToolsVersion="11.0"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <!-- Defines whether the current script file has been loaded / imported or not -->
         <ExistsBuildPackIso>true</ExistsBuildPackIso>
     </PropertyGroup>
 
     <Import
-        Condition="Exists('$(DirNBuildKitMsBuildShared)\shared.importbuildsharedsettings.props') AND '$(ExistsSharedImportBuildSharedSettings)' != 'true' "
-        Project="$(DirNBuildKitMsBuildShared)\shared.importbuildsharedsettings.props" />
-
-    <Import
-        Condition="Exists('$(FileNBuildKitExtensionsImport)') AND '$(ExistsNBuildKitExtensions)' != 'true' "
-        Project="$(FileNBuildKitExtensionsImport)" />
-    <Import
-        Condition="Exists('$(FileOpsToolsBuildExtensionsImport)') AND '$(ExistsNBuildKitExtensions)' != 'true' "
-        Project="$(FileOpsToolsBuildExtensionsImport)" />
+        Condition="Exists('$(FileBuildImports)') AND '$(ExistsBuildImports)' != 'true' "
+        Project="$(FileBuildImports)" />
 
     <Target
         Name="OpsToolsBuild_Build_Pack_Iso_Run">
@@ -27,7 +19,7 @@
     <Target Name="_OpsToolsBuild_Build_Pack_Iso_GetToolPaths">
         <Error
             Condition="!Exists('$(DirPackages)') "
-            Text="The packages directory does not exist. Cannot search for the unit test executables." />
+            Text="The packages directory does not exist. Cannot search for the ISO packing executables." />
 
         <NuGetInstall
             Condition=" '$(ToolsExternalMakeIsoFsPath)' == 'UNDEFINED' "
@@ -100,6 +92,8 @@
         <Iso
             File="$(FileGenerateIsoSpec)"
             OutputDirectory="$(DirBuildDeploy)"
-            OverwriteExistingFiles="true" />
+            OverwriteExistingFiles="true"
+            TemporaryDirectory="$(DirBuildTemp)\$(FileNameIsoSpec)"
+            ToolPath="$(ToolsExternalMakeIsoFsPath)" />
     </Target>
  </Project>

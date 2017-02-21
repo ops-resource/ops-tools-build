@@ -8,10 +8,10 @@
 using System;
 using NUnit.Framework;
 
-namespace Test.Unit.Ops.Tools.Build.Tasks
+namespace Ops.Tools.Build.Tasks.Package
 {
     [TestFixture]
-    public class UnitTest1
+    public class IsoTest
     {
         [Test]
         public void TestMethod1()

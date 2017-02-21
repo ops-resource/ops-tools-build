@@ -32,15 +32,27 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)/base.props" />
   <ItemGroup>
-    <Reference Include="Microsoft.Build, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Build.Framework, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Build.Utilities.v12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Consul, Version=0.6.4.7, Culture=neutral, PublicKeyToken=20a6ad9a81df1d95, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\Consul.0.6.4.7\lib\net45\Consul.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Build, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Build.Framework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Build.Utilities.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="nBuildKit.MsBuild.Tasks.Core, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\packages\nBuildKit.MsBuild.Tasks.Core.0.9.0\lib\net452\nBuildKit.MsBuild.Tasks.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nuclei.Build, Version=0.9.0.0, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\packages\Nuclei.Build.0.9.0\lib\net40\Nuclei.Build.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nuclei.Configuration, Version=0.9.0.0, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\Nuclei.Configuration.0.9.0\lib\net452\Nuclei.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nuclei.Diagnostics, Version=0.9.0.0, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\Nuclei.Diagnostics.0.9.0\lib\net452\Nuclei.Diagnostics.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -53,7 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Package\Iso.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
