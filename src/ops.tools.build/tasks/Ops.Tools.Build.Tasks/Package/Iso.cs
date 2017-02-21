@@ -177,12 +177,14 @@ namespace Ops.Tools.Build.Tasks.Package
                 // Define the output file path location
                 arguments.Add(
                     string.Format(
+                        CultureInfo.InvariantCulture,
                         "-o \"{0}\"",
                         outputFilePath));
 
                 // Define the directory from which the files should be taken
                 arguments.Add(
                     string.Format(
+                        CultureInfo.InvariantCulture,
                         "\"{0}\"",
                         GetAbsolutePath(TemporaryDirectory)));
             }
