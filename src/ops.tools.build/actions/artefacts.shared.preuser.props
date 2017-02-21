@@ -3,44 +3,6 @@
     DefaultTargets="Run"
     ToolsVersion="11.0"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <!--
-        **** PREPARE - VERSIONING ****
-    -->
-    <PropertyGroup>
-        <!--
-            The full path to the file that is used to store the version information during the build.
-        -->
-        <!-- <FileSemanticVersion Condition=" '$(FileSemanticVersion)' == '' ">$(DirBuildTemp)\semantic_version.json</FileSemanticVersion> -->
-    </PropertyGroup>
-
-
-    <!--
-        **** PREPARE - RELEASE NOTES ****
-    -->
-    <PropertyGroup>
-        <!-- The full path to the file that is used to store the issue IDs for the current branch -->
-        <!-- <FileIssueIds>$(DirBuildTemp)\issue_ids.json</FileIssueIds> -->
-        <!-- The full path to the text file that is used to store the release notes for the current release during the build. -->
-        <!-- <FileReleaseNotes>$(DirBuildTemp)\releasenotes.txt</FileReleaseNotes> -->
-    </PropertyGroup>
-
-
-    <!--
-        **** PREPARE - VCS INFO ****
-    -->
-    <PropertyGroup>
-        <!-- The full path to the file that contains the information about the current VCS workspace. -->
-        <!-- <FileVcsInfo>$(DirBuildTemp)\vcs.info.json</FileVcsInfo> -->
-    </PropertyGroup>
-
-
-    <!--
-        **** PREPARE - GENERATE FILES ****
-    -->
-    <!-- Additional generated files -->
-    <PropertyGroup>
-        <!-- <FileGeneratedLicenses>$(DirBuildTemp)\licenses.xml</FileGeneratedLicenses> -->
-    </PropertyGroup>
 
 
 
