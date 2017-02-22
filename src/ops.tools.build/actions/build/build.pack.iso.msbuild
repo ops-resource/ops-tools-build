@@ -94,6 +94,7 @@
             OutputDirectory="$(DirBuildDeploy)"
             OverwriteExistingFiles="true"
             TemporaryDirectory="$(DirBuildTemp)\$(FileNameIsoSpec)"
-            ToolPath="$(ToolsExternalMakeIsoFsPath)" />
+            ToolPath="$(ToolsExternalMakeIsoFsPath)"
+            WorkingDirectory="$(DirWorkspace)"" />
     </Target>
  </Project>

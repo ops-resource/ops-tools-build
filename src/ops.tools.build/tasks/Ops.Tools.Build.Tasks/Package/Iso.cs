@@ -76,15 +76,34 @@ namespace Ops.Tools.Build.Tasks.Package
         /// <inheritdoc/>
         public override bool Execute()
         {
-            var isoPath = GetAbsolutePath(File);
-            if (string.IsNullOrWhiteSpace(isoPath))
+            if (string.IsNullOrWhiteSpace(File.ItemSpec))
             {
                 Log.LogError("Output path for the ISO file is not defined. Unable to create an ISO file.");
                 return false;
             }
 
+            if (string.IsNullOrWhiteSpace(TemporaryDirectory.ItemSpec))
+            {
+                Log.LogError("The temporary directory is not defined. Unable to create an ISO file.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(ToolPath.ItemSpec))
+            {
+                Log.LogError("The file path to the 'mkisofs' executable is not defined. Unable to create an ISO file.");
+                return false;
+            }
+
+            var workingDirectory = GetAbsolutePath(WorkingDirectory);
+            if (string.IsNullOrWhiteSpace(workingDirectory))
+            {
+                workingDirectory = Directory.GetCurrentDirectory();
+            }
+
+            var inputPath = GetAbsolutePath(File);
+
             var xmlDoc = new XmlDocument();
-            xmlDoc.Load(isoPath);
+            xmlDoc.Load(inputPath);
             var name = xmlDoc.SelectSingleNode("//iso/name/text()").InnerText;
             var outputFilePath = Path.Combine(GetAbsolutePath(OutputDirectory), string.Format(CultureInfo.InvariantCulture, "{0}.iso", name));
 
@@ -100,6 +119,11 @@ namespace Ops.Tools.Build.Tasks.Package
                     var pathSections = exclude.Split(new[] { "**" }, StringSplitOptions.RemoveEmptyEntries);
 
                     var directory = pathSections.Length == 1 ? Path.GetDirectoryName(pathSections[0]) : pathSections[0].Trim('\\');
+                    if (!Path.IsPathRooted(directory))
+                    {
+                        directory = Path.Combine(workingDirectory, directory);
+                    }
+
                     var fileFilter = pathSections.Length == 1 ? Path.GetFileName(pathSections[0]) : pathSections[pathSections.Length - 1].Trim('\\');
                     var recurse = pathSections.Length > 1;
                     var filesToExclude = GetFilteredFilePaths(directory, fileFilter, recurse).Select(f => f.FullName);
@@ -116,6 +140,11 @@ namespace Ops.Tools.Build.Tasks.Package
                     var pathSections = source.Split(new[] { "**" }, StringSplitOptions.RemoveEmptyEntries);
 
                     var directory = pathSections.Length == 1 ? Path.GetDirectoryName(pathSections[0]) : pathSections[0].Trim('\\');
+                    if (!Path.IsPathRooted(directory))
+                    {
+                        directory = Path.Combine(workingDirectory, directory);
+                    }
+
                     var fileFilter = pathSections.Length == 1 ? Path.GetFileName(pathSections[0]) : pathSections[pathSections.Length - 1].Trim('\\');
                     var recurse = pathSections.Length > 1;
                     var filesToInclude = GetFilteredFilePaths(directory, fileFilter, recurse)
@@ -137,6 +166,14 @@ namespace Ops.Tools.Build.Tasks.Package
                         list.Add(relativePath);
                     }
                 }
+            }
+
+            if (!files.Any())
+            {
+                Log.LogError(
+                    "The configuration file at: '{0}' does not contain any files to add to the ISO. Cannot make an ISO without files.",
+                    inputPath);
+                return false;
             }
 
             Log.LogMessage(MessageImportance.Normal, string.Format(CultureInfo.InvariantCulture, "Creating archive at: {0}", outputFilePath));
@@ -165,7 +202,7 @@ namespace Ops.Tools.Build.Tasks.Package
                 // When creating Version 2 images, mkisofs emits an enhanced volume descriptor which looks similar to a primary
                 // volume descriptor but is slightly different.Be careful not to use broken software to make ISO - 9660 images
                 // bootable by assuming a second PVD copy and patching this putative PVD copy into an El Torito VD.
-                arguments.Add("iso-level 4");
+                arguments.Add("-iso-level 4");
 
                 // Include UDF support in the generated filesystem image. UDF sup-port is currently in alpha status and for this reason, it is not
                 // possible to create UDF only images.  UDF data structures are currently coupled to the Joliet structures, so there are many
@@ -191,7 +228,8 @@ namespace Ops.Tools.Build.Tasks.Package
 
             InvokeCommandLineTool(
                 ToolPath,
-                arguments);
+                arguments,
+                WorkingDirectory);
 
             return !Log.HasLoggedErrors;
         }
@@ -240,6 +278,16 @@ namespace Ops.Tools.Build.Tasks.Package
         /// </summary>
         [Required]
         public ITaskItem ToolPath
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the path to the working directory.
+        /// </summary>
+        [Required]
+        public ITaskItem WorkingDirectory
         {
             get;
             set;
