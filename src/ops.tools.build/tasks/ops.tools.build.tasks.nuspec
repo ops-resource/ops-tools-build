@@ -21,10 +21,10 @@
     <files>
         <file
             src="$DirBin$\*.dll"
-            target="build/extensions" />
+            target="build" />
         <file
             src="$DirBin$\*.targets"
-            target="build/extensions" />
+            target="build" />
 
         <file src="$DirWorkspace$\README.md" />
         <file src="$DirWorkspace$\LICENSE" />

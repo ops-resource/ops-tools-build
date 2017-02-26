@@ -136,6 +136,6 @@
     -->
 
     <PropertyGroup>
-        <OpsVersion>$VersionOpsTools$</OpsVersion>
+        <OpsConfigurationVersion>$VersionOpsTools$</OpsConfigurationVersion>
     </PropertyGroup>
 </Project>

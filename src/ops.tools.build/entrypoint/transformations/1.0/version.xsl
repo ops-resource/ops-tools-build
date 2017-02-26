@@ -10,7 +10,7 @@
     <!--
         Update the version to the version of the current XSL Transforms
     -->
-    <xsl:template match="msbuild:Project/msbuild:PropertyGroup/msbuild:OpsVersion/text()">
+    <xsl:template match="msbuild:Project/msbuild:PropertyGroup/msbuild:OpsConfigurationVersion/text()">
         <xsl:value-of select="$currentVersion"/>
     </xsl:template>
 </xsl:stylesheet>

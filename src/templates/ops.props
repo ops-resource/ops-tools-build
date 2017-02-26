@@ -348,6 +348,15 @@
     -->
 
     <PropertyGroup>
-        <OpsVersion>$VersionOpsTools$</OpsVersion>
+        <OpsConfigurationVersion>$VersionOpsTools$</OpsConfigurationVersion>
+    </PropertyGroup>
+
+    <!--
+        Defines the minimum and maximum versions for Ops.Tools.Build which are used to grab the correct packages from
+        NuGet if no package is specified in the packages.config file.
+    -->
+    <PropertyGroup>
+        <PackageMinimumVersion Condition=" '$(PackageMinimumVersion)' == '' ">0.1.0</PackageMinimumVersion>
+        <PackageMaximumVersion Condition=" '$(PackageMaximumVersion)' == '' ">0.2.0</PackageMaximumVersion>
     </PropertyGroup>
 </Project>

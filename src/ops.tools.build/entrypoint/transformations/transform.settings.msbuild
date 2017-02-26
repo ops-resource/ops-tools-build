@@ -64,7 +64,7 @@
         <XmlPeek
             Condition="Exists('$(FileUserConfiguration)')"
             Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/developer/msbuild/2003' /&gt;"
-            Query="/x:Project/x:PropertyGroup/x:OpsVersion/text()"
+            Query="/x:Project/x:PropertyGroup/x:OpsConfigurationVersion/text()"
             XmlInputPath="$(FileUserConfiguration)">
             <Output
                 ItemName="VersionExistingConfigurationFile"
@@ -78,7 +78,7 @@
         <XmlPeek
             Condition=" '$(IsUpToDate)' == 'false' "
             Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/developer/msbuild/2003' /&gt;"
-            Query="/x:Project/x:PropertyGroup/x:OpsVersion/text()"
+            Query="/x:Project/x:PropertyGroup/x:OpsConfigurationVersion/text()"
             XmlInputPath="$(FilePathToTransform)" >
             <Output
                 ItemName="VersionConfigurationFile"
