@@ -7,12 +7,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using Microsoft.Build.Framework;
 using NBuildKit.MsBuild.Tasks.Core;
+using NBuildKit.MsBuild.Tasks.Core.FileSystem;
 
 namespace Ops.Tools.Build.Tasks.Package
 {
@@ -153,7 +155,7 @@ namespace Ops.Tools.Build.Tasks.Package
 
                     foreach (var file in filesToInclude)
                     {
-                        var relativefilePath = GetFilePathRelativeToDirectory(file, directory);
+                        var relativefilePath = PathUtilities.GetFilePathRelativeToDirectory(file, directory);
                         var relativePath = Path.Combine(
                             target,
                             relativefilePath);
@@ -226,10 +228,20 @@ namespace Ops.Tools.Build.Tasks.Package
                         GetAbsolutePath(TemporaryDirectory)));
             }
 
+            DataReceivedEventHandler standardErrorHandler = (s, e) =>
+            {
+                if (!string.IsNullOrWhiteSpace(e.Data))
+                {
+                    Log.LogWarning(e.Data);
+                }
+            };
+
             InvokeCommandLineTool(
                 ToolPath,
                 arguments,
-                WorkingDirectory);
+                WorkingDirectory,
+                DefaultDataHandler,
+                standardErrorHandler);
 
             return !Log.HasLoggedErrors;
         }

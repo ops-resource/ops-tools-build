@@ -11,11 +11,6 @@
         Condition="Exists('$(FileBuildImports)') AND '$(ExistsBuildImports)' != 'true' "
         Project="$(FileBuildImports)" />
 
-    <Target
-        Name="OpsToolsBuild_Build_Pack_Iso_Run">
-        <CallTarget Targets="_OpsToolsBuild_Build_Pack_Iso_Pack" />
-    </Target>
-
     <Target Name="_OpsToolsBuild_Build_Pack_Iso_GetToolPaths">
         <Error
             Condition="!Exists('$(DirPackages)') "
@@ -54,7 +49,8 @@
 
     <Target
         Condition=" '@(IsoPackageSpecs)' != '' "
-        Name="_OpsToolsBuild_Build_Pack_Iso_Pack"
+        DependsOnTargets="_OpsToolsBuild_Build_Pack_Iso_GetToolPaths"
+        Name="OpsToolsBuild_Build_Pack_Iso_Run"
         Outputs="%(IsoPackageSpecs.Identity)">
         <Message
             Importance="low"
@@ -93,8 +89,8 @@
             File="$(FileGenerateIsoSpec)"
             OutputDirectory="$(DirBuildDeploy)"
             OverwriteExistingFiles="true"
-            TemporaryDirectory="$(DirBuildTemp)\$(FileNameIsoSpec)"
+            TemporaryDirectory="$(DirBuildTemp)\$([System.IO.Path]::GetFileNameWithoutExtension('$(FileIsoSpec)'))"
             ToolPath="$(ToolsExternalMakeIsoFsPath)"
-            WorkingDirectory="$(DirWorkspace)"" />
+            WorkingDirectory="$(DirWorkspace)" />
     </Target>
  </Project>
