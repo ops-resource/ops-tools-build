@@ -89,6 +89,7 @@
                                                            currently allows gathering release notes from GitHub, Jira and YouTrack
         $(BuildStepsPrepareRestoreNpm)                   - Restores all the NPM packages for the project.
         $(BuildStepsPrepareRestoreBower)                 - Restores all the Bower packages for the project.
+        $(BuildStepsPrepareCopyFiles)                    - Copies one or more files from the file system or from a NuGet package.
         $(BuildStepsPrepareAssemblyInfo)                 - Updates all existing AssemblyInfo.cs and AssemblyInfo.vb files with the version numbers, company information,
                                                            copyright information and optionally build time and build information.
         $(BuildStepsPrepareGenerateFiles)                - Generates one or more files from a set of template files.
@@ -286,6 +287,19 @@
         </BuildStepsToExecute>
         -->
 
+        <BuildStepsToExecute Include="$(BuildStepsPrepareCopyFiles)">
+            <Properties>
+            </Properties>
+            <Groups>
+                CopyFiles;
+                Prepare;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </BuildStepsToExecute>
+
         <BuildStepsToExecute Include="$(BuildStepsPrepareAssemblyInfo)">
             <Properties>
             </Properties>
@@ -337,7 +351,6 @@
         </BuildStepsToExecute>
         -->
 
-        <!--
         <BuildStepsToExecute Include="$(BuildStepsUnitTestNUnit)">
             <Properties>
                 Configuration=$(TestConfiguration);
@@ -351,6 +364,8 @@
             <PostSteps>
             </PostSteps>
         </BuildStepsToExecute>
+
+        <!--
         <BuildStepsToExecute Include="$(BuildStepsUnitTestMsTest)">
             <Properties>
                 Configuration=$(TestConfiguration);
@@ -494,7 +509,7 @@
     -->
     <ItemGroup>
         <!--
-        <BuildFilesToDelete Include="" />
+        <FilesToDelete Include="" />
         -->
     </ItemGroup>
 
@@ -506,7 +521,30 @@
     -->
     <ItemGroup>
         <!--
-        <BuildDirectoriesToDelete Include="" />
+        <DirectoriesToDelete Include="" />
+        -->
+    </ItemGroup>
+
+
+    <!--
+        **** PREPARE - COPY FILES ****
+    -->
+    <!--
+        Files that should be copied, either from the file system or from a NuGet package.
+    -->
+    <ItemGroup>
+        <!--
+        <FilesToCopy Include="">
+            <Destinations></Destinations>
+        </FilesToCopy>
+        -->
+    </ItemGroup>
+    <ItemGroup>
+        <!--
+        <NuGetFilesToCopy Include="My.Cool.NuGet.Package">
+            <Include>**/*.*</Include>
+            <Destinations>$(DirBuildTemp)</Destinations>
+        </NuGetFilesToCopy>
         -->
     </ItemGroup>
 
@@ -795,6 +833,6 @@
     -->
 
     <PropertyGroup>
-        <OpsVersion>$VersionOpsTools$</OpsVersion>
+        <OpsConfigurationVersion>$VersionOpsTools$</OpsConfigurationVersion>
     </PropertyGroup>
 </Project>

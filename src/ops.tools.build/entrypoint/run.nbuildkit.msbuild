@@ -35,7 +35,6 @@
         </Locations>
         <Files>
             <!-- The import files -->
-            FileSharedImports=$(FileSharedImports);
             FileBuildImports=$(FileBuildImports);
             FileTestImports=$(FileTestImports);
             FileDeployImports=$(FileDeployImports);
