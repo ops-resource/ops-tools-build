@@ -19,7 +19,7 @@
         <NuGetInstall
             Condition=" '$(ToolsExternalMakeIsoFsPath)' == 'UNDEFINED' "
             NuGetExecutablePath="$(ToolsExternalNuGetPath)"
-            PackageDirectory="$(DirPackages)"
+            PackagesDirectory="$(DirPackages)"
             PackageName="MkIsoFs.Windows.x86"
             PackageVersion="$(ToolsExternalMkIsoFsVersion)"
             Sources="@(NuGetSources)" />
