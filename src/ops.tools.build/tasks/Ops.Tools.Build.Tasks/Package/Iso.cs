@@ -78,19 +78,19 @@ namespace Ops.Tools.Build.Tasks.Package
         /// <inheritdoc/>
         public override bool Execute()
         {
-            if (string.IsNullOrWhiteSpace(File.ItemSpec))
+            if ((File == null) || string.IsNullOrWhiteSpace(File.ItemSpec))
             {
                 Log.LogError("Output path for the ISO file is not defined. Unable to create an ISO file.");
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(TemporaryDirectory.ItemSpec))
+            if ((TemporaryDirectory == null) || string.IsNullOrWhiteSpace(TemporaryDirectory.ItemSpec))
             {
                 Log.LogError("The temporary directory is not defined. Unable to create an ISO file.");
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(ToolPath.ItemSpec))
+            if ((ToolPath == null) || string.IsNullOrWhiteSpace(ToolPath.ItemSpec))
             {
                 Log.LogError("The file path to the 'mkisofs' executable is not defined. Unable to create an ISO file.");
                 return false;

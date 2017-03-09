@@ -13,8 +13,29 @@
     <ItemGroup Condition=" '@(IsoPackageSpecs)' == '' ">
         <!--
         <IsoPackageSpecs
-            Include="$(DirWorkspace)\**\*.isospec"
-            Exclude="$(DirBuild)\**\*.isospec" />
+            Exclude="$(DirBuild)\**\*.isospec"
+            Include="$(DirWorkspace)\**\*.isospec" />
+        -->
+    </ItemGroup>
+
+
+    <!--
+        **** PACK - PACKER ****
+    -->
+    <!--
+        The item group defining the location and contents of the Packer files that are used during the build
+        to generate the Packer images.
+
+        All file paths allow build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip.
+    -->
+    <ItemGroup Condition=" '@(PackerImagesToBuild)' == '' ">
+        <!--
+        <PackerImagesToBuild
+            Include="$(DirWorkspace)\**\*.json">
+            <Variables>
+                $(DirBuildTemp)\variables.json
+            </Variables>
+        </PackerImagesToBuild>
         -->
     </ItemGroup>
 

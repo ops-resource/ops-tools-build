@@ -24,7 +24,7 @@ using NUnit.Framework;
 namespace Ops.Tools.Build.Tasks.Package
 {
     [TestFixture]
-    public class IsoTest : TaskTest
+    public sealed class IsoTest : TaskTest
     {
         [Test]
         public void Execute()

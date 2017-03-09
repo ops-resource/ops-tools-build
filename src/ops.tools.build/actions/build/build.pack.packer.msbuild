@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0"
+         DefaultTargets="OpsToolsBuild_Build_Pack_Packer_Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ExistsBuildImagePacker>true</ExistsBuildImagePacker>
+    </PropertyGroup>
+
+    <Import
+        Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
+        Project="$(FileImports)" />
+
+    <Target Name="_OpsToolsBuild_Build_Pack_Packer_RestoreDependencies">
+        <NuGetInstall
+            NuGetExecutablePath="$(ToolsExternalNuGetPath)"
+            PackageName="Packer.Windows.x64"
+            PackageVersion="$(ToolsExternalPackerVersion)"
+            PackagesDirectory="$(DirPackages)"
+            Sources="@(NuGetSources)"
+            Condition=" '$(ToolsExternalPackerPath)' == 'UNDEFINED'"/>
+        <SearchPackagesDirectoryForToolPath
+            PackagesDirectory="$(DirPackages)"
+            FileToLocate="packer.exe"
+            Condition=" '$(ToolsExternalPackerPath)' == 'UNDEFINED' ">
+            <Output TaskParameter="Path" PropertyName="ToolsExternalPackerPath" />
+        </SearchPackagesDirectoryForToolPath>
+        <GetToolFullPath
+            Tool="$(ToolsExternalPackerPath)"
+            Condition=" '$(ToolsExternalPackerPath)' != 'UNDEFINED' ">
+            <Output TaskParameter="Path" PropertyName="ToolsExternalPackerPath" />
+        </GetToolFullPath>
+        <Message
+            Text="The Packer executable was found at: $(ToolsExternalPackerPath)"
+            Importance="low"
+            Condition="Exists('$(ToolsExternalPackerPath)') " />
+        <Error
+            Text="Could not locate the Packer executable path. Cannot generate an image."
+            Condition="!Exists('$(ToolsExternalPackerPath)') "/>
+    </Target>
+
+    <Target
+        DependsOnTargets="_OpsToolsBuild_Build_Pack_Packer_RestoreDependencies"
+        Name="OpsToolsBuild_Build_Pack_Packer_Run"
+        Condition=" '@(PackerImagesToBuild)' != '' "
+        Outputs="%(PackerImagesToBuild.Identity)">
+        <TemplateText
+            Template="%(PackerImagesToBuild.FullPath)"
+            Tokens="@(TemplateTokens)">
+            <Output TaskParameter="Result" PropertyName="FilePackerConfiguration" />
+        </TemplateText>
+
+        <Error
+            Text="Expected $(FilePackerConfiguration) to point to a valid path but it does not."
+            Condition="!Exists('$(FilePackerConfiguration)') " />
+
+        <Message
+            Text="Building $(FilePackerConfiguration) ..."
+            Importance="normal"/>
+
+        <Packer
+            ConfigurationFile="$(FilePackerConfiguration)"
+            LogFile="$(DirBuildLogs)\$([System.IO.Path]::GetFileNameWithoutExtension('$(FilePackerConfiguration)'))_packer.log"
+            ToolPath="$(ToolsExternalPackerPath)"
+            VariableFile="%(PackerImagesToBuild.Variables)"
+            WorkingDirectory="$(DirBuildTemp)" />
+    </Target>
+</Project>
