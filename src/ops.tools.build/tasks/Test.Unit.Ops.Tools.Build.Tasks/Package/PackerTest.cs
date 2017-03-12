@@ -62,6 +62,7 @@ namespace Ops.Tools.Build.Tasks.Package
             var task = new Packer(invoker.Object);
             task.BuildEngine = BuildEngine.Object;
             task.ConfigurationFile = new TaskItem();
+            task.TempDirectory = new TaskItem(directory);
             task.ToolPath = new TaskItem(Assembly.GetExecutingAssembly().LocalFilePath());
             task.WorkingDirectory = new TaskItem(directory);
 
@@ -77,6 +78,88 @@ namespace Ops.Tools.Build.Tasks.Package
                     It.IsAny<DataReceivedEventHandler>(),
                     It.IsAny<bool>()),
                 Times.Never());
+        }
+
+        [Test]
+        public void ExecuteWithFailure()
+        {
+            var directory = Assembly.GetExecutingAssembly().LocalDirectoryPath();
+            var configurationFile = Path.Combine(directory, "a.json");
+            var logFile = Path.Combine(directory, "a.log");
+            var variableFile = Path.Combine(directory, "v.json");
+            if (!File.Exists(variableFile))
+            {
+                File.Create(variableFile);
+            }
+
+            InitializeBuildEngine();
+
+            var invokedPath = string.Empty;
+            var invokedArgs = new List<string>();
+            var invokedWorkingDirectory = string.Empty;
+            Action<StringDictionary> environmentVariableBuilder = null;
+            var invoker = new Mock<IApplicationInvoker>();
+            {
+                invoker.Setup(
+                    i => i.Invoke(
+                        It.IsAny<string>(),
+                        It.IsAny<IEnumerable<string>>(),
+                        It.IsAny<string>(),
+                        It.IsAny<Action<StringDictionary>>(),
+                        It.IsAny<DataReceivedEventHandler>(),
+                        It.IsAny<DataReceivedEventHandler>(),
+                        It.IsAny<bool>()))
+                    .Callback<string, IEnumerable<string>, string, Action<StringDictionary>, DataReceivedEventHandler, DataReceivedEventHandler, bool>(
+                        (path, args, dir, e, o, err, f) =>
+                        {
+                            invokedPath = path;
+                            invokedArgs.AddRange(args);
+                            invokedWorkingDirectory = dir;
+                            environmentVariableBuilder = e;
+                        })
+                    .Returns(-1);
+            }
+
+            var task = new Packer(invoker.Object);
+            task.BuildEngine = BuildEngine.Object;
+            task.ConfigurationFile = new TaskItem(configurationFile);
+            task.LogFile = new TaskItem(logFile);
+            task.TempDirectory = new TaskItem(directory);
+            task.ToolPath = new TaskItem(Assembly.GetExecutingAssembly().LocalFilePath());
+            task.VariableFile = new TaskItem(variableFile);
+            task.WorkingDirectory = new TaskItem(directory);
+
+            var result = task.Execute();
+            Assert.IsFalse(result, "The task should not have executed successfully.");
+
+            Assert.AreEqual(Assembly.GetExecutingAssembly().LocalFilePath(), invokedPath);
+            Assert.AreEqual(directory, invokedWorkingDirectory);
+
+            Assert.AreEqual(3, invokedArgs.Count);
+            Assert.AreEqual("build", invokedArgs[0]);
+            Assert.AreEqual(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "-var-file=\"{0}\"",
+                    variableFile),
+                invokedArgs[1]);
+            Assert.AreEqual(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "\"{0}\"",
+                    configurationFile),
+                invokedArgs[2]);
+
+            var environmentVariables = new StringDictionary();
+            environmentVariableBuilder(environmentVariables);
+
+            Assert.AreEqual(4, environmentVariables.Count);
+            Assert.AreEqual(
+                Path.Combine(directory, "packer-cache"),
+                environmentVariables["PACKER_CACHE_DIR"]);
+            Assert.AreEqual(directory, environmentVariables["TMPDIR"]);
+            Assert.AreEqual("true", environmentVariables["PACKER_LOG"]);
+            Assert.AreEqual(logFile, environmentVariables["PACKER_LOG_PATH"]);
         }
 
         [Test]
@@ -122,6 +205,7 @@ namespace Ops.Tools.Build.Tasks.Package
             task.BuildEngine = BuildEngine.Object;
             task.ConfigurationFile = new TaskItem(configurationFile);
             task.LogFile = new TaskItem(logFile);
+            task.TempDirectory = new TaskItem(directory);
             task.ToolPath = new TaskItem(Assembly.GetExecutingAssembly().LocalFilePath());
             task.VariableFile = new TaskItem(variableFile);
             task.WorkingDirectory = new TaskItem(directory);
@@ -150,7 +234,11 @@ namespace Ops.Tools.Build.Tasks.Package
             var environmentVariables = new StringDictionary();
             environmentVariableBuilder(environmentVariables);
 
-            Assert.AreEqual(2, environmentVariables.Count);
+            Assert.AreEqual(4, environmentVariables.Count);
+            Assert.AreEqual(
+                Path.Combine(directory, "packer-cache"),
+                environmentVariables["PACKER_CACHE_DIR"]);
+            Assert.AreEqual(directory, environmentVariables["TMPDIR"]);
             Assert.AreEqual("true", environmentVariables["PACKER_LOG"]);
             Assert.AreEqual(logFile, environmentVariables["PACKER_LOG_PATH"]);
         }
@@ -189,6 +277,7 @@ namespace Ops.Tools.Build.Tasks.Package
 
             var task = new Packer(invoker.Object);
             task.BuildEngine = BuildEngine.Object;
+            task.TempDirectory = new TaskItem(directory);
             task.ToolPath = new TaskItem(Assembly.GetExecutingAssembly().LocalFilePath());
             task.WorkingDirectory = new TaskItem(directory);
 
@@ -242,6 +331,7 @@ namespace Ops.Tools.Build.Tasks.Package
             var task = new Packer(invoker.Object);
             task.BuildEngine = BuildEngine.Object;
             task.ConfigurationFile = new TaskItem(configurationFile);
+            task.TempDirectory = new TaskItem(directory);
             task.ToolPath = new TaskItem(Assembly.GetExecutingAssembly().LocalFilePath());
             task.WorkingDirectory = new TaskItem(directory);
 
@@ -263,7 +353,11 @@ namespace Ops.Tools.Build.Tasks.Package
             var environmentVariables = new StringDictionary();
             environmentVariableBuilder(environmentVariables);
 
-            Assert.AreEqual(0, environmentVariables.Count);
+            Assert.AreEqual(2, environmentVariables.Count);
+            Assert.AreEqual(
+                Path.Combine(directory, "packer-cache"),
+                environmentVariables["PACKER_CACHE_DIR"]);
+            Assert.AreEqual(directory, environmentVariables["TMPDIR"]);
         }
 
         [Test]
@@ -302,6 +396,7 @@ namespace Ops.Tools.Build.Tasks.Package
             var task = new Packer(invoker.Object);
             task.BuildEngine = BuildEngine.Object;
             task.ConfigurationFile = new TaskItem(configurationFile);
+            task.TempDirectory = new TaskItem(directory);
             task.WorkingDirectory = new TaskItem(directory);
 
             var result = task.Execute();

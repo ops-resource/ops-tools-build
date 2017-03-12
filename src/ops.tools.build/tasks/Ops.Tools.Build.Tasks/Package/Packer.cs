@@ -101,12 +101,22 @@ namespace Ops.Tools.Build.Tasks.Package
                 }
             };
 
-            InvokeCommandLineTool(
-                ToolPath,
+            var toolPath = GetFullToolPath(ToolPath);
+            var exitCode = InvokeCommandLineTool(
+                toolPath,
                 arguments,
-                WorkingDirectory,
+                workingDirectory,
                 DefaultDataHandler,
                 standardErrorHandler);
+            if (exitCode != 0)
+            {
+                Log.LogError(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0} exited with a non-zero exit code. Exit code was: {1}",
+                        Path.GetFileName(toolPath),
+                        exitCode));
+            }
 
             return !Log.HasLoggedErrors;
         }
@@ -135,6 +145,12 @@ namespace Ops.Tools.Build.Tasks.Package
         {
             if (environmentVariables != null)
             {
+                var tempDir = GetAbsolutePath(TempDirectory);
+                environmentVariables.Add("TMPDIR", tempDir);
+
+                var cacheDir = Path.Combine(tempDir, "packer-cache");
+                environmentVariables.Add("PACKER_CACHE_DIR", cacheDir);
+
                 var logFile = GetAbsolutePath(LogFile);
                 if (!string.IsNullOrWhiteSpace(logFile))
                 {
@@ -154,6 +170,16 @@ namespace Ops.Tools.Build.Tasks.Package
         /// Gets or sets the path to the file containing the definition of the Packer variables.
         /// </summary>
         public ITaskItem VariableFile
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the path to the working directory.
+        /// </summary>
+        [Required]
+        public ITaskItem TempDirectory
         {
             get;
             set;

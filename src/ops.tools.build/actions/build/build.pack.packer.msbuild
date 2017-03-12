@@ -60,6 +60,7 @@
         <Packer
             ConfigurationFile="$(FilePackerConfiguration)"
             LogFile="$(DirBuildLogs)\$([System.IO.Path]::GetFileNameWithoutExtension('$(FilePackerConfiguration)'))_packer.log"
+            TempDirectory="$(DirBuildTemp)"
             ToolPath="$(ToolsExternalPackerPath)"
             VariableFile="%(PackerImagesToBuild.Variables)"
             WorkingDirectory="$(DirBuildTemp)" />
