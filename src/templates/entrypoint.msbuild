@@ -41,21 +41,17 @@
         -->
         <FileNugetConfig Condition=" '$(FileNugetConfig)' == '' ">$(DirWorkspace)\nuget.config</FileNugetConfig>
 
-        <!-- External tools -->
-        <!--
-            The full path to the NuGet command line application. Expected to be found via the PATH environment variable.
-        -->
-        <ToolsExternalNuGetPath Condition=" '$(ToolsExternalNuGetPath)' == '' ">NuGet.exe</ToolsExternalNuGetPath>
-
+        <!-- Required packages -->
         <!--
             The name of the package that contains the entry point for the current build.
         -->
         <PackageNameEntryPoint Condition=" '$(PackageNameEntryPoint)' == '' ">Ops.Tools.Build.EntryPoint</PackageNameEntryPoint>
 
+        <!-- External tools -->
         <!--
-            Defines the version number of the configuration file
+            The full path to the NuGet command line application. Expected to be found via the PATH environment variable.
         -->
-        <NBuildKitConfigurationVersion>1.0</NBuildKitConfigurationVersion>
+        <ToolsExternalNuGetPath Condition=" '$(ToolsExternalNuGetPath)' == '' ">NuGet.exe</ToolsExternalNuGetPath>
 
         <!-- MsBuild -->
         <!--

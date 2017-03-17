@@ -229,23 +229,6 @@
         </PropertyGroup>
     </Target>
 
-    <!--
-        Invoke the deploy steps as defined by the 'settings.props' file by invoking the nBuildKit 'deploy.msbuild'
-        script and passing the path to the 'settings.props' file and the version of nBuildKit that is going to
-        be used to execute the deploy.
-    -->
-    <Target
-        DependsOnTargets="_EntryPoint_SetNBuildKitTarget_Deploy"
-        Name="Deploy">
-        <CallTarget Targets="_EntryPoint_Execute" />
-    </Target>
-
-    <Target Name="_EntryPoint_SetNBuildKitTarget_Deploy">
-        <PropertyGroup>
-            <TargetToExecute>Deploy</TargetToExecute>
-        </PropertyGroup>
-    </Target>
-
     <Target
         DependsOnTargets="_EntryPoint_LocateNBuildKit"
         Name="_EntryPoint_Run">
