@@ -89,7 +89,7 @@
             File="$(FileGenerateIsoSpec)"
             OutputDirectory="$(DirBuildDeploy)"
             OverwriteExistingFiles="true"
-            TemporaryDirectory="$(DirBuildTemp)\$([System.IO.Path]::GetFileNameWithoutExtension('$(FileIsoSpec)'))"
+            TemporaryDirectory="$(DirBuildTemp)\iso_$([System.IO.Path]::GetFileNameWithoutExtension('$(FileIsoSpec)'))"
             ToolPath="$(ToolsExternalMakeIsoFsPath)"
             WorkingDirectory="$(DirWorkspace)" />
     </Target>
