@@ -230,11 +230,8 @@
     </Target>
 
     <Target
-        DependsOnTargets="_EntryPoint_LocateNBuildKit"
+        DependsOnTargets="EntryPoint_LocateEntryPoint"
         Name="_EntryPoint_Run">
-        <Error
-            Condition=" '$(PackageVersion)' == '' "
-            Text="Could not determine the correct version of the $(PackageNameEntryPoint) NuGet package. Without the correct version of this package it is not possible to start the build." />
         <Error
             Condition=" '$(DirEntryPointPackage)' == '' OR !Exists('$(DirEntryPointPackage)')"
             Text="Could not determine the location of the $(PackageNameEntryPoint) NuGet package. The file was expected to be in '$(DirPackages)\$(PackageNameEntryPoint).&lt;VERSION&gt;' directory, but that directory does not exist. Cannot start build." />
@@ -275,8 +272,8 @@
         Get the full path to the nBuildkit package directory so that we can invoked the build scripts from there.
     -->
     <Target
-        DependsOnTargets="_EntryPoint_LocatePackagesDir;_EntryPoint_RestoreGlobalNugetPackages;_EntryPoint_LocateNBuildKitViaPackagesConfig;_EntryPoint_LocatePackageViaHighestAvailableVersion"
-        Name="_EntryPoint_LocateNBuildKit">
+        DependsOnTargets="EntryPoint_LocatePackagesDir;EntryPoint_RestoreGlobalNugetPackages;EntryPoint_LocateEntryPointViaPackagesConfig;EntryPoint_LocatePackageViaHighestAvailableVersion"
+        Name="EntryPoint_LocateEntryPoint">
         <Message Text="DirEntryPointPackage after search: $(DirEntryPointPackage)" />
 
         <Error
@@ -289,8 +286,8 @@
         so that we can be sure that the nBuildKit main package is extacted to the package directory.
     -->
     <Target
-        DependsOnTargets="_EntryPoint_LocatePackagesDir"
-        Name="_EntryPoint_RestoreGlobalNugetPackages">
+        DependsOnTargets="EntryPoint_LocatePackagesDir"
+        Name="EntryPoint_RestoreGlobalNugetPackages">
         <EntryPoint_LocalTask_NuGetRestore
             Condition="Exists('$(NuGetPackageFile)')"
             NuGetPath="$(ToolsExternalNuGetPath)"
@@ -301,7 +298,7 @@
 
     <Target
         Condition="Exists('$(DirPackages)')"
-        Name="_EntryPoint_LocateNBuildKitViaPackagesConfig">
+        Name="EntryPoint_LocateEntryPointViaPackagesConfig">
         <!-- Get the version of nBuildKit that is expected from the global packages file -->
         <XmlPeek
             Condition="Exists('$(NuGetPackageFile)')"
@@ -338,66 +335,66 @@
 
     <Target
         Condition="!Exists('$(DirEntryPointPackage)')"
-        Name="_EntryPoint_LocatePackageViaHighestAvailableVersion">
+        Name="EntryPoint_LocatePackageViaHighestAvailableVersion">
         <CreateProperty
-            Condition=" '$(NBuildKitMinimumVersion)' != '' "
-            Value="$(NBuildKitMinimumVersion)">
+            Condition=" '$(PackageMinimumVersion)' != '' "
+            Value="$(PackageMinimumVersion)">
             <Output
-                PropertyName="VersionNBuildKitMinimum"
+                PropertyName="VersionPackageMinimum"
                 TaskParameter="Value" />
         </CreateProperty>
         <CreateProperty
-            Condition=" '$(NBuildKitMaximumVersion)' != '' "
-            Value="$(NBuildKitMaximumVersion)">
+            Condition=" '$(PackageMaximumVersion)' != '' "
+            Value="$(PackageMaximumVersion)">
             <Output
-                PropertyName="VersionNBuildKitMaximum"
-                TaskParameter="Value" />
-        </CreateProperty>
-
-        <XmlPeek
-            Condition=" '$(NBuildKitMinimumVersion)' == '' "
-            Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/developer/msbuild/2003' /&gt;"
-            Query="/x:Project/x:PropertyGroup/x:NBuildKitMinimumVersion/text()"
-            XmlInputPath="$(SharedPropertyFile)">
-            <Output
-                ItemName="VersionNBuildKitMinimumItem"
-                TaskParameter="Result" />
-        </XmlPeek>
-        <CreateProperty
-            Condition=" '$(NBuildKitMinimumVersion)' == '' "
-            Value="%(VersionNBuildKitMinimumItem.Identity)">
-            <Output
-                PropertyName="VersionNBuildKitMinimum"
+                PropertyName="VersionPackageMaximum"
                 TaskParameter="Value" />
         </CreateProperty>
 
         <XmlPeek
-            Condition=" '$(NBuildKitMaximumVersion)' == '' "
+            Condition=" '$(PackageMinimumVersion)' == '' "
             Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/developer/msbuild/2003' /&gt;"
-            Query="/x:Project/x:PropertyGroup/x:NBuildKitMaximumVersion/text()"
+            Query="/x:Project/x:PropertyGroup/x:PackageMinimumVersion/text()"
             XmlInputPath="$(SharedPropertyFile)">
             <Output
-                ItemName="VersionNBuildKitMaximumItem"
+                ItemName="VersionPackageMinimumItem"
                 TaskParameter="Result" />
         </XmlPeek>
         <CreateProperty
-            Condition=" '$(NBuildKitMaximumVersion)' == '' "
-            Value="%(VersionNBuildKitMaximumItem.Identity)">
+            Condition=" '$(PackageMinimumVersion)' == '' "
+            Value="%(VersionPackageMinimumItem.Identity)">
             <Output
-                PropertyName="VersionNBuildKitMaximum"
+                PropertyName="VersionPackageMinimum"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <XmlPeek
+            Condition=" '$(PackageMaximumVersion)' == '' "
+            Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/developer/msbuild/2003' /&gt;"
+            Query="/x:Project/x:PropertyGroup/x:PackageMaximumVersion/text()"
+            XmlInputPath="$(SharedPropertyFile)">
+            <Output
+                ItemName="VersionPackageMaximumItem"
+                TaskParameter="Result" />
+        </XmlPeek>
+        <CreateProperty
+            Condition=" '$(PackageMaximumVersion)' == '' "
+            Value="%(VersionPackageMaximumItem.Identity)">
+            <Output
+                PropertyName="VersionPackageMaximum"
                 TaskParameter="Value" />
         </CreateProperty>
 
         <EntryPoint_LocalTask_GetHighestSuitablePackageVersionFromNuGet
-            MaximumVersion="$(VersionNBuildKitMaximum)"
-            MinimumVersion="$(VersionNBuildKitMinimum)"
+            MaximumVersion="$(VersionPackageMaximum)"
+            MinimumVersion="$(VersionPackageMinimum)"
             NuGetPath="$(ToolsExternalNuGetPath)"
             PackageName="$(PackageNameEntryPoint)">
             <Output
                 PropertyName="PackageVersion"
                 TaskParameter="Version" />
         </EntryPoint_LocalTask_GetHighestSuitablePackageVersionFromNuGet>
-        <EntryPoint_LocalTask_InstallNBuildKitFromNuGet
+        <EntryPoint_LocalTask_InstallPackageFromNuGet
             NuGetPath="$(ToolsExternalNuGetPath)"
             PackageDirectory="$(DirPackages)"
             PackageName="$(PackageNameEntryPoint)"
@@ -406,7 +403,7 @@
 
         <CreateProperty
             Condition="Exists('$(DirPackages)')"
-            Value="$(DirPackages)\$(PackageNameEntryPoint).$(PackageVersion)\build">
+            Value="$(DirPackages)\$(PackageNameEntryPoint)\build">
             <Output
                 PropertyName="DirEntryPointPackage"
                 TaskParameter="Value" />
@@ -418,7 +415,7 @@
     <!--
         Get the full path to the packages directory.
     -->
-    <Target Name="_EntryPoint_LocatePackagesDir">
+    <Target Name="EntryPoint_LocatePackagesDir">
         <!-- Determine if a packages folder exists at the same level as this script. If so use that  -->
         <CreateProperty
             Condition="Exists('$(DirDefaultPackages)')"
@@ -664,7 +661,7 @@
     <UsingTask
         AssemblyFile="$(MsBuildTasksAssembly)"
         TaskFactory="CodeTaskFactory"
-        TaskName="EntryPoint_LocalTask_InstallNBuildKitFromNuGet">
+        TaskName="EntryPoint_LocalTask_InstallPackageFromNuGet">
         <ParameterGroup>
             <NuGetPath
                 ParameterType="System.String"
@@ -694,7 +691,7 @@
                             builder.Append(string.Format("install \"{0}\" ", PackageName));
                             builder.Append(string.Format("-Version \"{0}\" ", PackageVersion));
 
-                            builder.Append("-NonInteractive -Verbosity detailed -NoCache ");
+                            builder.Append("-NonInteractive -ExcludeVersion -Verbosity detailed -NoCache ");
 
                             // Make sure we remove the back-slash because if we don't then
                             // the closing quote will be eaten by the command line parser. Note that
@@ -765,4 +762,21 @@
             </Code>
         </Task>
     </UsingTask>
+
+
+
+
+
+    <!--
+        *****************************************
+        *                                       *
+        *     NBUILDKIT SPECIFIC SETTINGS       *
+        *                                       *
+        *****************************************
+    -->
+
+    <PropertyGroup>
+        <!-- Defines the version number of the configuration file -->
+        <NBuildKitEntryPointVersion>1.0</NBuildKitEntryPointVersion>
+    </PropertyGroup>
 </Project>
