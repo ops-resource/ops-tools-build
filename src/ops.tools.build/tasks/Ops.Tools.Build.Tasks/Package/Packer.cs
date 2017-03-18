@@ -143,13 +143,20 @@ namespace Ops.Tools.Build.Tasks.Package
         /// <inheritdoc/>
         protected override void UpdateEnvironmentVariables(StringDictionary environmentVariables)
         {
+            const string EnvironmentVariableTempDirectory = "TMP";
             if (environmentVariables != null)
             {
                 var tempDir = GetAbsolutePath(TempDirectory);
-                environmentVariables.Add("TMPDIR", tempDir);
+                if (!environmentVariables.ContainsKey(EnvironmentVariableTempDirectory))
+                {
+                    environmentVariables.Add(EnvironmentVariableTempDirectory, tempDir);
+                }
+                else
+                {
+                    environmentVariables[EnvironmentVariableTempDirectory] = tempDir;
+                }
 
-                var cacheDir = Path.Combine(tempDir, "packer-cache");
-                environmentVariables.Add("PACKER_CACHE_DIR", cacheDir);
+                environmentVariables.Add("PACKER_CACHE_DIR", "packer-cache");
 
                 var logFile = GetAbsolutePath(LogFile);
                 if (!string.IsNullOrWhiteSpace(logFile))

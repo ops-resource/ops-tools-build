@@ -155,9 +155,9 @@ namespace Ops.Tools.Build.Tasks.Package
 
             Assert.AreEqual(4, environmentVariables.Count);
             Assert.AreEqual(
-                Path.Combine(directory, "packer-cache"),
+                "packer-cache",
                 environmentVariables["PACKER_CACHE_DIR"]);
-            Assert.AreEqual(directory, environmentVariables["TMPDIR"]);
+            Assert.AreEqual(directory, environmentVariables["TMP"]);
             Assert.AreEqual("true", environmentVariables["PACKER_LOG"]);
             Assert.AreEqual(logFile, environmentVariables["PACKER_LOG_PATH"]);
         }
@@ -236,9 +236,9 @@ namespace Ops.Tools.Build.Tasks.Package
 
             Assert.AreEqual(4, environmentVariables.Count);
             Assert.AreEqual(
-                Path.Combine(directory, "packer-cache"),
+                "packer-cache",
                 environmentVariables["PACKER_CACHE_DIR"]);
-            Assert.AreEqual(directory, environmentVariables["TMPDIR"]);
+            Assert.AreEqual(directory, environmentVariables["TMP"]);
             Assert.AreEqual("true", environmentVariables["PACKER_LOG"]);
             Assert.AreEqual(logFile, environmentVariables["PACKER_LOG_PATH"]);
         }
@@ -355,9 +355,9 @@ namespace Ops.Tools.Build.Tasks.Package
 
             Assert.AreEqual(2, environmentVariables.Count);
             Assert.AreEqual(
-                Path.Combine(directory, "packer-cache"),
+                "packer-cache",
                 environmentVariables["PACKER_CACHE_DIR"]);
-            Assert.AreEqual(directory, environmentVariables["TMPDIR"]);
+            Assert.AreEqual(directory, environmentVariables["TMP"]);
         }
 
         [Test]
