@@ -12,6 +12,7 @@
 
     <Target Name="_OpsToolsBuild_Build_Pack_Packer_RestoreDependencies">
         <NuGetInstall
+            ExcludeVersion="$(ShouldRestoreNuGetPackagesWithoutVersionInPath)"
             NuGetExecutablePath="$(ToolsExternalNuGetPath)"
             PackageName="Packer.Windows.x64"
             PackageVersion="$(ToolsExternalPackerVersion)"
