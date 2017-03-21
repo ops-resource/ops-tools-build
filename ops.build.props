@@ -520,8 +520,12 @@
     -->
     <ItemGroup Condition=" '@(AssemblyInfoFilesToUpdate)' == '' ">
         <!--
-        <AssemblyInfoFilesToUpdate Include="$(DirSrc)\**\AssemblyInfo.cs" />
-        <AssemblyInfoFilesToUpdate Include="$(DirSrc)\**\AssemblyInfo.vb" />
+        <AssemblyInfoFilesToUpdate
+            Condition=" '$(DirSrc)' != '' "
+            Include="$(DirSrc)\**\AssemblyInfo.cs" />
+        <AssemblyInfoFilesToUpdate
+            Condition=" '$(DirSrc)' != '' "
+            Include="$(DirSrc)\**\AssemblyInfo.vb" />
         -->
     </ItemGroup>
 
@@ -551,33 +555,45 @@
         <MsBuildFileReplacementToken>(%3F&lt;token&gt;\%24(?&lt;identifier&gt;\w%2A)\%24)</MsBuildFileReplacementToken>
     </PropertyGroup>
     <ItemGroup>
-        <BuildFilesToGenerate Include="$(DirBuildTemp)\templates\entrypoint.msbuild">
+        <BuildFilesToGenerate
+            Condition=" '$(DirBuildTemp)' != '' "
+            Include="$(DirBuildTemp)\templates\entrypoint.msbuild">
             <Encoding>UTF-8</Encoding>
             <Expression>$(MsBuildFileReplacementToken)</Expression>
             <Template>$(DirSrc)\templates\entrypoint.msbuild</Template>
         </BuildFilesToGenerate>
 
-        <BuildFilesToGenerate Include="$(DirBuildTemp)\templates\ops.artefacts.props">
+        <BuildFilesToGenerate
+            Condition=" '$(DirBuildTemp)' != '' "
+            Include="$(DirBuildTemp)\templates\ops.artefacts.props">
             <Encoding>UTF-8</Encoding>
             <Expression>$(MsBuildFileReplacementToken)</Expression>
             <Template>$(DirSrc)\templates\ops.artefacts.props</Template>
         </BuildFilesToGenerate>
-        <BuildFilesToGenerate Include="$(DirBuildTemp)\templates\ops.build.props">
+        <BuildFilesToGenerate
+            Condition=" '$(DirBuildTemp)' != '' "
+            Include="$(DirBuildTemp)\templates\ops.build.props">
             <Encoding>UTF-8</Encoding>
             <Expression>$(MsBuildFileReplacementToken)</Expression>
             <Template>$(DirSrc)\templates\ops.build.props</Template>
         </BuildFilesToGenerate>
-        <BuildFilesToGenerate Include="$(DirBuildTemp)\templates\ops.deploy.props">
+        <BuildFilesToGenerate
+            Condition=" '$(DirBuildTemp)' != '' "
+            Include="$(DirBuildTemp)\templates\ops.deploy.props">
             <Encoding>UTF-8</Encoding>
             <Expression>$(MsBuildFileReplacementToken)</Expression>
             <Template>$(DirSrc)\templates\ops.deploy.props</Template>
         </BuildFilesToGenerate>
-        <BuildFilesToGenerate Include="$(DirBuildTemp)\templates\ops.props">
+        <BuildFilesToGenerate
+            Condition=" '$(DirBuildTemp)' != '' "
+            Include="$(DirBuildTemp)\templates\ops.props">
             <Encoding>UTF-8</Encoding>
             <Expression>$(MsBuildFileReplacementToken)</Expression>
             <Template>$(DirSrc)\templates\ops.props</Template>
         </BuildFilesToGenerate>
-        <BuildFilesToGenerate Include="$(DirBuildTemp)\templates\ops.test.props">
+        <BuildFilesToGenerate
+            Condition=" '$(DirBuildTemp)' != '' "
+            Include="$(DirBuildTemp)\templates\ops.test.props">
             <Encoding>UTF-8</Encoding>
             <Expression>$(MsBuildFileReplacementToken)</Expression>
             <Template>$(DirSrc)\templates\ops.test.props</Template>
@@ -593,8 +609,9 @@
         The solution path allows build templates, e.g. '$(DirSrc)\${CompanyName}\${ProductName}\MySolution.sln'
     -->
     <ItemGroup>
-        <SolutionsToBuild Include="$(DirSrc)\ops.tools.build\tasks\*.sln"
-                          Condition=" '$(TestConfiguration)' != '$(ProductionConfiguration)' " >
+        <SolutionsToBuild
+            Condition=" '$(DirSrc)' != '' AND '$(TestConfiguration)' != '$(ProductionConfiguration)' "
+            Include="$(DirSrc)\ops.tools.build\tasks\*.sln">
             <Configuration>$(TestConfiguration)</Configuration>
             <Platform>$(Platform)</Platform>
             <Targets>Rebuild</Targets>
@@ -602,7 +619,9 @@
                 ShouldPerformCodeAnalysis=false;
             </Properties>
         </SolutionsToBuild>
-        <SolutionsToBuild Include="$(DirSrc)\ops.tools.build\tasks\*.sln">
+        <SolutionsToBuild
+            Condition=" '$(DirSrc)' != '' "
+            Include="$(DirSrc)\ops.tools.build\tasks\*.sln">
             <Configuration>$(ProductionConfiguration)</Configuration>
             <Platform>$(Platform)</Platform>
             <Targets>Rebuild</Targets>
@@ -745,7 +764,9 @@
         <!--
             The locations of the files that should be analyzed by FxCop.
         -->
-        <FxCopFiles Include="$(DirSrc)\ops.tools.build\tasks\**\bin\$(Configuration)\ops.tools.build*.dll">
+        <FxCopFiles
+            Condition=" '$(DirSrc)' != '' "
+            Include="$(DirSrc)\ops.tools.build\tasks\**\bin\$(Configuration)\ops.tools.build*.dll">
             <TargetFramework>4.5</TargetFramework>
             <RuleSet>$(DirSrc)\ops.tools.build\tasks\default.ruleset</RuleSet>
         </FxCopFiles>

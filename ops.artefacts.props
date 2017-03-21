@@ -12,7 +12,9 @@
     -->
     <ItemGroup>
         <!--
-        <MsBuildTasksProjectsToBuild Include="$(DirSrc)\MyTasks.Tasks.csproj">
+        <MsBuildTasksProjectsToBuild
+            Condition=" '$(DirSrc)' != '' "
+            Include="$(DirSrc)\MyTasks.Tasks.csproj">
             <Configuration>$(ProductionConfiguration)</Configuration>
             <Platform>$(Platform)</Platform>
             <Targets>Rebuild</Targets>
@@ -33,7 +35,9 @@
         The collection that contains all the assembly files that contain custom MsBuild Task definitions.
     -->
     <ItemGroup>
-        <ExtensionAssemblies Include="$(DirBuildBinPlatformConfig)\*.Tasks.dll">
+        <ExtensionAssemblies
+            Condition=" '$(DirBuildBinPlatformConfig)' != '' "
+            Include="$(DirBuildBinPlatformConfig)\*.Tasks.dll">
             <ExistsProperty>ExistsOpsToolsBuildExtensions</ExistsProperty>
         </ExtensionAssemblies>
     </ItemGroup>
@@ -58,7 +62,9 @@
         The item group defining which assemblies should be IL merged.
     -->
     <ItemGroup>
-        <AssembliesToMerge Include="$(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\Ops.Tools.Build.Tasks.dll">
+        <AssembliesToMerge
+            Condition=" '$(DirSrc)' != '' "
+            Include="$(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\Ops.Tools.Build.Tasks.dll">
             <AssembliesToExclude>
                 $(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\Microsoft.Build*.dll
             </AssembliesToExclude>
@@ -87,7 +93,9 @@
         All file paths allow build templates, e.g. $(DirSrc)\${ProductName}\myproject.nuspec.
     -->
     <ItemGroup>
-        <NuGetPackageSpecs Include="$(DirSrc)\**\*.nuspec">
+        <NuGetPackageSpecs
+            Condition=" '$(DirSrc)' != '' "
+            Include="$(DirSrc)\**\*.nuspec">
             <ShouldBuildSymbols>false</ShouldBuildSymbols>
             <IncludedDependencies>
             </IncludedDependencies>
@@ -105,7 +113,9 @@
         All file paths allow build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip.
     -->
     <ItemGroup>
-        <ArchivePackageSpecs Include="$(DirSrc)\**\*.zipspec" />
+        <ArchivePackageSpecs
+            Condition=" '$(DirSrc)' != '' "
+            Include="$(DirSrc)\**\*.zipspec" />
     </ItemGroup>
 
 

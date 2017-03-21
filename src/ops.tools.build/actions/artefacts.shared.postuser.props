@@ -13,6 +13,7 @@
     <ItemGroup Condition=" '@(IsoPackageSpecs)' == '' ">
         <!--
         <IsoPackageSpecs
+            Condition=" '$(DirWorkspace)' != '' "
             Exclude="$(DirBuild)\**\*.isospec"
             Include="$(DirWorkspace)\**\*.isospec" />
         -->
@@ -31,6 +32,7 @@
     <ItemGroup Condition=" '@(PackerImagesToBuild)' == '' ">
         <!--
         <PackerImagesToBuild
+            Condition=" '$(DirWorkspace)' != '' "
             Include="$(DirWorkspace)\**\*.json">
             <Variables>
                 $(DirBuildTemp)\variables.json

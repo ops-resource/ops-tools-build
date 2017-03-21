@@ -367,8 +367,12 @@
         Allows build templates, e.g. $(DirBuildDeploy)\${VersionSemantic}\*.nupkg.
     -->
     <ItemGroup>
-        <!--<NuGetPackagesToPush Include="$(DirBuildDeploy)\*.nupkg"
-                             Exclude="$(DirBuildDeploy)\*.symbols.nupkg" />-->
+        <!--
+        <NuGetPackagesToPush
+            Condition=" '$(DirBuildDeploy)' != '' "
+            Include="$(DirBuildDeploy)\*.nupkg"
+            Exclude="$(DirBuildDeploy)\*.symbols.nupkg" />
+        -->
     </ItemGroup>
 
 
@@ -380,7 +384,11 @@
         Allows build templates, e.g. $(DirBuildDeploy)\${VersionSemantic}\*.symbols.nupkg.
     -->
     <ItemGroup>
-        <!--<SymbolPackagesToPush Include="$(DirBuildDeploy)\*.symbols.nupkg" />-->
+        <!--
+        <SymbolPackagesToPush
+            Condition=" '$(DirBuildDeploy)' != '' "
+            Include="$(DirBuildDeploy)\*.symbols.nupkg" />
+        -->
     </ItemGroup>
 
 
@@ -393,11 +401,13 @@
     -->
     <ItemGroup>
         <!--
-        <PushToGitBranchSpecs Include="$(DirBuildDeploy)\myarchive-${VersionSemantic}.zip">
-             <Repository>$(GitRemoteRepository)</Repository>
-             <Branch>master</Branch>
-             <ExtractZipFiles>true</ExtractZipFiles>
-             <CommitMessage>New changes</CommitMessage>
+        <PushToGitBranchSpecs
+            Condition=" '$(DirBuildDeploy)' != '' "
+            Include="$(DirBuildDeploy)\myarchive-${VersionSemantic}.zip">
+            <Repository>$(GitRemoteRepository)</Repository>
+            <Branch>master</Branch>
+            <ExtractZipFiles>true</ExtractZipFiles>
+            <CommitMessage>New changes</CommitMessage>
         </PushToGitBranchSpecs>
         -->
     </ItemGroup>
@@ -412,8 +422,10 @@
     -->
     <ItemGroup Condition=" '@(PushToGitRepositorySpecs)' == '' ">
         <!--
-        <PushToGitRepositorySpecs Include="$(DirBuildDeploy)\myarchive-${VersionSemantic}.zip">
-             <Repository>$(GitRemoteRepository)</Repository>
+        <PushToGitRepositorySpecs
+            Condition=" '$(DirBuildDeploy)' != '' "
+            Include="$(DirBuildDeploy)\myarchive-${VersionSemantic}.zip">
+            <Repository>$(GitRemoteRepository)</Repository>
         </PushToGitRepositorySpecs>
         -->
     </ItemGroup>
