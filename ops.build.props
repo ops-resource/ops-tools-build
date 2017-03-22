@@ -767,8 +767,9 @@
         <FxCopFiles
             Condition=" '$(DirSrc)' != '' "
             Include="$(DirSrc)\ops.tools.build\tasks\**\bin\$(Configuration)\ops.tools.build*.dll">
-            <TargetFramework>4.5</TargetFramework>
+            <CustomDictionary>$(FxCopCustomDictionary)</CustomDictionary>
             <RuleSet>$(DirSrc)\ops.tools.build\tasks\default.ruleset</RuleSet>
+            <TargetFramework>4.5</TargetFramework>
         </FxCopFiles>
     </ItemGroup>
     <ItemGroup>
