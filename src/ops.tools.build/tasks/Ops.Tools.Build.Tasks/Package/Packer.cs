@@ -16,7 +16,8 @@ using NBuildKit.MsBuild.Tasks.Core;
 namespace Ops.Tools.Build.Tasks.Package
 {
     /// <summary>
-    /// Defines a <see cref="ITask"/> that reads an 'isospec' file and creates the associated ISO file.
+    /// Defines a <see cref="ITask"/> that invokes the <a href="https://packer.io">Packer</a> command line executable
+    /// to generate an VM or container image.
     /// </summary>
     public sealed class Packer : CommandLineToolTask
     {
@@ -56,7 +57,7 @@ namespace Ops.Tools.Build.Tasks.Package
         {
             if ((ConfigurationFile == null) || string.IsNullOrWhiteSpace(ConfigurationFile.ItemSpec))
             {
-                Log.LogError("Output path for the ISO file is not defined. Unable to create an ISO file.");
+                Log.LogError("Output path for the configuration file is not defined. Unable to invoke Packer.");
                 return false;
             }
 
