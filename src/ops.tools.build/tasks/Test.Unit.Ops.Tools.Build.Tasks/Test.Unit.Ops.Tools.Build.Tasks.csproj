@@ -86,6 +86,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileSystem\CalculateFileHashTest.cs" />
+    <Compile Include="FileSystem\ReadHashesFromFileTest.cs" />
     <Compile Include="Package\IsoTest.cs" />
     <Compile Include="Package\PackerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -103,6 +105,11 @@
       <Project>{daf2edb7-9e4a-4924-a9e0-ee1e02d30918}</Project>
       <Name>Ops.Tools.Build.Tasks</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FileToHash.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
