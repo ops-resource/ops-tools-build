@@ -340,6 +340,30 @@
 
 
     <!--
+        **** PREPARE - CALCULATE HASHES ****
+    -->
+    <!--
+        The collection of files for which the hashes need to be calculated. The available hash algorithms
+        are:
+
+        - MD5
+        - SHA1
+        - SHA256
+        - SHA512
+
+        Hash values are stored in a file in the temp directory and can be retrieved with the
+        'ReadHashFromFile' task
+    -->
+    <ItemGroup Condition=" '@(FilesToHash)' == '' ">
+        <!-->
+        <FilesToHash Include="">
+            <Algorithm></Algorithm>
+        </FilesToHash>
+        -->
+    </ItemGroup>
+
+
+    <!--
         **** PREPARE - COPY FILES ****
     -->
     <!--

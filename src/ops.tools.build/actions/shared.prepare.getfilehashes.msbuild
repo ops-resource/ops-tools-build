@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="OpsToolsBuild_Shared_Prepare_GetFileHashes_Run"
+    ToolsVersion="14.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsSharedPrepareGetVersion>true</ExistsSharedPrepareGetVersion>
+    </PropertyGroup>
+
+    <Import
+        Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
+        Project="$(FileImports)" />
+
+    <Target
+        Condition="!Exists('$(FileHashes)')"
+        Name="OpsToolsBuild_Shared_Prepare_GetFileHashes_Run">
+        <CallTarget Targets="_OpsToolsBuild_Shared_Prepare_GetFileHashes_Calculate" />
+        <CallTarget Targets="_OpsToolsBuild_Shared_Prepare_GetFileHashes_WriteHashesToFile" />
+
+        <Copy
+            DestinationFolder="$(DirTemplateGenerators)"
+            SkipUnchangedFiles="true"
+            SourceFiles="$(MSBuildThisFileDirectory)shared.generatetoken.hashes.msbuild" />
+
+        <PropertyGroup>
+            <Locations>
+                DirNBuildKitMsBuildActions=$(DirNBuildKitMsBuildActions);
+                DirNBuildKitMsBuildTasks=$(DirNBuildKitMsBuildTasks);
+                DirWorkspace=$(DirWorkspace);
+                DirUserSettings=$(DirUserSettings);
+            </Locations>
+            <Files>
+                FileImports=$(FileImports);
+            </Files>
+            <DefaultProperties>
+                ShouldGenerateHashTokens=true;
+            </DefaultProperties>
+        </PropertyGroup>
+        <InvokeStandaloneMsBuild
+            Condition="Exists('$(DirNBuildKitMsBuildActions)shared.templatetokens.msbuild')"
+            Projects="$(DirNBuildKitMsBuildActions)shared.templatetokens.msbuild"
+            Properties="$(Locations);$(Files);$(DefaultProperties)"
+            RunEachTargetSeparately="True"
+            SkipNonexistentProjects="False"
+            StopOnFirstFailure="False"
+            Targets="nBuildKit_Shared_TemplateTokens_Generate"
+            TemporaryDirectory="$(DirBuildTemp)"
+            ToolsVersion="$(MSBuildToolsVersion)"
+            WorkingDirectory="$(DirWorkspace)">
+        </InvokeStandaloneMsBuild>
+    </Target>
+
+    <Target
+        Condition="!Exists('$(FileHashes)') "
+        Name="_OpsToolsBuild_Shared_Prepare_GetFileHashes_Calculate"
+        Outputs="%(FilesToHash.Identity)">
+        <Message
+            Importance="normal"
+            Text="Getting %(FilesToHash.Algorithm) hash for %(FilesToHash.FullPath) ..." />
+
+        <CalculateFileHash
+            Hash="%(FilesToHash.Algorithm)"
+            Path="%(FilesToHash.FullPath)">
+            <Output
+                PropertyName="Hash"
+                TaskParameter="Hash" />
+        </CalculateFileHash>
+
+        <CreateItem
+            AdditionalMetadata="Algorithm=%(FilesToHash.Algorithm);Hash=$(Hash)"
+            Include="%(FilesToHash.FullPath)">
+            <Output
+                ItemName="CalculatedHashes"
+                TaskParameter="Include" />
+        </CreateItem>
+    </Target>
+
+    <Target
+        Condition="!Exists('$(FileHashes)') "
+        Name="_OpsToolsBuild_Shared_Prepare_GetFileHashes_WriteHashesToFile">
+        <Message
+            Importance="low"
+            Text="Writing the versions to file ..." />
+
+        <ItemGroup>
+            <Items_FileHashes_Header Include="[" />
+
+            <Items_FileHashes Include="{ &quot;IsEndValue&quot;: false, &quot;Algorithm&quot;: &quot;%(CalculatedHashes.Algorithm)&quot;, &quot;File&quot;: &quot;%(CalculatedHashes.FullPath)&quot;, &quot;Hash&quot;: &quot;%(CalculatedHashes.Hash)&quot; }," />
+
+            <Items_FileHashes_Footer Include="{ &quot;IsEndValue&quot;: true }" />
+            <Items_FileHashes_Footer Include="]" />
+        </ItemGroup>
+
+        <WriteLinesToFile
+            File="$(FileHashes)"
+            Lines="@(Items_FileHashes_Header)"
+            Overwrite="true" />
+
+        <WriteLinesToFile
+            File="$(FileHashes)"
+            Lines="@(Items_FileHashes)"
+            Overwrite="false" />
+
+        <WriteLinesToFile
+            File="$(FileHashes)"
+            Lines="@(Items_FileHashes_Footer)"
+            Overwrite="false" />
+    </Target>
+ </Project>

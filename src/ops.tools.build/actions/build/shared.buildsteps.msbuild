@@ -6,10 +6,19 @@
         <ExistsOpsToolsBuildBuildSteps>true</ExistsOpsToolsBuildBuildSteps>
     </PropertyGroup>
     <PropertyGroup>
+        <BuildStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</BuildStepsPrepareFileHashes>
         <BuildStepsPackIso>$(MSBuildThisFileDirectory)build.pack.iso.msbuild</BuildStepsPackIso>
         <BuildStepsPackPacker>$(MSBuildThisFileDirectory)build.pack.packer.msbuild</BuildStepsPackPacker>
     </PropertyGroup>
     <ItemGroup>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPrepareFileHashes)'))">
+            <Description>
+                Calculate the hash of one or more files.
+            </Description>
+            <Id>BuildStepsPrepareFileHashes</Id>
+            <Name>Build - Calculate file hashes</Name>
+            <Path>$(BuildStepsPrepareFileHashes)</Path>
+        </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPackIso)'))">
             <Description>
                 Create an ISO file from a given set of files and directories.

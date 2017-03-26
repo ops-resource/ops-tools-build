@@ -36,6 +36,17 @@
     </PropertyGroup>
 
 
+    <!--
+        **** PREPARE - CALCULATE HASHES ****
+    -->
+    <PropertyGroup>
+        <!--
+            The full path to the file that will contain the calculated file hashes.
+        -->
+        <FileHashes>$(DirBuildTemp)\filehashes.json</FileHashes>
+    </PropertyGroup>
+
+
 
 
 
