@@ -217,6 +217,19 @@
             </PostSteps>
         </DeployStepsToExecute>
 
+        <DeployStepsToExecute Include="$(DeployStepsPrepareFileHashes)">
+            <Properties>
+            </Properties>
+            <Groups>
+                prepare;
+                prepare.hash;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </DeployStepsToExecute>
+
         <!--
         <DeployStepsToExecute Include="$(DeployStepsPushToTags)">
             <Properties>
@@ -382,7 +395,7 @@
         Hash values are stored in a file in the temp directory and can be retrieved with the
         'ReadHashFromFile' task
     -->
-    <ItemGroup Condition=" '@(FilesToHash)' == '' ">
+    <ItemGroup>
         <!-->
         <FilesToHash Include="">
             <Algorithm></Algorithm>

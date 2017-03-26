@@ -353,6 +353,19 @@
             <PostSteps>
             </PostSteps>
         </BuildStepsToExecute>
+
+        <BuildStepsToExecute Include="$(BuildStepsPrepareFileHashes)">
+            <Properties>
+            </Properties>
+            <Groups>
+                prepare;
+                prepare.hash;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </BuildStepsToExecute>
         <!--
         <BuildStepsToExecute Include="$(BuildStepsPrepareGenerateLicenses)">
             <Properties>
@@ -642,7 +655,7 @@
         Hash values are stored in a file in the temp directory and can be retrieved with the
         'ReadHashFromFile' task
     -->
-    <ItemGroup Condition=" '@(FilesToHash)' == '' ">
+    <ItemGroup>
         <!-->
         <FilesToHash Include="">
             <Algorithm></Algorithm>

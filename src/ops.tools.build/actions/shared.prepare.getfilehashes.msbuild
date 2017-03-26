@@ -16,7 +16,10 @@
         Condition="!Exists('$(FileHashes)')"
         Name="OpsToolsBuild_Shared_Prepare_GetFileHashes_Run">
         <CallTarget Targets="_OpsToolsBuild_Shared_Prepare_GetFileHashes_Calculate" />
-        <CallTarget Targets="_OpsToolsBuild_Shared_Prepare_GetFileHashes_WriteHashesToFile" />
+
+        <CallTarget Targets="_OpsToolsBuild_Shared_Prepare_GetFileHashes_WriteHashesToFile_Header" />
+        <CallTarget Targets="_OpsToolsBuild_Shared_Prepare_GetFileHashes_WriteHashesToFile_Content" />
+        <CallTarget Targets="_OpsToolsBuild_Shared_Prepare_GetFileHashes_WriteHashesToFile_Footer" />
 
         <Copy
             DestinationFolder="$(DirTemplateGenerators)"
@@ -38,8 +41,8 @@
             </DefaultProperties>
         </PropertyGroup>
         <InvokeStandaloneMsBuild
-            Condition="Exists('$(DirNBuildKitMsBuildActions)shared.templatetokens.msbuild')"
-            Projects="$(DirNBuildKitMsBuildActions)shared.templatetokens.msbuild"
+            Condition="Exists('$(DirNBuildKitMsBuildActions)\shared.templatetokens.msbuild')"
+            Projects="$(DirNBuildKitMsBuildActions)\shared.templatetokens.msbuild"
             Properties="$(Locations);$(Files);$(DefaultProperties)"
             RunEachTargetSeparately="True"
             SkipNonexistentProjects="False"
@@ -60,7 +63,7 @@
             Text="Getting %(FilesToHash.Algorithm) hash for %(FilesToHash.FullPath) ..." />
 
         <CalculateFileHash
-            Hash="%(FilesToHash.Algorithm)"
+            Algorithm="%(FilesToHash.Algorithm)"
             Path="%(FilesToHash.FullPath)">
             <Output
                 PropertyName="Hash"
@@ -77,30 +80,53 @@
     </Target>
 
     <Target
-        Condition="!Exists('$(FileHashes)') "
-        Name="_OpsToolsBuild_Shared_Prepare_GetFileHashes_WriteHashesToFile">
+        Name="_OpsToolsBuild_Shared_Prepare_GetFileHashes_WriteHashesToFile_Header">
         <Message
             Importance="low"
             Text="Writing the versions to file ..." />
 
         <ItemGroup>
             <Items_FileHashes_Header Include="[" />
-
-            <Items_FileHashes Include="{ &quot;IsEndValue&quot;: false, &quot;Algorithm&quot;: &quot;%(CalculatedHashes.Algorithm)&quot;, &quot;File&quot;: &quot;%(CalculatedHashes.FullPath)&quot;, &quot;Hash&quot;: &quot;%(CalculatedHashes.Hash)&quot; }," />
-
-            <Items_FileHashes_Footer Include="{ &quot;IsEndValue&quot;: true }" />
-            <Items_FileHashes_Footer Include="]" />
         </ItemGroup>
 
         <WriteLinesToFile
             File="$(FileHashes)"
             Lines="@(Items_FileHashes_Header)"
             Overwrite="true" />
+    </Target>
+
+    <Target
+        Name="_OpsToolsBuild_Shared_Prepare_GetFileHashes_WriteHashesToFile_Content"
+        Outputs="%(CalculatedHashes.Identity)">
+        <Message
+            Importance="low"
+            Text="Writing the versions to file ..." />
+
+        <PropertyGroup>
+            <FilePathOfHashedFile>%(CalculatedHashes.FullPath)</FilePathOfHashedFile>
+            <JsonEscapedFilePath>$(FilePathOfHashedFile.Replace('\', '\\'))</JsonEscapedFilePath>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <Items_FileHashes Include="{ &quot;IsEndValue&quot;: false, &quot;Algorithm&quot;: &quot;%(CalculatedHashes.Algorithm)&quot;, &quot;File&quot;: &quot;$(JsonEscapedFilePath)&quot;, &quot;Hash&quot;: &quot;%(CalculatedHashes.Hash)&quot; }," />
+        </ItemGroup>
 
         <WriteLinesToFile
             File="$(FileHashes)"
             Lines="@(Items_FileHashes)"
             Overwrite="false" />
+    </Target>
+
+    <Target
+        Name="_OpsToolsBuild_Shared_Prepare_GetFileHashes_WriteHashesToFile_Footer">
+        <Message
+            Importance="low"
+            Text="Writing the versions to file ..." />
+
+        <ItemGroup>
+            <Items_FileHashes_Footer Include="{ &quot;IsEndValue&quot;: true }" />
+            <Items_FileHashes_Footer Include="]" />
+        </ItemGroup>
 
         <WriteLinesToFile
             File="$(FileHashes)"

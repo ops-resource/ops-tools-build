@@ -22,7 +22,7 @@
         Name="shared_generatetokens_hashes_writepropertyfile">
         <ReadHashesFromFile
             Condition="Exists('$(FileHashes)')"
-            Path="$(FileSemanticVersion)">
+            Path="$(FileHashes)">
             <Output
                 ItemName="StoredHashes"
                 TaskParameter="Hashes" />
