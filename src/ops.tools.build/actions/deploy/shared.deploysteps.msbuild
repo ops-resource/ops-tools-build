@@ -7,9 +7,9 @@
         <!-- Note the current script is not meant to be imported! -->
         <ExistsOpsToolsBuildDeploySteps>true</ExistsOpsToolsBuildDeploySteps>
     </PropertyGroup>
-    <PropertyGroup>
-        <DeployStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</uildStepsPrepareFileHashes>
 
+    <PropertyGroup>
+        <DeployStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</DeployStepsPrepareFileHashes>
     </PropertyGroup>
     <ItemGroup>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(DeployStepsPrepareFileHashes)'))">
