@@ -65,6 +65,8 @@
                                            currently allows gathering release notes from GitHub, Jira and YouTrack
         $(TestStepsPrepareVcsInfo)       - Stores the Version Control System (VCS) information in a file for later use.
                                            Currently supported version control systems is GIT
+        $(TestStepsPrepareCopyNuGet)     - Copies one or more files from a NuGet package.
+        $(TestStepsPrepareCopyFiles)     - Copies one or more files from the file system.
         $(TestStepsPrepareGenerateFiles) - Generates one or more files from a set of template files.
         $(TestStepsIntegrationPester)    - Runs Pester on a specified test script file.
 
@@ -72,20 +74,16 @@
         for that step, e.g. adding a test step that points to the 'c:\stuff\MyCoolScript.msbuild' will execute
         that script.
 
-        Each script has the following properties passed to it:
-        $(ShouldDisplayDebugLog)          - A flag indicating whether or not to display debug log information, usually at the start of the script execution.
-        $(NBuildKitVersion)               - The full version of the nBuildKit library that is executing the build.
-        $(DirNBuildKitMsBuild)            - The full path to the directory that contains the nBuildKit scripts.
-        $(DirNBuildKitMsBuildShared)      - The full path to the directory that contains the shared nBuildkit scripts.
-        $(DirNBuildKitMsBuildExtensions)  - The full path to the directory that contains the nBuildKit extension scripts.
-        $(DirNBuildKitMsBuildTemplates)   - The full path to the directory that contains the nBuildKit templates.
+        Any properties defined by the 'Properties' section are pushed up.
     -->
     <ItemGroup>
         <TestStepsToExecute Include="$(TestStepsPrepareWorkspace)">
             <Properties>
             </Properties>
             <Groups>
-                Clean;
+                clean;
+                prepare;
+                prepare.clean;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -98,7 +96,8 @@
             <Properties>
             </Properties>
             <Groups>
-                Bootstrap;
+                prepare;
+                prepare.bootstrap;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -109,7 +108,8 @@
             <Properties>
             </Properties>
             <Groups>
-                Bootstrap;
+                prepare;
+                prepare.bootstrap;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -122,9 +122,9 @@
             <Properties>
             </Properties>
             <Groups>
-                NuGet;
-                Prepare;
-                Restore;
+                prepare;
+                prepare.restore;
+                prepare.restore.nuget;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -140,7 +140,9 @@
             <Properties>
             </Properties>
             <Groups>
-                Prepare;
+                prepare;
+                prepare.buildserver;
+                prepare.buildserver.vcssetbranch;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -151,7 +153,9 @@
             <Properties>
             </Properties>
             <Groups>
-                Prepare;
+                prepare;
+                prepare.get;
+                prepare.get.vcsinfo;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -162,7 +166,9 @@
             <Properties>
             </Properties>
             <Groups>
-                Prepare;
+                prepare;
+                prepare.get;
+                prepare.get.issueids;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -170,15 +176,13 @@
             </PostSteps>
         </TestStepsToExecute>
 
-        <!--
-            All steps from here on may be executed on a different branch than the orginal branch we we started the
-            build on because we might have done some merging.
-        -->
         <TestStepsToExecute Include="$(TestStepsPrepareGetVersion)">
             <Properties>
             </Properties>
             <Groups>
-                Prepare;
+                prepare;
+                prepare.get;
+                prepare.get.version;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -189,19 +193,50 @@
             <Properties>
             </Properties>
             <Groups>
-                Prepare;
+                prepare;
+                prepare.get;
+                prepare.get.releasenotes;
             </Groups>
             <PreSteps>
             </PreSteps>
             <PostSteps>
             </PostSteps>
         </TestStepsToExecute>
+
+        <TestStepsToExecute Include="$(TestStepsPrepareCopyNuGet)">
+            <Properties>
+            </Properties>
+            <Groups>
+                prepare;
+                prepare.copy;
+                prepare.copy.nuget;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </TestStepsToExecute>
+        <TestStepsToExecute Include="$(TestStepsPrepareCopyFiles)">
+            <Properties>
+            </Properties>
+            <Groups>
+                prepare;
+                prepare.copy;
+                prepare.copy.files;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </TestStepsToExecute>
+
         <TestStepsToExecute Include="$(TestStepsPrepareGenerateFiles)">
             <Properties>
             </Properties>
             <Groups>
-                Generate;
-                Prepare;
+                prepare;
+                prepare.generate;
+                prepare.generate.files;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -212,8 +247,9 @@
             <Properties>
             </Properties>
             <Groups>
-                Integration;
-                Pester;
+                test;
+                test.pester;
+                test.pester.integration;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -229,16 +265,7 @@
         for that step, e.g. adding a test step that points to the 'c:\stuff\MyCoolScript.msbuild' will execute
         that script.
 
-        Each script has the following properties passed to it:
-        $(SharedPropertyFile)             - The full path to the settings.props file (i.e. this file).
-        $(ShouldDisplayDebugLog)         - A flag indicating whether or not to display debug log information, usually at the start of the script execution.
-        $(NBuildKitVersion)              - The full version of the nBuildKit library that is executing the build.
-        $(DirNBuildKitMsBuild)           - The full path to the directory that contains the nBuildKit scripts.
-        $(DirNBuildKitMsBuildShared)     - The full path to the directory that contains the shared nBuildkit scripts.
-        $(DirNBuildKitMsBuildExtensions) - The full path to the directory that contains the nBuildKit extension scripts.
-        $(DirNBuildKitMsBuildTemplates)  - The full path to the directory that contains the nBuildKit templates.
-
-        Additionally any properties defined by the 'Properties' section are also pushed up.
+        Any properties defined by the 'Properties' section are pushed up.
     -->
     <ItemGroup>
         <!--
@@ -278,7 +305,7 @@
     -->
     <ItemGroup>
         <!--
-        <TestFilesToDelete Include="" />
+        <FilesToDelete Include="" />
         -->
     </ItemGroup>
 
@@ -290,19 +317,31 @@
     -->
     <ItemGroup>
         <!--
-        <TestDirectoriesToDelete Include="" />
+        <DirectoriesToDelete Include="" />
         -->
     </ItemGroup>
 
+
     <!--
-        The list of all files that should be copied prior to starting the tests.
+        **** PREPARE - COPY FILES ****
     -->
-    <ItemGroup>
-        <!--<TestFilesToCopy
-            Condition=" '$(DirTest)' != '' "
-            Include="$(DirTest)\**\*.*">
-            <TargetDirectory>$(DirBuildTest)</TargetDirectory>
-        </TestFilesToCopy>-->
+    <!--
+        Files that should be copied, either from the file system or from a NuGet package.
+    -->
+    <ItemGroup Condition=" '@(FilesToCopy)' == '' ">
+        <!--
+        <FilesToCopy Include="">
+            <Destination></Destination>
+        </FilesToCopy>
+        -->
+    </ItemGroup>
+    <ItemGroup Condition=" '@(NuGetFilesToCopy)' == '' ">
+        <!--
+        <NuGetFilesToCopy Include="My.Cool.NuGet.Package">
+            <Include>**/*.*</Include>
+            <Destinations>$(DirBuildTemp)</Destinations>
+        </NuGetFilesToCopy>
+        -->
     </ItemGroup>
 
 
@@ -323,8 +362,7 @@
         Additional parameters can be provided through the 'TemplateTokens' ItemGroup below.
     -->
     <ItemGroup>
-        <!--
-        <TestFilesToGenerate
+        <!--<TestFilesToGenerate
             Condition=" '$(DirBuildTemp)' != '' "
             Include="$(DirBuildTemp)\MyFile.txt">
             <<Encoding>UTF-8</Encoding>
@@ -332,8 +370,7 @@
             <ReplacementValue>MyAdditionalTemplateValue</ReplacementValue>
             <Template>$(DirTemplates)\MyOtherTemplatefile.txt</Template>
             <Token>MyAdditionalTemplateParameter</Token>
-        </TestFilesToGenerate>
-        -->
+        </TestFilesToGenerate>-->
     </ItemGroup>
 
 
@@ -348,6 +385,9 @@
     </PropertyGroup>
     <!--
         The list of all arguments that should be passed to the Pester test.
+
+        The value elements may contain zero or more template parameters as indicated at the top of this
+        file. Template parameters must be enclosed in '${}'.
     -->
     <ItemGroup>
         <!--

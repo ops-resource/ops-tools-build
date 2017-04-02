@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0"
-         DefaultTargets="Run"
-         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project
+    DefaultTargets="Run"
+    ToolsVersion="14.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <!--
         The following ItemGroup defines which steps are taken during the deploy process. The order of the items in the item group
         determines in which order the deploy steps are executed.
@@ -59,6 +60,8 @@
                                              - The GitHubFlowVersion tool (https://github.com/JakeGinnivan/GitHubFlowVersion)
         $(DeployStepsPrepareTagVcs)        - Tags the current commit with the version number. Currently supported version control systems are TFS and GIT.
         $(DeployStepsPrepareGetIssueIds)   - Gets the issue IDs from the commits on the current branch and stores them in a temp file for later use.
+        $(DeployStepsPrepareCopyNuGet)     - Copies one or more files from a NuGet package.
+        $(DeployStepsPrepareCopyFiles)     - Copies one or more files from the file system.
         $(DeployStepsPushToTags)           - Pushes the tags to a remote git repository
         $(DeployStepsPushToNuget)          - Pushes one or more artifacts to a NuGet feed
         $(DeployStepsPushToDirectory)      - Pushes one or more artifacts to a directory
@@ -72,13 +75,7 @@
         for that step, e.g. adding a deploy step that points to the 'c:\stuff\MyCoolScript.msbuild' will execute
         that script.
 
-        Each script has the following properties passed to it:
-        $(ShouldDisplayDebugLog)          - A flag indicating whether or not to display debug log information, usually at the start of the script execution.
-        $(NBuildKitVersion)               - The full version of the nBuildKit library that is executing the build.
-        $(DirNBuildKitMsBuild)            - The full path to the directory that contains the nBuildKit scripts.
-        $(DirNBuildKitMsBuildShared)      - The full path to the directory that contains the shared nBuildkit scripts.
-        $(DirNBuildKitMsBuildExtensions)  - The full path to the directory that contains the nBuildKit extension scripts.
-        $(DirNBuildKitMsBuildTemplates)   - The full path to the directory that contains the nBuildKit templates.
+        Any properties defined by the 'Properties' section are pushed up.
     -->
     <ItemGroup>
         <!--
@@ -86,7 +83,8 @@
             <Properties>
             </Properties>
             <Groups>
-                Bootstrap;
+                prepare;
+                prepare.bootstrap;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -97,7 +95,8 @@
             <Properties>
             </Properties>
             <Groups>
-                Bootstrap;
+                prepare;
+                prepare.bootstrap;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -110,9 +109,9 @@
             <Properties>
             </Properties>
             <Groups>
-                NuGet;
-                Prepare;
-                Restore;
+                prepare;
+                prepare.restore;
+                prepare.restore.nuget;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -128,7 +127,9 @@
             <Properties>
             </Properties>
             <Groups>
-                Prepare;
+                prepare;
+                prepare.buildserver;
+                prepare.buildserver.vcssetbranch;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -139,7 +140,9 @@
             <Properties>
             </Properties>
             <Groups>
-                Prepare;
+                prepare;
+                prepare.get;
+                prepare.get.issueids;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -155,7 +158,9 @@
             <Properties>
             </Properties>
             <Groups>
-                Prepare;
+                prepare;
+                prepare.get;
+                prepare.get.version;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -169,8 +174,9 @@
                 Platform=$(Platform);
             </Properties>
             <Groups>
-                Prepare;
-                Tag;
+                prepare;
+                prepare.vcs;
+                prepare.vcs.tag;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -179,14 +185,41 @@
         </DeployStepsToExecute>
         -->
         <!--
+        <DeployStepsToExecute Include="$(DeployStepsPrepareCopyNuGet)">
+            <Properties>
+            </Properties>
+            <Groups>
+                prepare;
+                prepare.copy;
+                prepare.copy.nuget;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </DeployStepsToExecute>
+        <DeployStepsToExecute Include="$(DeployStepsPrepareCopyFiles)">
+            <Properties>
+            </Properties>
+            <Groups>
+                prepare;
+                prepare.copy;
+                prepare.copy.files;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </DeployStepsToExecute>
+
         <DeployStepsToExecute Include="$(DeployStepsPushToTags)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
                 Platform=$(Platform);
             </Properties>
             <Groups>
-                Tag;
-                Push;
+                deploy;
+                deploy.vcs.tags;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -200,8 +233,8 @@
                 Platform=$(Platform);
             </Properties>
             <Groups>
-                NuGet;
-                Push;
+                deploy;
+                deploy.package.nuget;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -215,8 +248,8 @@
                 Platform=$(Platform);
             </Properties>
             <Groups>
-                Directory;
-                Push;
+                deploy;
+                deploy.package.directory;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -229,8 +262,8 @@
                 Platform=$(Platform);
             </Properties>
             <Groups>
-                Push;
-                SymbolServer;
+                deploy;
+                deploy.package.symbols;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -243,8 +276,8 @@
                 Platform=$(Platform);
             </Properties>
             <Groups>
-                GitHub;
-                Push;
+                deploy;
+                deploy.github;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -258,8 +291,8 @@
                 Platform=$(Platform);
             </Properties>
             <Groups>
-                Git;
-                Push;
+                deploy;
+                deploy.vcs.git.branch;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -272,8 +305,8 @@
                 Platform=$(Platform);
             </Properties>
             <Groups>
-                Git;
-                Push;
+                deploy;
+                deploy.vcs.git.repository;
             </Groups>
             <PreSteps>
             </PreSteps>
@@ -289,16 +322,7 @@
         for that step, e.g. adding a deploy step that points to the 'c:\stuff\MyCoolScript.msbuild' will execute
         that script.
 
-        Each script has the following properties passed to it:
-        $(SharedPropertyFile)             - The full path to the settings.props file (i.e. this file).
-        $(ShouldDisplayDebugLog)         - A flag indicating whether or not to display debug log information, usually at the start of the script execution.
-        $(NBuildKitVersion)              - The full version of the nBuildKit library that is executing the build.
-        $(DirNBuildKitMsBuild)           - The full path to the directory that contains the nBuildKit scripts.
-        $(DirNBuildKitMsBuildShared)     - The full path to the directory that contains the shared nBuildkit scripts.
-        $(DirNBuildKitMsBuildExtensions) - The full path to the directory that contains the nBuildKit extension scripts.
-        $(DirNBuildKitMsBuildTemplates)  - The full path to the directory that contains the nBuildKit templates.
-
-        Additionally any properties defined by the 'Properties' section are also pushed up.
+        Any properties defined by the 'Properties' section are pushed up.
     -->
     <ItemGroup>
         <!--
@@ -324,6 +348,29 @@
             <Name>My deploy step</Name>
             <Path>$(DirWorkspace)\my.deploy.step.msbuild</Path>
         </AvailableStepMetadata>
+        -->
+    </ItemGroup>
+
+
+    <!--
+        **** PREPARE - COPY FILES ****
+    -->
+    <!--
+        Files that should be copied, either from the file system or from a NuGet package.
+    -->
+    <ItemGroup Condition=" '@(FilesToCopy)' == '' ">
+        <!--
+        <FilesToCopy Include="">
+            <Destination></Destination>
+        </FilesToCopy>
+        -->
+    </ItemGroup>
+    <ItemGroup Condition=" '@(NuGetFilesToCopy)' == '' ">
+        <!--
+        <NuGetFilesToCopy Include="My.Cool.NuGet.Package">
+            <Include>**/*.*</Include>
+            <Destinations>$(DirBuildTemp)</Destinations>
+        </NuGetFilesToCopy>
         -->
     </ItemGroup>
 
@@ -360,7 +407,7 @@
             If the repository needs authentication then the API key should be defined via an environment variable:
             NuGetApiKey - The NuGet API key for the NuGet feed
         -->
-        <!--<NuGetSourceUrl Condition=" '$(NuGetSourceUrl)' == '' ">UNDEFINED</NuGetSourceUrl>-->
+        <!--<NuGetSourceUrl>UNDEFINED</NuGetSourceUrl>-->
     </PropertyGroup>
     <!--
         The ItemGroup defining which packages should be pushed up to the NuGet package source.
@@ -383,11 +430,45 @@
         The ItemGroup defining which symbol packages should be pushed up to the symbol server.
         Allows build templates, e.g. $(DirBuildDeploy)\${VersionSemantic}\*.symbols.nupkg.
     -->
+    <PropertyGroup>
+        <!--
+            The URL to which all NuGet symbol packages should be pushed. If the repository needs authentication then
+            the API key should be defined via an environment variable:
+            NuGetApiKey - The NuGet API key for the NuGet feed
+        -->
+        <!--<NuGetSymbolSourceUrl>UNDEFINED</NuGetSymbolSourceUrl>-->
+        <!--
+            The URL / UNC path to which all the symbol packages should be pushed.
+        -->
+        <!--<SymbolServerUncPath>UNDEFINED</SymbolServerUncPath>-->
+    </PropertyGroup>
     <ItemGroup>
         <!--
         <SymbolPackagesToPush
             Condition=" '$(DirBuildDeploy)' != '' "
             Include="$(DirBuildDeploy)\*.symbols.nupkg" />
+        -->
+    </ItemGroup>
+
+
+    <!--
+        **** PUSHTO - GITHUB RELEASE ****
+    -->
+    <!--
+        The ItemGroup defining the files that should be pushed to a GitHub release. All properties
+        except for the Repository allow the use of build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip
+    -->
+    <ItemGroup>
+        <!--
+        <PushToGitHubReleaseSpecs Include="${VersionSemantic} - My release">
+             <Repository>MyCoolProject</Repository>
+             <Description>${ReleaseNotes}</Description>
+             <IncludedFiles>
+                $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip
+             </IncludedFiles>
+             <ExcludedFiles>
+             </ExcludedFiles>
+        </PushToGitHubReleaseSpecs>
         -->
     </ItemGroup>
 
@@ -404,10 +485,10 @@
         <PushToGitBranchSpecs
             Condition=" '$(DirBuildDeploy)' != '' "
             Include="$(DirBuildDeploy)\myarchive-${VersionSemantic}.zip">
-            <Repository>$(GitRemoteRepository)</Repository>
-            <Branch>master</Branch>
-            <ExtractZipFiles>true</ExtractZipFiles>
-            <CommitMessage>New changes</CommitMessage>
+             <Repository>$(GitRemoteRepository)</Repository>
+             <Branch>master</Branch>
+             <ExtractZipFiles>true</ExtractZipFiles>
+             <CommitMessage>New changes</CommitMessage>
         </PushToGitBranchSpecs>
         -->
     </ItemGroup>

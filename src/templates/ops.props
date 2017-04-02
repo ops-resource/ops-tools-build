@@ -173,6 +173,17 @@
     </PropertyGroup>
 
     <!--
+        Global files
+    -->
+    <PropertyGroup>
+        <!-- Defines the directory into which the workflow high level overview files are written -->
+        <!-- <DirHighLevelOverview>UNDEFINED</DirHighLevelOverview> -->
+
+        <!-- Defines the name of the file in which the high level overview of the build is written to -->
+        <!-- <FileNameHighLevelOverview>UNDEFINED</FileNameHighLevelOverview> -->
+    </PropertyGroup>
+
+    <!--
         Workflow
     -->
     <PropertyGroup>
@@ -275,6 +286,157 @@
 
 
     <!--
+        **** PREPARE - VERSIONING ****
+    -->
+    <PropertyGroup>
+        <!--
+            The full path to the file that contains the current version of the project in MsBuild format.  The file is expected
+            to have the following structure:
+
+            <?xml version="1.0" encoding="utf-8"?>
+            <Project ToolsVersion="14.0"
+                     DefaultTargets="Build"
+                     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+                <PropertyGroup>
+                    <BuildNumber>$(BUILD_NUMBER)</BuildNumber>
+                    <BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
+
+                    <VersionMajor>1</VersionMajor>
+                    <VersionMinor>2</VersionMinor>
+                    <VersionPatch>3</VersionPatch>
+                    <VersionBuild>$(BuildNumber)</VersionBuild>
+                    <VersionPreRelease></VersionPreRelease>
+                </PropertyGroup>
+            </Project>
+        -->
+        <!-- <FileVersionMsBuild>$(DirWorkspace)\version.xml</FileVersionMsBuild> -->
+
+        <!--
+            When using GitVersion with a git repository that needs authentication the following properties
+            have to be defined on via an environment variable (either local to the process that executes the build,
+            or global to the user):
+              GitPassword - The user token that provides access to GitHub
+
+            The following properties can be defined on the command line or via the current script:
+              GitUserName - The user name of the user who owns the Git repository
+
+            Note that if no authentication is required, e.g. the repository allows anonymous access or
+            the authentication is done through the user account, i.e. via Active Directory, then
+            the user name should be left empty.
+        -->
+        <!-- <GitUserName></GitUserName> -->
+
+        <!--
+            The full file path to the script that handles custom generation of the version numbers.
+
+            The script is expected be a custom implementation of the CalculateCustomVersion.msbuild script.
+            The script file can be called anything as long as it contains an inline task
+            called CalculateCustomVersion that takes no parameters and returns the version number parts as follows:
+                VersionMajor         - The major component of the version number, e.g. 1.
+                VersionMinor         - The minor component of the version number, e.g. 2.
+                VersionPatch         - The patch component of the version number, e.g. 3.
+                VersionBuild         - The build component of the version number, e.g. 4.
+                VersionPreRelease    - The pre-release section of the version number, e.g. 'unstable'
+                VersionSemantic      - The short semantic version, normally made up of
+                                       <MAJOR>.<MINOR>.<PATCH>, e.g. 1.2.3
+                VersionSemanticFull  - The full semantic version, normally made up of
+                                       <MAJOR>.<MINOR>.<PATCH>-<METADATA>+<BUILD>, e.g. 1.2.3-unstable+4
+                VersionSemanticNuget - The NuGet compatible semantic version, normally made up of
+                                       <MAJOR>.<MINOR>.<PATCH>-<PRERELEASE><BUILD>, e.g. 1.2.3-unstable4
+        -->
+        <!-- <ScriptGetVersion>UNDEFINED</ScriptGetVersion> -->
+    </PropertyGroup>
+
+
+    <!--
+        **** PREPARE - RELEASE NOTES ****
+    -->
+    <PropertyGroup>
+        <!--
+            The template for the Github milestone name that will be used to get the closed work items for the
+            release note
+        -->
+        <!-- <GitHubMilestoneName>${VersionMajor}.${VersionMinor}.${VersionPatch}</GitHubMilestoneName> -->
+
+        <!-- The user name of the user who owns the GitHub repository -->
+        <!-- <GitHubUserName>UNDEFINED</GitHubUserName> -->
+
+        <!--
+            The full file path to the script that handles custom collection of the issue information for the current
+            release.
+
+            The script is expected be a custom implementation of the GatherIssues.msbuild script.
+            The script file can be called anything as long as it contains a target called:
+
+                '_Custom_GetIssueInformationForCurrentRelease'
+
+            The target should create an ItemGroup called 'ReleaseNoteIssues' containing the issue information. The each item in the item
+            group should describe one issue in the following format:
+
+            <item include="ISSUE_NUMBER">
+                <Title>ISSUE_TITLE</Title>
+                <URL>ISSUE_URL</Url>
+                <State>ISSUE_STATE</State>
+                <Body>ISSUE_BODY</Body>
+                <UserName>ISSUE_USERNAME</UserName>
+                <UserUrl>ISSUE_USERURL</UserUrl>
+                <Labels>ISSUE_LABELS</Labels>
+            </item>
+
+            Where:
+
+                ISSUE_NUMBER   - The ID of the issue.
+                ISSUE_TITLE    - The title of the issue.
+                ISSUE_URL      - The URL of the issue.
+                ISSUE_STATE    - The state of the issue, e.g. open, closed etc.
+                ISSUE_BODY     - The description of the issue.
+                ISSUE_USERNAME - The name of the user to whom the issue is assigned.
+                ISSUE_USERURL  - The URL for the user, if it exists.
+                ISSUE_LABELS   - The labels / type for the issue.
+        -->
+        <!-- <ScriptGatherIssues>UNDEFINED</ScriptGatherIssues> -->
+
+        <!--
+            The full file path to the script that handles the custom formatting of the release notes for
+            the current release.
+
+            The script is expected be a custom implementation of the WriteReleaseNotes.msbuild script.
+            The script file can be called anything as long as it contains a target called:
+
+                '_Custom_WriteReleaseNotesForCurrentRelease'
+
+            The target should process an ItemGroup called 'ReleaseNoteIssues' containing the issue information. The each item in the item
+            group describes one issue in the following format:
+
+            <item include="ISSUE_NUMBER">
+                <Title>ISSUE_TITLE</Title>
+                <State>ISSUE_STATE</State>
+                <Body>ISSUE_BODY</Body>
+                <UserName>ISSUE_USERNAME</UserName>
+                <UserUrl>ISSUE_USERURL</UserUrl>
+                <Labels>ISSUE_LABELS</Labels>
+            </item>
+
+            Where:
+
+                ISSUE_NUMBER   - The ID of the issue.
+                ISSUE_TITLE    - The title of the issue.
+                ISSUE_STATE    - The state of the issue, e.g. open, closed etc.
+                ISSUE_BODY     - The description of the issue.
+                ISSUE_USERNAME - The name of the user to whom the issue is assigned.
+                ISSUE_USERURL  - The URL for the user, if it exists.
+                ISSUE_LABELS   - The labels / type for the issue.
+        -->
+        <!-- <ScriptWriteReleaseNotes>UNDEFINED</ScriptWriteReleaseNotes> -->
+
+        <!--
+            A flag that indicates whether or not the build should fail if there is a failure to gather the release notes.
+        -->
+        <!-- <ContinueBuildIfReleaseNoteGatheringFails>true</ContinueBuildIfReleaseNoteGatheringFails> -->
+    </PropertyGroup>
+
+
+    <!--
         **** PREPARE - GENERATE FILES ****
     -->
     <PropertyGroup>
@@ -298,6 +460,25 @@
         </TemplateTokens>
         -->
     </ItemGroup>
+
+
+    <!--
+        **** STEPS ****
+    -->
+    <PropertyGroup>
+        <!--
+            Defines the groups that should be executed in the current stage.
+
+            A group is a collection of steps which are executed in sequence in the same process. One step
+            can belong to multiple groups and one group may contain multiple steps.
+
+            A group is identified by a tag.
+
+            The tag 'all' is a special tag that will lead to the invocation of all steps that are registered for the
+            selected stage.
+        -->
+        <!-- <GroupsToExecute>All</GroupsToExecute> -->
+    </PropertyGroup>
 
 
 

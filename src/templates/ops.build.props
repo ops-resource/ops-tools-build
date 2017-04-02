@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0"
-         DefaultTargets="Run"
-         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project
+    DefaultTargets="Run"
+    ToolsVersion="14.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <!-- Overrides for the build configuration -->
     <PropertyGroup>
         <!-- A flag that indicates whether or not the build output of the VS projects is redirected to the $(DirBuildBinPlatformConfig) directory. -->
@@ -44,9 +45,6 @@
 
         Additionally all the standard properties as seen below and the properties for the given build step are passed in.
 
-        The following ItemGroup defines which steps are taken during the build process. The order of the items in the item group
-        determines in which order the build steps are executed.
-
         The following build steps are by default provided through the given properties:
         $(BuildStepsPrepareWorkspace)                    - Clears the existing build artifacts from the workspace and creates the required directories. Clearing the
                                                            existing build artifacts is only executed if the $(ShouldClean) property is set to 'true'.
@@ -60,7 +58,7 @@
         $(BuildStepsPrepareVcsInfo)                      - Stores the Version Control System (VCS) information in a file for later use.
                                                            Currently supported version control systems is GIT
         $(BuildStepsPrepareGetIssueIds)                  - Gets the issue IDs from the commits on the current branch and stores them in a temp file for later use.
-        $(BuildStepsPrepareVcsMerge)                     - Merges the current changes to the designated target branch (specified by @(BranchMergeTarget)).
+        $(BuildStepsPrepareVcsMerge)                     - Merges the current changes to the designated target branches (specified by @(BranchMergeTarget)).
         $(BuildStepsPrepareGetVersion)                   - Gathers version information and stores it in a temporary file for use by the rest of the build process.
                                                            Currently supported methods of gathering version information are using (in order):
                                                            - The version defined by a custom MsBuild task which is defined in a file of which the path is stored
@@ -90,7 +88,7 @@
         $(BuildStepsPrepareRestoreNpm)                   - Restores all the NPM packages for the project.
         $(BuildStepsPrepareRestoreBower)                 - Restores all the Bower packages for the project.
         $(BuildStepsPrepareCopyNuGet)                    - Copies one or more files from a NuGet package.
-        $(BuildStepsPrepareCopyFiles)                    - Copies one or more files from the file system or from a NuGet package.
+        $(BuildStepsPrepareCopyFiles)                    - Copies one or more files from the file system.
         $(BuildStepsPrepareAssemblyInfo)                 - Updates all existing AssemblyInfo.cs and AssemblyInfo.vb files with the version numbers, company information,
                                                            copyright information and optionally build time and build information.
         $(BuildStepsPrepareGenerateFiles)                - Generates one or more files from a set of template files.
@@ -99,6 +97,7 @@
         $(BuildStepsUnitTestNUnit)                       - Executes the unit tests with NUnit and measures code coverage with OpenCover.
         $(BuildStepsUnitTestMsTest)                      - Executes the unit tests with MsTest and measures code coverage with OpenCover.
         $(BuildStepsUnitTestVsTest)                      - Executes the unit tests with VsTest and measures code coverage.
+        $(BuildStepsAnalyzeXml)                          - Analyzes one or more XML files based on the provided XSD.
         $(BuildStepsAnalyzeBinariesFxCop)                - Analyzes the binary files with FxCop.
         $(BuildStepsPackNuGet)                           - Generates the NuGet packages.
         $(BuildStepsPackZip)                             - Generates one or more ZIP archives.
@@ -107,13 +106,7 @@
         for that step, e.g. adding a build step that points to the 'c:\stuff\MyCoolScript.msbuild' will execute
         that script.
 
-        Each script has the following properties passed to it:
-        $(ShouldDisplayDebugLog)                         - A flag indicating whether or not to display debug log information, usually at the start of the script execution.
-        $(NBuildKitVersion)                              - The full version of the nBuildKit library that is executing the build.
-        $(DirNBuildKitMsBuild)                           - The full path to the directory that contains the nBuildKit scripts.
-        $(DirNBuildKitMsBuildShared)                     - The full path to the directory that contains the shared nBuildkit scripts.
-        $(DirNBuildKitMsBuildExtensions)                 - The full path to the directory that contains the nBuildKit extension scripts.
-        $(DirNBuildKitMsBuildTemplates)                  - The full path to the directory that contains the nBuildKit templates.
+        Any properties defined by the 'Properties' section are pushed up.
 
         Additionally any properties defined by the 'Properties' section are also pushed up.
     -->
@@ -140,6 +133,10 @@
                 prepare;
                 prepare.bootstrap;
             </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
         </BuildStepsToExecute>
 
         <BuildStepsToExecute Include="$(BuildStepsGenerateTargetsFile)">
@@ -149,6 +146,10 @@
                 prepare;
                 prepare.bootstrap;
             </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
         </BuildStepsToExecute>
         -->
 
@@ -572,16 +573,7 @@
         for that step, e.g. adding a build step that points to the 'c:\stuff\MyCoolScript.msbuild' will execute
         that script.
 
-        Each script has the following properties passed to it:
-        $(SharedPropertyFile)             - The full path to the settings.props file (i.e. this file).
-        $(ShouldDisplayDebugLog)         - A flag indicating whether or not to display debug log information, usually at the start of the script execution.
-        $(NBuildKitVersion)              - The full version of the nBuildKit library that is executing the build.
-        $(DirNBuildKitMsBuild)           - The full path to the directory that contains the nBuildKit scripts.
-        $(DirNBuildKitMsBuildShared)     - The full path to the directory that contains the shared nBuildkit scripts.
-        $(DirNBuildKitMsBuildExtensions) - The full path to the directory that contains the nBuildKit extension scripts.
-        $(DirNBuildKitMsBuildTemplates)  - The full path to the directory that contains the nBuildKit templates.
-
-        Additionally any properties defined by the 'Properties' section are also pushed up.
+        Any properties defined by the 'Properties' section are pushed up.
     -->
     <ItemGroup>
         <!--
@@ -725,7 +717,9 @@
     -->
     <ItemGroup>
         <!--
-        <BuildFilesToGenerate Include="$(DirBuildTemp)\MyFile.txt">
+        <BuildFilesToGenerate
+            Condition=" '$(DirBuildTemp)' != '' "
+            Include="$(DirBuildTemp)\MyFile.txt">
             <Encoding>UTF-8</Encoding>
             <Expression>(MyRegex)</Expression>
             <ReplacementValue>MyAdditionalTemplateValue</ReplacementValue>
@@ -751,9 +745,8 @@
             <Configuration>$(TestConfiguration)</Configuration>
             <Platform>$(Platform)</Platform>
             <Targets>Rebuild</Targets>
-            <Properties>
-                ShouldPerformCodeAnalysis=false;
-            </Properties>
+            <Properties></Properties>
+            <GeneratedAssembliesFile>$(DirBuildTemp)\mysln.$(TestConfiguration).$(PlatformWithoutSpaces).props</GeneratedAssembliesFile>
         </SolutionsToBuild>
         <SolutionsToBuild
             Condition=" '$(DirSrc)' != '' "
@@ -761,14 +754,36 @@
             <Configuration>$(ProductionConfiguration)</Configuration>
             <Platform>$(Platform)</Platform>
             <Targets>Rebuild</Targets>
-            <Properties>
-                ShouldPerformCodeAnalysis=false;
-            </Properties>
+            <Properties></Properties>
+            <GeneratedAssembliesFile>$(DirBuildTemp)\mysln.$(ProductionConfiguration).$(PlatformWithoutSpaces).props</GeneratedAssembliesFile>
         </SolutionsToBuild>
         -->
     </ItemGroup>
 
     <PropertyGroup>
+        <!--
+            A flag that indicates whether an AssemblyInfo file with the company and copyright information should be generated.
+            The file will be placed in the Properties directory of the Visual Studio project and will be named
+            AssemblyInfo.Company.xx (cs/vb). This file will contain:
+            - The AssemblyCompanyAttribute with the company name
+            - The AssemblyCopyrightAttribute with the text provided by the ${CopyrightLong} template parameter.
+        -->
+        <!--<ShouldGenerateAssemblyCompanyInfo>false</ShouldGenerateAssemblyCompanyInfo>-->
+        <!--
+            A flag that indicates whether an AssemblyInfo file with the version numbers should be generated. The file
+            will be placed in the Properties directory of the Visual Studio project and will be named
+            AssemblyInfo.Version.xx (cs/vb). This file will contain:
+            - The AssemblyVersionAttribute with the version as provided by the ${VersionAssembly} template parameter.
+            - The AssemblyFileVersionAttribute with the version as provided by the ${VersionAssemblyFile} template parameter.
+            - The AssemblyInformationalVersionAttribute with the version as provided by the ${VersionProduct} template parameter.
+
+            Also indicates that a VersionNumber.wxi should be generated. This file will be placed
+            in the project folder of the Visual Studio project. This file will contain:
+            - The ApplicationVersion property with the version as provided by the ${VersionProduct} template parameter.
+            - The InstallVersion property with the version as provided by the ${VersionInstall} template parameter.
+            - The ProductVersionFolder property with the version as provided by the ${VersionInstallFilePath} template parameter.
+        -->
+        <!--<ShouldGenerateAssemblyVersionInfo>false</ShouldGenerateAssemblyVersionInfo>-->
         <!--
             A flag that indicates whether an AssemblyInfo file with the build information should be generated. The file
             will be placed in the Properties directory of the Visual Studio project and will be named
@@ -850,6 +865,44 @@
     <!--
         **** UNIT TESTS ****
     -->
+    <PropertyGroup>
+        <!--
+            The assembly name prefix for the assemblies containing the unit tests. Allows build templates,
+            e.g. '${CompanyName}.${ProductName}.Tests'.
+        -->
+        <!--<UnitTestAssemblyNamePrefix>Test.Unit</UnitTestAssemblyNamePrefix>-->
+
+        <!--
+            The full path to the location where the MsTest report file should be created. This path can include build templates,
+            e.g. $(DirBuildLogs)\${CompanyName}\${ProductName}\mytest.trx.
+        -->
+        <!--<FileReportMsTest>$(DirBuildLogs)\mstest.trx</FileReportMsTest>-->
+
+        <!--
+            The full path to the directory where the VsTest report files should be created. This path can include build templates,
+            e.g. $(DirBuildLogs)\${CompanyName}\${ProductName}.
+        -->
+        <!--<DirReportVsTest>$(DirBuildLogs)\vstest</DirReportVsTest>-->
+
+        <!--
+            The full path to the XML report file that is generated by OpenCover upon completion of the unit test execution.
+            Allows build templates, e.g. $(DirBuildLogs)\${CompanyName}\${ProductName}\opencover.xml.
+        -->
+        <!--<FileReportOpenCoverXml>$(DirBuildLogs)\opencover.xml</FileReportOpenCoverXml>-->
+
+        <!--
+            The full path to the CSV report file that is generated by OpenCover upon completion of the unit test execution.
+            Allows build templates. , e.g. $(DirBuildLogs)\${CompanyName}\${ProductName}\coverage.csv.
+        -->
+        <!--<FileReportOpenCoverCsv>$(DirBuildLogs)\coverage.csv</FileReportOpenCoverCsv>-->
+
+        <!--
+            The full path to the Cobertura report directory which will contain the cobertura report files which are generated
+            by converting the OpenCover results to Cobertura.
+            Allows build templates, e.g. $(DirBuildLogs)\${CompanyName}\${ProductName}
+        -->
+        <!-- <DirReportOpenCoverCobertura>$(DirBuildLogs)</DirReportOpenCoverCobertura> -->
+    </PropertyGroup>
     <ItemGroup>
         <!--
             The ItemGroup items that define which files contain the unit test cases. Paths can include build templates,
@@ -882,9 +935,36 @@
 
 
     <!--
+        **** SOURCE ANALYSIS - XML ****
+    -->
+    <ItemGroup>
+        <!--
+            The paths to the XML files that should be validated against the given schema.
+        -->
+        <!--
+        <XmlFilesToValidate
+            Condition=" '$(DirSrc)' != '' "
+            Exclude="$(DirSrc)\**\ignore.xml"
+            Include="$(DirSrc)\**\*.xml">
+            <SchemaFile></SchemaFile>
+            <TargetNamespace></TargetNamespace>
+        </XmlFilesToValidate>
+        -->
+    </ItemGroup>
+
+
+    <!--
         **** BINARY ANALYSIS - FXCOP ****
     -->
     <PropertyGroup>
+        <!--
+            The full path to the FxCop project file.
+        -->
+        <!--<FileProjectFxCop>UNDEFINED</FileProjectFxCop>-->
+        <!--
+            The full path to the FxCop output report. Allows build templates, e.g. $(DirBuildLogs)\${ProductName}_fxcop.xml.
+        -->
+        <!--<FileReportFxCop>$(DirBuildLogs)\fxcop.xml</FileReportFxCop>-->
         <!--
             The full path to the XML file that contains the custom dictionary for FxCop.
         -->
@@ -908,15 +988,15 @@
         <!--
         <FxCopFiles
             Condition=" '$(DirSrc)' != '' "
-            Include="$(DirSrc)\**\bin\**\*.dll"
-            Exclude="$(DirSrc)\**\bin\**\Test.*.dll">
+            Exclude="$(DirSrc)\**\bin\$(Configuration)\Test.*.dll"
+            Include="$(DirSrc)\**\bin\$(Configuration)\*.dll">
             <CustomDictionary>$(FxCopCustomDictionary)</CustomDictionary>
             <RuleSet>$(DirSrc)\codeanalysis.base.ruleset</RuleSet>
             <TargetFramework>4.5</TargetFramework>
         </FxCopFiles>
         <FxCopFiles
             Condition=" '$(DirSrc)' != '' "
-            Include="$(DirSrc)\**\bin\**\*.exe">
+            Include="$(DirSrc)\**\bin\$(Configuration)\*.exe">
             <CustomDictionary>$(FxCopCustomDictionary)</CustomDictionary>
             <RuleSet>$(DirSrc)\codeanalysis.base.ruleset</RuleSet>
             <TargetFramework>2.0</TargetFramework>
