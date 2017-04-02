@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<iso>
+    <name>ops.tools.build.samples-${VersionSemantic}</name>
+    <files>
+        <file src="${DirWorkspace}\README.md;${DirWorkspace}\LICENSE" target="" />
+        <file src="${FileReleaseNotes}" target="" />
+        <file src="${DirSrc}\samples\files\**\*.*" target="" />
+    </files>
+</iso>

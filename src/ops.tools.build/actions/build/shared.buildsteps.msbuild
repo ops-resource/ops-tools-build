@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    ToolsVersion="14.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ExistsOpsToolsBuildBuildSteps>true</ExistsOpsToolsBuildBuildSteps>
+    </PropertyGroup>
+    <PropertyGroup>
+        <BuildStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</BuildStepsPrepareFileHashes>
+        <BuildStepsPackIso>$(MSBuildThisFileDirectory)build.pack.iso.msbuild</BuildStepsPackIso>
+        <BuildStepsPackPacker>$(MSBuildThisFileDirectory)build.pack.packer.msbuild</BuildStepsPackPacker>
+    </PropertyGroup>
+    <ItemGroup>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPrepareFileHashes)'))">
+            <Description>
+                Calculate the hash of one or more files.
+            </Description>
+            <Id>BuildStepsPrepareFileHashes</Id>
+            <Name>Build - Calculate file hashes</Name>
+            <Path>$(BuildStepsPrepareFileHashes)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPackIso)'))">
+            <Description>
+                Create an ISO file from a given set of files and directories.
+            </Description>
+            <Id>BuildStepsPackIso</Id>
+            <Name>Build - Create ISO file</Name>
+            <Path>$(BuildStepsPackIso)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPackPacker)'))">
+            <Description>
+                Create an Packer file from a given set of Packer configuration files.
+            </Description>
+            <Id>BuildStepsPackPacker</Id>
+            <Name>Build - Create Packer file</Name>
+            <Path>$(BuildStepsPackPacker)</Path>
+        </AvailableStepMetadata>
+    </ItemGroup>
+</Project>

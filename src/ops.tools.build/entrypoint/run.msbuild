@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    ToolsVersion="14.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Directories -->
+        <!-- Files -->
+        <FileBuildImports>$(MSBuildThisFileDirectory)import.build.props</FileBuildImports>
+        <FileTestImports>$(MSBuildThisFileDirectory)import.test.props</FileTestImports>
+        <FileDeployImports>$(MSBuildThisFileDirectory)import.deploy.props</FileDeployImports>
+
+        <!-- Required packages -->
+        <!--
+            The name of the package that contains the action scripts for the current build.
+        -->
+        <PackageNameNBuildKitActions Condition=" '$(PackageNameNBuildKitActions)' == '' ">nBuildKit.MsBuild.Actions</PackageNameNBuildKitActions>
+
+        <!--
+            The name of the package that contains the executor scripts for the current build.
+        -->
+        <PackageNameNBuildKitExecutors Condition=" '$(PackageNameNBuildKitExecutors)' == '' ">nBuildKit.MsBuild.Executors</PackageNameNBuildKitExecutors>
+
+        <!--
+            The name of the package that contains the tasks for the current build.
+        -->
+        <PackageNameNBuildKitTasks Condition=" '$(PackageNameNBuildKitTasks)' == '' ">nBuildKit.MsBuild.Tasks</PackageNameNBuildKitTasks>
+
+        <!--
+            The name of the package that contains the action scripts for the current build.
+        -->
+        <PackageNameOpsToolsBuildActions Condition=" '$(PackageNameOpsToolsBuildActions)' == '' ">Ops.Tools.Build.Actions</PackageNameOpsToolsBuildActions>
+
+        <!--
+            The name of the package that contains the tasks for the current build.
+        -->
+        <PackageNameOpsToolsBuildTasks Condition=" '$(PackageNameOpsToolsBuildTasks)' == '' ">Ops.Tools.Build.Tasks</PackageNameOpsToolsBuildTasks>
+
+        <!--
+            For MsBuild versions 4.0 through to 12.0 the tasks dll was in an assembly that contains the version in the file name.
+            However starting with version 14 that is no longer the case so have to differentiate between these cases.
+        -->
+        <MsBuildTasksAssembly>$(MSBuildToolsPath)\Microsoft.Build.Tasks.v$(MSBuildToolsVersion).dll</MsBuildTasksAssembly>
+        <MsBuildTasksAssembly Condition="!Exists('$(MsBuildTasksAssembly)')">$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll</MsBuildTasksAssembly>
+    </PropertyGroup>
+
+    <!--
+        Invoke the build steps as defined by the 'build.settings.props' file by invoking the 'build' target
+        on the 'build.msbuild' script in the 'nBuildKit.MsBuild' NuGet package
+        and passing the path to the workspace directory and the configuration files. Parameters provided by the
+        user are passed through by default.
+    -->
+    <Target
+        DependsOnTargets="_OpsToolsBuild_EntryPoint_Run_SetNBuildKitPhaseFileName_Build;_OpsToolsBuild_EntryPoint_Run_Execute"
+        Name="Build">
+    </Target>
+
+    <Target Name="_OpsToolsBuild_EntryPoint_Run_SetNBuildKitPhaseFileName_Build">
+        <PropertyGroup>
+            <TargetToExecute>build</TargetToExecute>
+            <Files>
+                $(Files);
+                FileBuildImports=$(FileBuildImports);
+            </Files>
+        </PropertyGroup>
+    </Target>
+
+    <!--
+        Invoke the test steps as defined by the 'test.settings.props' file by invoking the 'test' target
+        on the 'test.msbuild' script in the 'nBuildKit.MsBuild' NuGet package
+        and passing the path to the workspace directory and the configuration files. Parameters provided by the
+        user are passed through by default.
+    -->
+    <Target
+        DependsOnTargets="_OpsToolsBuild_EntryPoint_Run_SetNBuildKitPhaseFileName_Test;_OpsToolsBuild_EntryPoint_Run_Execute"
+        Name="Test">
+    </Target>
+
+    <Target Name="_OpsToolsBuild_EntryPoint_Run_SetNBuildKitPhaseFileName_Test">
+        <PropertyGroup>
+            <TargetToExecute>test</TargetToExecute>
+            <Files>
+                $(Files);
+                FileTestImports=$(FileTestImports);
+            </Files>
+        </PropertyGroup>
+    </Target>
+
+    <!--
+        Invoke the deploy steps as defined by the 'deploy.settings.props' file by invoking the 'deploy' target
+        on the 'deploy.msbuild' script in the 'nBuildKit.MsBuild' NuGet package
+        and passing the path to the workspace directory and the configuration files. Parameters provided by the
+        user are passed through by default.
+    -->
+    <Target
+        DependsOnTargets="_OpsToolsBuild_EntryPoint_Run_SetNBuildKitPhaseFileName_Deploy;_OpsToolsBuild_EntryPoint_Run_Execute"
+        Name="Deploy">
+    </Target>
+
+    <Target Name="_OpsToolsBuild_EntryPoint_Run_SetNBuildKitPhaseFileName_Deploy">
+        <PropertyGroup>
+            <TargetToExecute>deploy</TargetToExecute>
+            <Files>
+                $(Files);
+                FileDeployImports=$(FileDeployImports);
+            </Files>
+        </PropertyGroup>
+    </Target>
+
+    <Target
+        DependsOnTargets="_OpsToolsBuild_EntryPoint_Run_LocatePackages"
+        Name="_OpsToolsBuild_EntryPoint_Run_Execute">
+
+        <!--
+            Collect the standard paths for injection into nBuildKit.
+        -->
+        <PropertyGroup>
+            <Locations>
+                DirNBuildKitMsBuildActions=$(DirNBuildKitMsBuildActions);
+                DirNBuildKitMsBuildTasks=$(DirNBuildKitMsBuildTasks);
+                DirOpsToolsBuildActions=$(DirOpsToolsBuildActions);
+                DirOpsToolsBuildTasks=$(DirOpsToolsBuildTasks);
+                DirExecutors=$(DirExecutors);
+            </Locations>
+            <Files>
+                $(Files);
+            </Files>
+        </PropertyGroup>
+
+        <MSBuild
+            BuildInParallel="False"
+            Projects="$(MSBuildThisFileDirectory)run.nbuildkit.msbuild"
+            Properties="$(Locations);$(Files);TargetToExecute=$(TargetToExecute);"
+            RebaseOutputs="False"
+            RemoveProperties=""
+            RunEachTargetSeparately="True"
+            SkipNonexistentProjects="False"
+            StopOnFirstFailure="True"
+            TargetAndPropertyListSeparators=""
+            Targets=""
+            ToolsVersion="$(MSBuildToolsVersion)"
+            UnloadProjectsOnCompletion="True"
+            UseResultsCache="True">
+        </MSBuild>
+    </Target>
+
+    <Target
+        Name="_OpsToolsBuild_EntryPoint_Run_LocatePackages">
+        <OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage
+            Condition="!Exists('$(DirNBuildKitMsBuildActions)')"
+            PackagesDirectory="$(DirPackages)"
+            PackageName="$(PackageNameNBuildKitActions)">
+            <Output
+                PropertyName="DirNBuildKitMsBuildActionsTemp"
+                TaskParameter="Path" />
+        </OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage>
+        <CreateProperty
+            Condition="Exists('$(DirNBuildKitMsBuildActionsTemp)')"
+            Value="$(DirNBuildKitMsBuildActionsTemp)\build">
+            <Output
+                PropertyName="DirNBuildKitMsBuildActions"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage
+            Condition="!Exists('$(DirExecutors)')"
+            PackagesDirectory="$(DirPackages)"
+            PackageName="$(PackageNameNBuildKitExecutors)">
+            <Output
+                PropertyName="DirExecutorsTemp"
+                TaskParameter="Path" />
+        </OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage>
+        <CreateProperty
+            Condition="Exists('$(DirExecutorsTemp)')"
+            Value="$(DirExecutorsTemp)\build">
+            <Output
+                PropertyName="DirExecutors"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage
+            Condition="!Exists('$(DirNBuildKitMsBuildTasks)')"
+            PackagesDirectory="$(DirPackages)"
+            PackageName="$(PackageNameNBuildKitTasks)">
+            <Output
+                PropertyName="DirNBuildKitMsBuildTasksTemp"
+                TaskParameter="Path" />
+        </OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage>
+        <CreateProperty
+            Condition="Exists('$(DirNBuildKitMsBuildTasksTemp)')"
+            Value="$(DirNBuildKitMsBuildTasksTemp)\build">
+            <Output
+                PropertyName="DirNBuildKitMsBuildTasks"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage
+            Condition="!Exists('$(DirOpsToolsBuildActions)')"
+            PackagesDirectory="$(DirPackages)"
+            PackageName="$(PackageNameOpsToolsBuildActions)">
+            <Output
+                PropertyName="DirOpsToolsBuildActionsTemp"
+                TaskParameter="Path" />
+        </OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage>
+        <CreateProperty
+            Condition="Exists('$(DirOpsToolsBuildActionsTemp)')"
+            Value="$(DirOpsToolsBuildActionsTemp)\build">
+            <Output
+                PropertyName="DirOpsToolsBuildActions"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage
+            Condition="!Exists('$(DirOpsToolsBuildTasks)')"
+            PackagesDirectory="$(DirPackages)"
+            PackageName="$(PackageNameOpsToolsBuildTasks)">
+            <Output
+                PropertyName="DirOpsToolsBuildTasksTemp"
+                TaskParameter="Path" />
+        </OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage>
+        <CreateProperty
+            Condition="Exists('$(DirOpsToolsBuildTasksTemp)')"
+            Value="$(DirOpsToolsBuildTasksTemp)\build">
+            <Output
+                PropertyName="DirOpsToolsBuildTasks"
+                TaskParameter="Value" />
+        </CreateProperty>
+    </Target>
+
+    <!--
+        In order to prevent it from ever colliding with any of the inline tasks defined elsewhere we'll give it
+        a name that is unlikely ever to be used elsewhere (yay poor-mans namespaces?).
+    -->
+    <UsingTask
+        AssemblyFile="$(MsBuildTasksAssembly)"
+        TaskFactory="CodeTaskFactory"
+        TaskName="OpsToolsBuild_EntryPoint_Run_LocalTask_FindHighestVersionOfPackage">
+        <ParameterGroup>
+            <PackageName
+                ParameterType="System.String"
+                Required="true" />
+            <PackagesDirectory
+                ParameterType="System.String"
+                Required="true" />
+            <Path
+                ParameterType="System.String"
+                Output="true" />
+        </ParameterGroup>
+        <Task>
+            <Code
+                Language="cs"
+                Type="Method">
+                <![CDATA[
+                    public override bool Execute()
+                    {
+                        try
+                        {
+                            var packagesDir = new System.IO.DirectoryInfo(PackagesDirectory);
+                            var potentialPaths = packagesDir.GetDirectories(
+                                string.Format(
+                                    System.Globalization.CultureInfo.InvariantCulture,
+                                    "{0}*",
+                                    PackageName),
+                                SearchOption.TopDirectoryOnly);
+
+                            Log.LogMessage(
+                                MessageImportance.Low,
+                                "Searching for {0} located the following potential directories: {1}",
+                                PackageName,
+                                string.Join(", ", potentialPaths.Select(i => i.FullName)));
+
+                            string selectedPath = null;
+                            var selectedVersion = new Version();
+
+                            var nonVersionPath = string.Empty;
+                            foreach (var path in potentialPaths)
+                            {
+                                var versionText = path.Name.Substring(PackageName.Length).Trim('.').Trim();
+                                if (string.IsNullOrEmpty(versionText))
+                                {
+                                    // There can only be one path that matches the package name and doesn't have a version
+                                    // number in the path
+                                    nonVersionPath = path.FullName;
+                                }
+
+                                Version packageVersion;
+                                if (!Version.TryParse(versionText, out packageVersion))
+                                {
+                                    Log.LogMessage(
+                                        MessageImportance.Low,
+                                        "Path {0} is not a match for package {1}",
+                                        path.FullName,
+                                        PackageName);
+
+                                    continue;
+                                }
+
+                                if (packageVersion > selectedVersion)
+                                {
+                                    Log.LogMessage(
+                                        MessageImportance.Low,
+                                        "Path {0} is a better match for package {1} than {2}",
+                                        path.FullName,
+                                        PackageName,
+                                        selectedPath);
+
+                                    selectedVersion = packageVersion;
+                                    selectedPath = path.FullName;
+                                }
+                            }
+
+                            if ((selectedPath == null) && !string.IsNullOrEmpty(nonVersionPath))
+                            {
+                                selectedPath = nonVersionPath;
+                            }
+
+                            Path = selectedPath;
+                            if (string.IsNullOrWhiteSpace(Path))
+                            {
+                                Log.LogError(
+                                    "Could not locate the '{0}' package in the '{0}' directory.",
+                                    PackageName,
+                                    PackagesDirectory);
+                            }
+                            else
+                            {
+                                Log.LogMessage(
+                                    MessageImportance.Normal,
+                                    "Located '{0}' in '{1}'.",
+                                    PackageName,
+                                    Path);
+                            }
+                        }
+                        catch(Exception e)
+                        {
+                            Log.LogErrorFromException(e);
+                        }
+
+                        // Log.HasLoggedErrors is true if the task logged any errors -- even if they were logged
+                        // from a task's constructor or property setter. As long as this task is written to always log an error
+                        // when it fails, we can reliably return HasLoggedErrors.
+                        return !Log.HasLoggedErrors;
+                    }
+                ]]>
+            </Code>
+        </Task>
+    </UsingTask>
+</Project>

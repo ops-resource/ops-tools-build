@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<archive>
+    <name>ops.tools.build.templates-${VersionSemantic}</name>
+    <files>
+        <file src="${DirWorkspace}\readme.txt" target="" />
+        <file src="${DirWorkspace}\license" target="" />
+        <file
+            exclude="${DirTemp}\templates\*.zipspec"
+            src="${DirTemp}\templates\*.*"
+            target="" />
+    </files>
+</archive>
