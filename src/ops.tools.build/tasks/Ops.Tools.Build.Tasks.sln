@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ops.Tools.Build.Tasks", "Ops.Tools.Build.Tasks\Ops.Tools.Build.Tasks.csproj", "{DAF2EDB7-9E4A-4924-A9E0-EE1E02D30918}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Ops.Tools.Build.Tasks", "Test.Unit.Ops.Tools.Build.Tasks\Test.Unit.Ops.Tools.Build.Tasks.csproj", "{4ECD8A9D-2821-4A03-935E-E2C6922F5B64}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{AF43A560-5648-4417-B60C-1582F4FA926E}"
+	ProjectSection(SolutionItems) = preProject
+		base.props = base.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "analysis", "analysis", "{FCF5F681-9A65-4BBF-BB58-25B3FE728B2A}"
+	ProjectSection(SolutionItems) = preProject
+		CustomDictionary.xml = CustomDictionary.xml
+		default.ruleset = default.ruleset
+		stylecop.json = stylecop.json
+		test.ruleset = test.ruleset
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Deploy|Any CPU = Deploy|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DAF2EDB7-9E4A-4924-A9E0-EE1E02D30918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAF2EDB7-9E4A-4924-A9E0-EE1E02D30918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAF2EDB7-9E4A-4924-A9E0-EE1E02D30918}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
+		{DAF2EDB7-9E4A-4924-A9E0-EE1E02D30918}.Deploy|Any CPU.Build.0 = Deploy|Any CPU
+		{DAF2EDB7-9E4A-4924-A9E0-EE1E02D30918}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAF2EDB7-9E4A-4924-A9E0-EE1E02D30918}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ECD8A9D-2821-4A03-935E-E2C6922F5B64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ECD8A9D-2821-4A03-935E-E2C6922F5B64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ECD8A9D-2821-4A03-935E-E2C6922F5B64}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
+		{4ECD8A9D-2821-4A03-935E-E2C6922F5B64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ECD8A9D-2821-4A03-935E-E2C6922F5B64}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="Run"
+    ToolsVersion="14.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+
+
+
+
+    <!--
+        *************************************
+        *                                   *
+        *     SHARED TOOLS                  *
+        *                                   *
+        *************************************
+    -->
+
+    <!-- Overrides for the tools paths -->
+    <PropertyGroup>
+        <!--
+            The full path and version to the mkisofs command line executable. If not defined the packages directory is searched.
+        -->
+        <ToolsExternalMakeIsoFsPath>UNDEFINED</ToolsExternalMakeIsoFsPath>
+        <ToolsExternalMkIsoFsVersion>3.2.7.0</ToolsExternalMkIsoFsVersion>
+
+        <!--
+            The full path and version to the packer command line executable. If not defined the packages directory is searched.
+        -->
+        <ToolsExternalPackerPath>UNDEFINED</ToolsExternalPackerPath>
+        <ToolsExternalPackerVersion>1.0.0</ToolsExternalPackerVersion>
+    </PropertyGroup>
+
+
+
+
+
+
+    <!--
+        *****************************************
+        *                                       *
+        *   OPS.TOOLS.BUILD SPECIFIC SETTINGS   *
+        *                                       *
+        *****************************************
+    -->
+
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsOpsToolsBuildBuildPreUserSharedSettings>true</ExistsOpsToolsBuildBuildPreUserSharedSettings>
+    </PropertyGroup>
+</Project>

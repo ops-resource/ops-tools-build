@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0"
+         DefaultTargets="Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!--
+            The workspace directory is defined as the directory that is the top-level directory in which all the
+            files for the build, test, deploy stage can be found. During the process there should never be a need
+            to go any futher up the directory hierarchy to find files.
+        -->
+        <DirWorkspace Condition=" '$(DirWorkspace)' == '' ">UNDEFINED</DirWorkspace>
+
+        <!--
+            The directory in which the transformed user configuration files will be stored while running nBuildKit.
+        -->
+        <DirUserConfiguration Condition=" '$(DirUserConfiguration)' == '' ">$(DirWorkspace)\build\configurations</DirUserConfiguration>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Locations>
+            <!-- Workspace directory as found by the entrypoint script -->
+            DirWorkspace=$(DirWorkspace);
+
+            <!-- The directory where the settings files are and where they should go -->
+            DirUserSettings=$(DirUserSettings);
+            DirUserConfiguration=$(DirUserConfiguration);
+
+            <!-- The directories for the nBuildKit parts -->
+            DirNBuildKitMsBuildActions=$(DirNBuildKitMsBuildActions);
+            DirNBuildKitMsBuildTasks=$(DirNBuildKitMsBuildTasks);
+
+            <!-- The directories for the current toolset -->
+            DirOpsToolsBuildActions=$(DirOpsToolsBuildActions);
+            DirOpsToolsBuildTasks=$(DirOpsToolsBuildTasks);
+        </Locations>
+        <Files>
+            <!-- The import files -->
+            FileBuildImports=$(FileBuildImports);
+            FileTestImports=$(FileTestImports);
+            FileDeployImports=$(FileDeployImports);
+
+            <!-- The transformation file -->
+            ScriptTransformConfigurations=$(MSBuildThisFileDirectory)transformations\transform.settings.msbuild;
+        </Files>
+    </PropertyGroup>
+
+    <Import
+        Condition="Exists('$(MSBuildThisFileDirectory)import.base.props')"
+        Project="$(MSBuildThisFileDirectory)import.base.props" />
+
+    <Target
+        Name="Run" >
+        <InvokeStandaloneMsBuild
+            Projects="$(DirExecutors)\configureandexecute.msbuild"
+            Properties="$(Locations);$(Files)"
+            RunEachTargetSeparately="True"
+            SkipNonexistentProjects="False"
+            StopOnFirstFailure="True"
+            Targets="$(TargetToExecute)"
+            TemporaryDirectory="$(DirWorkspace)\build\temp"
+            ToolsVersion="$(MSBuildToolsVersion)"
+            WorkingDirectory="$(DirWorkspace)" />
+    </Target>
+</Project>

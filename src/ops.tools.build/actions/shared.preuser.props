@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="Run"
+    ToolsVersion="14.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- Overrides for the project specific properties -->
+    <PropertyGroup>
+        <!--
+            The name of the company. This is for instance used for:
+            * Copyrights
+            * API documentation
+        -->
+        <CompanyName>Ops-Resource</CompanyName>
+
+        <!--
+            The name of the company that can be used as a part of a file path. This is for instance used for:
+            * Installer file paths
+        -->
+        <CompanyNameInFilePath>ops-resource</CompanyNameInFilePath>
+
+        <!--
+            The URL of the company website. This is for instance used for:
+            * nuspec files
+        -->
+        <CompanyUrl>https://github.com/ops-resource</CompanyUrl>
+    </PropertyGroup>
+
+    <!--
+        Directories
+    -->
+    <PropertyGroup>
+        <!--
+            NOTE: The 'DirWorkspace' property is always set prior to loading the current file. The variable is set
+            to the directory which contains the current file.
+        -->
+    </PropertyGroup>
+
+
+    <!--
+        **** PREPARE - CALCULATE HASHES ****
+    -->
+    <PropertyGroup>
+        <!--
+            The full path to the file that will contain the calculated file hashes.
+        -->
+        <FileHashes>$(DirBuildTemp)\filehashes.json</FileHashes>
+    </PropertyGroup>
+
+
+
+
+
+    <!--
+        *************************************
+        *                                   *
+        *     SHARED TOOLS                  *
+        *                                   *
+        *************************************
+    -->
+
+    <!-- Overrides for the tools paths -->
+    <PropertyGroup>
+    </PropertyGroup>
+
+
+
+
+
+
+    <!--
+        *****************************************
+        *                                       *
+        *   OPS.TOOLS.BUILD SPECIFIC SETTINGS   *
+        *                                       *
+        *****************************************
+    -->
+
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsOpsToolsBuildPreUserSharedSettings>true</ExistsOpsToolsBuildPreUserSharedSettings>
+    </PropertyGroup>
+</Project>

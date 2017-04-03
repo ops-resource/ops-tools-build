@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Ops.Tools.Build.Tasks</id>
+        <version>$VersionSemantic$</version>
+        <authors>$CompanyName$</authors>
+        <owners>$CompanyName$</owners>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+        <projectUrl>$ProductUrl$</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>
+            Provides custom MsBuild tasks for the Ops-Resource packages.
+        </description>
+        <releaseNotes>
+            $ReleaseNotesHtmlEncoded$
+        </releaseNotes>
+        <dependencies>
+            $Dependencies$
+        </dependencies>
+    </metadata>
+    <files>
+        <file
+            src="$DirBin$\*.dll"
+            target="build" />
+        <file
+            src="$DirBin$\*.targets"
+            target="build" />
+
+        <file src="$DirWorkspace$\README.md" />
+        <file src="$DirWorkspace$\LICENSE" />
+    </files>
+</package>
