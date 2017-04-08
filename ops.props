@@ -509,10 +509,10 @@
     -->
     <ItemGroup>
         <TemplateTokens Include="VersionNBuildKitMinimum">
-            <ReplacementValue>$(NBuildKitMinimumVersion)</ReplacementValue>
+            <ReplacementValue>$(PackageMinimumVersion)</ReplacementValue>
         </TemplateTokens>
         <TemplateTokens Include="VersionNBuildKitMaximum">
-            <ReplacementValue>$(NBuildKitMaximumVersion)</ReplacementValue>
+            <ReplacementValue>$(PackageMaximumVersion)</ReplacementValue>
         </TemplateTokens>
     </ItemGroup>
 
