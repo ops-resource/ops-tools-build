@@ -735,7 +735,7 @@
             - The AssemblyCompanyAttribute with the company name
             - The AssemblyCopyrightAttribute with the text provided by the ${CopyrightLong} template parameter.
         -->
-        <!--<ShouldGenerateAssemblyCompanyInfo>false</ShouldGenerateAssemblyCompanyInfo>-->
+        <ShouldGenerateAssemblyCompanyInfo>true</ShouldGenerateAssemblyCompanyInfo>
         <!--
             A flag that indicates whether an AssemblyInfo file with the version numbers should be generated. The file
             will be placed in the Properties directory of the Visual Studio project and will be named
@@ -750,7 +750,7 @@
             - The InstallVersion property with the version as provided by the ${VersionInstall} template parameter.
             - The ProductVersionFolder property with the version as provided by the ${VersionInstallFilePath} template parameter.
         -->
-        <!--<ShouldGenerateAssemblyVersionInfo>false</ShouldGenerateAssemblyVersionInfo>-->
+        <ShouldGenerateAssemblyVersionInfo>true</ShouldGenerateAssemblyVersionInfo>
         <!--
             A flag that indicates whether an AssemblyInfo file with the build information should be generated. The file
             will be placed in the Properties directory of the Visual Studio project and will be named
