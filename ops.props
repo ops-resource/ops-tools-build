@@ -274,6 +274,16 @@
     -->
     <PropertyGroup>
         <!--
+            The flag that indicates if the input branch is a Git master branch.
+        -->
+        <!-- <IsMasterBranch Condition=" '$(IsMasterBranch)' == '' AND '$(IsGitWorkspace)' == 'true' ">$([System.Text.RegularExpressions.Regex]::IsMatch('$(GitBranchExpected)', '^(master)%24'))</IsMasterBranch> -->
+
+        <!--
+            The flag that indicates if the input branch is a Git develop branch.
+        -->
+        <!-- <IsDevelopBranch Condition=" '$(IsDevelopBranch)' == '' AND '$(IsGitFlow)' == 'true' ">$([System.Text.RegularExpressions.Regex]::IsMatch('$(GitBranchExpected)', '^(develop)%24'))</IsDevelopBranch> -->
+
+        <!--
             The flag that indicates if the input branch is a GitFlow feature branch.
         -->
         <!-- <IsFeatureBranch Condition=" '$(IsGitFlow)' == 'true' ">$([System.Text.RegularExpressions.Regex]::IsMatch('$(GitBranchExpected)', '^(feature\/).*'))</IsFeatureBranch> -->
@@ -580,7 +590,7 @@
         NuGet if no package is specified in the packages.config file.
     -->
     <PropertyGroup>
-        <PackageMinimumVersion Condition=" '$(PackageMinimumVersion)' == '' ">0.9.0</PackageMinimumVersion>
+        <PackageMinimumVersion Condition=" '$(PackageMinimumVersion)' == '' ">0.9.1</PackageMinimumVersion>
         <PackageMaximumVersion Condition=" '$(PackageMaximumVersion)' == '' ">0.10.0</PackageMaximumVersion>
     </PropertyGroup>
 
