@@ -23,7 +23,8 @@
             PackagesDirectory="$(DirPackages)"
             PackageName="MkIsoFs.Windows.x86"
             PackageVersion="$(ToolsExternalMkIsoFsVersion)"
-            Sources="@(NuGetSources)" />
+            Sources="@(NuGetSources)"
+            WorkingDirectory="$(DirWorkspace)" />
         <SearchPackagesDirectoryForToolPath
             Condition=" '$(ToolsExternalMakeIsoFsPath)' == 'UNDEFINED' "
             FileToLocate="mkisofs.exe"
