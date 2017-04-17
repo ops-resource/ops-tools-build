@@ -608,6 +608,6 @@
     -->
 
     <PropertyGroup>
-        <OpsConfigurationVersion>0.1</OpsConfigurationVersion>
+        <OpsConfigurationVersion>0.2</OpsConfigurationVersion>
     </PropertyGroup>
 </Project>

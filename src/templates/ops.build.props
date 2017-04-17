@@ -99,6 +99,13 @@
         </ArchiveFilesToCopy>
         -->
     </ItemGroup>
+    <ItemGroup>
+        <!--
+        <ArchiveFilesToCopy Include="">
+            <Destination></Destination>
+        </ArchiveFilesToCopy>
+        -->
+    </ItemGroup>
 
 
     <!--
