@@ -455,6 +455,20 @@
 
 
     <!--
+        **** ANALYZE - FOODCRITIC ****
+    -->
+    <!--
+        The collection of directories that should be analyzed with Foodcritic
+    -->
+    <ItemGroup>
+        <!-->
+        <ChefCookbooksToAnalyze Include="">
+        </ChefCookbooksToAnalyze>
+        -->
+    </ItemGroup>
+
+
+    <!--
         **** PACK - NUGET ****
     -->
     <PropertyGroup>
@@ -969,7 +983,25 @@
             <PostSteps>
             </PostSteps>
         </BuildStepsToExecute>
+        -->
 
+        <BuildStepsToExecute Include="$(BuildStepsAnalyzeFoodCritic)">
+            <Properties>
+                Configuration=$(TestConfiguration);
+                Platform=$(Platform)
+            </Properties>
+            <Groups>
+                test;
+                test.analyze;
+                test.analyze.foodcritic;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </BuildStepsToExecute>
+
+        <!--
         <BuildStepsToExecute Include="$(BuildStepsBuildILMerge)">
             <Properties>
                 Configuration=$(ProductionConfiguration);

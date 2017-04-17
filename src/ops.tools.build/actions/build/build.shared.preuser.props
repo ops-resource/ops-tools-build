@@ -19,6 +19,12 @@
     <!-- Overrides for the tools paths -->
     <PropertyGroup>
         <!--
+            The full path and version to the foodcritic command line executable. If not defined the packages directory is searched.
+        -->
+        <ToolsExternalFoodCriticPath>foodcritic</ToolsExternalFoodCriticPath>
+        <ToolsExternalFoodCriticVersion>UNDEFINED</ToolsExternalFoodCriticVersion>
+
+        <!--
             The full path and version to the mkisofs command line executable. If not defined the packages directory is searched.
         -->
         <ToolsExternalMakeIsoFsPath>UNDEFINED</ToolsExternalMakeIsoFsPath>

@@ -7,6 +7,9 @@
     </PropertyGroup>
     <PropertyGroup>
         <BuildStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</BuildStepsPrepareFileHashes>
+
+        <BuildStepsAnalyzeFoodCritic>$(MSBuildThisFileDirectory)build.analyze.foodcritic.msbuild</BuildStepsAnalyzeFoodCritic>
+
         <BuildStepsPackIso>$(MSBuildThisFileDirectory)build.pack.iso.msbuild</BuildStepsPackIso>
         <BuildStepsPackPacker>$(MSBuildThisFileDirectory)build.pack.packer.msbuild</BuildStepsPackPacker>
     </PropertyGroup>
@@ -18,6 +21,14 @@
             <Id>BuildStepsPrepareFileHashes</Id>
             <Name>Build - Calculate file hashes</Name>
             <Path>$(BuildStepsPrepareFileHashes)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsAnalyzeFoodCritic)'))">
+            <Description>
+                Analyze Chef cookbooks with the Foodcritic tool.
+            </Description>
+            <Id>BuildStepsAnalyzeFoodCritic</Id>
+            <Name>Build - Analyze Chef code with foodcritic</Name>
+            <Path>$(BuildStepsAnalyzeFoodCritic)</Path>
         </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPackIso)'))">
             <Description>

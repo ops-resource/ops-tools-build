@@ -28,6 +28,20 @@
     </ItemGroup>
 
 
+    <!--
+        **** ANALYZE - FOODCRITIC ****
+    -->
+    <!--
+        The collection of directories that should be analyzed with Foodcritic
+    -->
+    <ItemGroup Condition=" '@(ChefCookbooksToAnalyze)' == '' ">
+        <!-->
+        <ChefCookbooksToAnalyze Include="">
+        </ChefCookbooksToAnalyze>
+        -->
+    </ItemGroup>
+
+
 
 
 
