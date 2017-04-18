@@ -35,6 +35,12 @@
         -->
         <ToolsExternalPackerPath>UNDEFINED</ToolsExternalPackerPath>
         <ToolsExternalPackerVersion>1.0.0</ToolsExternalPackerVersion>
+
+        <!--
+            The full path and version to the rubucop command line executable. If not defined the packages directory is searched.
+        -->
+        <ToolsExternalRuboCopPath>rubocop</ToolsExternalRuboCopPath>
+        <ToolsExternalRuboCopVersion>UNDEFINED</ToolsExternalRuboCopVersion>
     </PropertyGroup>
 
 

@@ -8,6 +8,7 @@
     <PropertyGroup>
         <BuildStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</BuildStepsPrepareFileHashes>
 
+        <BuildStepsAnalyzeRuboCop>$(MSBuildThisFileDirectory)build.analyze.rubocop.msbuild</BuildStepsAnalyzeRuboCop>
         <BuildStepsAnalyzeFoodCritic>$(MSBuildThisFileDirectory)build.analyze.foodcritic.msbuild</BuildStepsAnalyzeFoodCritic>
 
         <BuildStepsPackIso>$(MSBuildThisFileDirectory)build.pack.iso.msbuild</BuildStepsPackIso>
@@ -21,6 +22,14 @@
             <Id>BuildStepsPrepareFileHashes</Id>
             <Name>Build - Calculate file hashes</Name>
             <Path>$(BuildStepsPrepareFileHashes)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsAnalyzeRuboCop)'))">
+            <Description>
+                Analyze ruby code with the RuboCop tool.
+            </Description>
+            <Id>BuildStepsAnalyzeRuboCop</Id>
+            <Name>Build - Analyze ruby code with Rubocop</Name>
+            <Path>$(BuildStepsAnalyzeRuboCop)</Path>
         </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsAnalyzeFoodCritic)'))">
             <Description>

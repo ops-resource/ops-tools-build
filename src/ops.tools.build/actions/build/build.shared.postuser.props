@@ -29,6 +29,19 @@
 
 
     <!--
+        **** ANALYZE - RUBOCOP ****
+    -->
+    <!--
+        The collection of files that should be analyzed with Rubocop
+    -->
+    <ItemGroup Condition=" '@(RubocopConfigurationFiles)' == '' ">
+        <!-->
+        <RubocopConfigurationFiles Include="">
+        </RubocopConfigurationFiles>
+        -->
+    </ItemGroup>
+
+    <!--
         **** ANALYZE - FOODCRITIC ****
     -->
     <!--
