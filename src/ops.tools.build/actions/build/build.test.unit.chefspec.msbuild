@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0"
+         DefaultTargets="Test_Unit_ChefSpec_Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsBuildTestUnitChefSpec>true</ExistsBuildTestUnitChefSpec>
+    </PropertyGroup>
+
+    <Import
+        Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
+        Project="$(FileImports)" />
+
+    <Target Name="Test_Unit_ChefSpec_Run">
+        <CallTarget Targets="_Test_Unit_ChefSpec_Execute" />
+    </Target>
+
+    <Target
+        Name="_Test_Unit_ChefSpec_Execute"
+        Outputs="%(ChefCookbooksToAnalyze.Identity)">
+        <CreateProperty Value="%(ChefCookbooksToAnalyze.FullPath)">
+            <Output
+                PropertyName="ChefSpecWorkingDirectory"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <CreateProperty Value="%(ChefCookbooksToAnalyze.RSpecPattern)">
+            <Output
+                PropertyName="RSpecPattern"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <Exec
+            Command="$(ToolsExternalRSpecPath) --pattern &quot;$(RSpecPattern)&quot; --format documentation --format RspecJunitFormatter --out &quot;$(DirBuildLogs)\chefspec_$([System.IO.Path]::GetFileNameWithoutExtension('$(ChefSpecWorkingDirectory)')).xml&quot;"
+            WorkingDirectory="$(ChefSpecWorkingDirectory)" />
+    </Target>
+ </Project>

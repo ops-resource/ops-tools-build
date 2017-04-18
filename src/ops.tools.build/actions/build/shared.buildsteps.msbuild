@@ -11,6 +11,8 @@
         <BuildStepsAnalyzeRuboCop>$(MSBuildThisFileDirectory)build.analyze.rubocop.msbuild</BuildStepsAnalyzeRuboCop>
         <BuildStepsAnalyzeFoodCritic>$(MSBuildThisFileDirectory)build.analyze.foodcritic.msbuild</BuildStepsAnalyzeFoodCritic>
 
+        <BuildStepsUnitTestChefSpec>$(MSBuildThisFileDirectory)build.test.unit.chefspec.msbuild</BuildStepsUnitTestChefSpec>
+
         <BuildStepsPackIso>$(MSBuildThisFileDirectory)build.pack.iso.msbuild</BuildStepsPackIso>
         <BuildStepsPackPacker>$(MSBuildThisFileDirectory)build.pack.packer.msbuild</BuildStepsPackPacker>
     </PropertyGroup>
@@ -38,6 +40,14 @@
             <Id>BuildStepsAnalyzeFoodCritic</Id>
             <Name>Build - Analyze Chef code with foodcritic</Name>
             <Path>$(BuildStepsAnalyzeFoodCritic)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsUnitTestChefspec)'))">
+            <Description>
+                Execute tests on Chef cookbooks with ChefSpec.
+            </Description>
+            <Id>BuildStepsUnitTestChefspec</Id>
+            <Name>Build - Test Chef code with ChefSpec</Name>
+            <Path>$(BuildStepsUnitTestChefspec)</Path>
         </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPackIso)'))">
             <Description>

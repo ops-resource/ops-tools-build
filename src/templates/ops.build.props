@@ -469,14 +469,15 @@
 
 
     <!--
-        **** ANALYZE - FOODCRITIC ****
+        **** ANALYSE / UNIT TEST - CHEF ****
     -->
     <!--
-        The collection of directories that should be analyzed with Foodcritic
+        The collection of directories that should be analyzed with Foodcritic and ChefSpec.
     -->
-    <ItemGroup>
+    <ItemGroup Condition=" '@(ChefCookbooksToAnalyze)' == '' ">
         <!-->
         <ChefCookbooksToAnalyze Include="">
+            <RSpecPattern>./*/spec/*_spec.rb</RSpecPattern>
         </ChefCookbooksToAnalyze>
         -->
     </ItemGroup>
@@ -901,6 +902,24 @@
                 test;
                 test.unittest;
                 test.unittest.vstest;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </BuildStepsToExecute>
+        -->
+
+        <!--
+        <BuildStepsToExecute Include="$(BuildStepsUnitTestChefSpec)">
+            <Properties>
+                Configuration=$(TestConfiguration);
+                Platform=$(Platform)
+            </Properties>
+            <Groups>
+                test;
+                test.unittest;
+                test.unittest.chefspec;
             </Groups>
             <PreSteps>
             </PreSteps>
