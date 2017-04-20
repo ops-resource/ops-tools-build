@@ -474,7 +474,7 @@
     <!--
         The collection of directories that should be analyzed with Foodcritic and ChefSpec.
     -->
-    <ItemGroup Condition=" '@(ChefCookbooksToAnalyze)' == '' ">
+    <ItemGroup>
         <!-->
         <ChefCookbooksToAnalyze Include="">
             <RSpecPattern>./*/spec/*_spec.rb</RSpecPattern>
@@ -910,6 +910,37 @@
         </BuildStepsToExecute>
         -->
 
+        <BuildStepsToExecute Include="$(BuildStepsAnalyzeRuboCop)">
+            <Properties>
+                Configuration=$(TestConfiguration);
+                Platform=$(Platform)
+            </Properties>
+            <Groups>
+                test;
+                test.analyze;
+                test.analyze.rubocop;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </BuildStepsToExecute>
+        <BuildStepsToExecute Include="$(BuildStepsAnalyzeFoodCritic)">
+            <Properties>
+                Configuration=$(TestConfiguration);
+                Platform=$(Platform)
+            </Properties>
+            <Groups>
+                test;
+                test.analyze;
+                test.analyze.foodcritic;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </BuildStepsToExecute>
+
         <!--
         <BuildStepsToExecute Include="$(BuildStepsUnitTestChefSpec)">
             <Properties>
@@ -960,37 +991,6 @@
             </PostSteps>
         </BuildStepsToExecute>
         -->
-
-        <BuildStepsToExecute Include="$(BuildStepsAnalyzeRuboCop)">
-            <Properties>
-                Configuration=$(TestConfiguration);
-                Platform=$(Platform)
-            </Properties>
-            <Groups>
-                test;
-                test.analyze;
-                test.analyze.rubocop;
-            </Groups>
-            <PreSteps>
-            </PreSteps>
-            <PostSteps>
-            </PostSteps>
-        </BuildStepsToExecute>
-        <BuildStepsToExecute Include="$(BuildStepsAnalyzeFoodCritic)">
-            <Properties>
-                Configuration=$(TestConfiguration);
-                Platform=$(Platform)
-            </Properties>
-            <Groups>
-                test;
-                test.analyze;
-                test.analyze.foodcritic;
-            </Groups>
-            <PreSteps>
-            </PreSteps>
-            <PostSteps>
-            </PostSteps>
-        </BuildStepsToExecute>
 
         <!--
         <BuildStepsToExecute Include="$(BuildStepsBuildILMerge)">

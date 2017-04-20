@@ -11,12 +11,8 @@
         Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
         Project="$(FileImports)" />
 
-    <Target Name="Build_Analyze_Foodcritic_Run">
-        <CallTarget Targets="_Build_Analyze_Foodcritic_Execute" />
-    </Target>
-
     <Target
-        Name="_Build_Analyze_Foodcritic_Execute"
+        Name="Build_Analyze_Foodcritic_Run"
         Outputs="%(ChefCookbooksToAnalyze.Identity)">
         <Exec
             Command="$(ToolsExternalFoodCriticPath) -f any &quot;%(ChefCookbooksToAnalyze.FullPath)&quot;"
