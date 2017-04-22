@@ -13,7 +13,9 @@
 
     <Target Name="_OpsToolsBuild_Build_Pack_Iso_GetToolPaths">
         <Error
+            Code="$(NBuildKitErrorCodePackagesDirectoryNotFound)"
             Condition="!Exists('$(DirPackages)') "
+            HelpKeyword="$(NBuildKitErrorIdPackagesDirectoryNotFound)"
             Text="The packages directory does not exist. Cannot search for the ISO packing executables." />
 
         <NuGetInstall
@@ -45,7 +47,9 @@
             Importance="low"
             Text="The mkisofs executable was found at: $(ToolsExternalMakeIsoFsPath)" />
         <Error
+            Code="$(NBuildKitErrorCodeToolFileNotFound)"
             Condition="!Exists('$(ToolsExternalMakeIsoFsPath)') "
+            HelpKeyword="$(NBuildKitErrorIdToolFileNotFound)"
             Text="Could not locate the mkisofs executable path. Cannot create an ISO file." />
     </Target>
 

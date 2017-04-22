@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="Run"
+    ToolsVersion="14.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsOpsToolsBuildSharedErrorCodes>true</ExistsOpsToolsBuildSharedErrorCodes>
+    </PropertyGroup>
+
+    <!--
+        This property group defines all the known error IDs.
+    -->
+    <PropertyGroup>
+        <!-- System -->
+        <!-- Error codes from 0001 to 0099 -->
+        <OpsToolsBuildErrorIdUnknownError>OpsToolsBuild.UnknownError</OpsToolsBuildErrorIdUnknownError>
+        <OpsToolsBuildErrorCodeUnknownError>OTB0001</OpsToolsBuildErrorCodeUnknownError>
+
+
+        <!-- IO -->
+        <!-- Directories -->
+        <!-- Error codes from 0100 to 0299 -->
+
+        <!-- Files -->
+        <!-- Error codes from 0300 to 0499 -->
+
+        <!-- Application interaction -->
+        <!-- Error codes from 0500 to 0699 -->
+
+        <!-- Processing -->
+        <!-- Error codes from 0700 to 0899 -->
+        <OpsToolsBuildErrorIdCalculateHashFailure>OpsToolsBuild.Processing.CalculateHash.Failure</OpsToolsBuildErrorIdCalculateHashFailure>
+        <OpsToolsBuildErrorCodeCalculateHashFailure>OTB0721</OpsToolsBuildErrorCodeCalculateHashFailure>
+
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- System -->
+        <ErrorInformation Include="$(OpsToolsBuildErrorIdUnknownError)">
+            <Code>$(OpsToolsBuildErrorCodeUnknownError)</Code>
+            <Description>An internal error has occured.</Description>
+        </ErrorInformation>
+
+        <!-- Processing -->
+        <ErrorInformation Include="$(OpsToolsBuildErrorIdCalculateHashFailure)">
+            <Code>$(OpsToolsBuildErrorCodeCalculateHashFailure)</Code>
+            <Description>Failed to calculate the hash.</Description>
+        </ErrorInformation>
+    </ItemGroup>
+</Project>

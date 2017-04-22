@@ -36,7 +36,9 @@
             Importance="low"
             Condition="Exists('$(ToolsExternalPackerPath)') " />
         <Error
+            Code="$(NBuildKitErrorCodeToolFileNotFound)"
             Text="Could not locate the Packer executable path. Cannot generate an image."
+            HelpKeyword="$(NBuildKitErrorIdToolFileNotFound)"
             Condition="!Exists('$(ToolsExternalPackerPath)') "/>
     </Target>
 
@@ -52,7 +54,9 @@
         </TemplateText>
 
         <Error
+            Code="$(NBuildKitErrorCodeFileNotFound)"
             Text="Expected $(FilePackerConfiguration) to point to a valid path but it does not."
+            HelpKeyword="$(NBuildKitErrorIdFileNotFound)"
             Condition="!Exists('$(FilePackerConfiguration)') " />
 
         <Message

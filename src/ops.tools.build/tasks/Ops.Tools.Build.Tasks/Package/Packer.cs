@@ -57,13 +57,31 @@ namespace Ops.Tools.Build.Tasks.Package
         {
             if ((ConfigurationFile == null) || string.IsNullOrWhiteSpace(ConfigurationFile.ItemSpec))
             {
-                Log.LogError("Output path for the configuration file is not defined. Unable to invoke Packer.");
+                Log.LogError(
+                    string.Empty,
+                    ErrorCodeById(ErrorIdFileNotFound),
+                    ErrorIdFileNotFound,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "Output path for the configuration file is not defined. Unable to invoke Packer.");
                 return false;
             }
 
             if ((ToolPath == null) || string.IsNullOrWhiteSpace(ToolPath.ItemSpec))
             {
-                Log.LogError("The file path to the 'packer' executable is not defined. Unable to create an image.");
+                Log.LogError(
+                    string.Empty,
+                    ErrorCodeById(ErrorIdApplicationPathNotFound),
+                    ErrorIdApplicationPathNotFound,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "The file path to the 'packer' executable is not defined. Unable to create an image.");
                 return false;
             }
 
@@ -112,11 +130,17 @@ namespace Ops.Tools.Build.Tasks.Package
             if (exitCode != 0)
             {
                 Log.LogError(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "{0} exited with a non-zero exit code. Exit code was: {1}",
-                        Path.GetFileName(toolPath),
-                        exitCode));
+                    string.Empty,
+                    ErrorCodeById(ErrorIdApplicationNonzeroExitCode),
+                    ErrorIdApplicationNonzeroExitCode,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "{0} exited with a non-zero exit code. Exit code was: {1}",
+                    Path.GetFileName(toolPath),
+                    exitCode);
             }
 
             return !Log.HasLoggedErrors;
