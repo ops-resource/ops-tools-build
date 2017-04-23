@@ -20,6 +20,7 @@
 
         <NuGetInstall
             Condition=" '$(ToolsExternalMakeIsoFsPath)' == 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
             ExcludeVersion="$(ShouldRestoreNuGetPackagesWithoutVersionInPath)"
             NuGetExecutablePath="$(ToolsExternalNuGetPath)"
             PackagesDirectory="$(DirPackages)"
@@ -29,6 +30,7 @@
             WorkingDirectory="$(DirWorkspace)" />
         <SearchPackagesDirectoryForToolPath
             Condition=" '$(ToolsExternalMakeIsoFsPath)' == 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
             FileToLocate="mkisofs.exe"
             PackagesDirectory="$(DirPackages)">
             <Output
@@ -37,6 +39,7 @@
         </SearchPackagesDirectoryForToolPath>
         <GetToolFullPath
             Condition=" '$(ToolsExternalMakeIsoFsPath)' != 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
             Tool="$(ToolsExternalMakeIsoFsPath)">
             <Output
                 PropertyName="ToolsExternalMakeIsoFsPath"
@@ -67,6 +70,7 @@
             Directories="$(DirBuildDeploy)" />
 
         <TemplateText
+            ErrorInformation="@(ErrorInformation)"
             Template="%(IsoPackageSpecs.Identity)"
             Tokens="@(TemplateTokens)">
             <Output
@@ -87,11 +91,13 @@
 
         <TemplateFile
             Encoding="UTF-8"
+            ErrorInformation="@(ErrorInformation)"
             OutputFileName="$(FileGenerateIsoSpec)"
             Template="$(FileIsoSpec)"
             Tokens="@(TemplateTokens)" />
 
         <Iso
+            ErrorInformation="@(ErrorInformation)"
             File="$(FileGenerateIsoSpec)"
             OutputDirectory="$(DirBuildDeploy)"
             OverwriteExistingFiles="true"

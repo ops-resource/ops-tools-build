@@ -42,6 +42,7 @@
         </PropertyGroup>
         <InvokeStandaloneMsBuild
             Condition="Exists('$(DirNBuildKitMsBuildActions)\shared.templatetokens.msbuild')"
+            ErrorInformation="@(ErrorInformation)"
             Projects="$(DirNBuildKitMsBuildActions)\shared.templatetokens.msbuild"
             Properties="$(Locations);$(Files);$(DefaultProperties)"
             RunEachTargetSeparately="True"
@@ -64,6 +65,7 @@
 
         <CalculateFileHash
             Algorithm="%(FilesToHash.Algorithm)"
+            ErrorInformation="@(ErrorInformation)"
             Path="%(FilesToHash.FullPath)">
             <Output
                 PropertyName="Hash"
