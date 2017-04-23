@@ -6,6 +6,7 @@
         <ExistsOpsToolsBuildBuildSteps>true</ExistsOpsToolsBuildBuildSteps>
     </PropertyGroup>
     <PropertyGroup>
+        <BuildStepsPrepareRestoreBerkshelf>$(MSBuildThisFileDirectory)..\shared.prepare.berkshelf.restore.msbuild</BuildStepsPrepareRestoreBerkshelf>
         <BuildStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</BuildStepsPrepareFileHashes>
 
         <BuildStepsAnalyzeRuboCop>$(MSBuildThisFileDirectory)build.analyze.rubocop.msbuild</BuildStepsAnalyzeRuboCop>
@@ -17,6 +18,14 @@
         <BuildStepsPackPacker>$(MSBuildThisFileDirectory)build.pack.packer.msbuild</BuildStepsPackPacker>
     </PropertyGroup>
     <ItemGroup>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPrepareRestoreBerkshelf)'))">
+            <Description>
+                Restores the cookbook dependencies.
+            </Description>
+            <Id>BuildStepsPrepareRestoreBerkshelf</Id>
+            <Name>Build - restore cookbook dependencies</Name>
+            <Path>$(BuildStepsPrepareRestoreBerkshelf)</Path>
+        </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPrepareFileHashes)'))">
             <Description>
                 Calculate the hash of one or more files.

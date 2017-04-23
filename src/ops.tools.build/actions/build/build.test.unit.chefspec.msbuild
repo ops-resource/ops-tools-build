@@ -17,13 +17,13 @@
 
     <Target
         Name="_Test_Unit_ChefSpec_Execute"
-        Outputs="%(ChefCookbooksToAnalyze.Identity)">
-        <CreateProperty Value="%(ChefCookbooksToAnalyze.FullPath)">
+        Outputs="%(ChefCookbooks.Identity)">
+        <CreateProperty Value="%(ChefCookbooks.FullPath)">
             <Output
                 PropertyName="ChefSpecWorkingDirectory"
                 TaskParameter="Value" />
         </CreateProperty>
-        <CreateProperty Value="%(ChefCookbooksToAnalyze.RSpecPattern)">
+        <CreateProperty Value="%(ChefCookbooks.ChefSpecPattern)">
             <Output
                 PropertyName="RSpecPattern"
                 TaskParameter="Value" />

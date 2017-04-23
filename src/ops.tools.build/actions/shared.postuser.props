@@ -3,7 +3,19 @@
     DefaultTargets="Run"
     ToolsVersion="14.0"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
+    <!--
+        **** PREPARE - CHEF ****
+    -->
+    <!--
+        The collection of directories that contain cookbooks.
+    -->
+    <ItemGroup Condition=" '@(ChefCookbooks)' == '' ">
+        <!-->
+        <ChefCookbooks Include="">
+            <ChefSpecPattern>./*/spec/*_spec.rb</ChefSpecPattern>
+        </ChefCookbooks>
+        -->
+    </ItemGroup>
 
 
 

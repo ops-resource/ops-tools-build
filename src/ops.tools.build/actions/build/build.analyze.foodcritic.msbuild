@@ -13,9 +13,9 @@
 
     <Target
         Name="Build_Analyze_Foodcritic_Run"
-        Outputs="%(ChefCookbooksToAnalyze.Identity)">
+        Outputs="%(ChefCookbooks.Identity)">
         <Exec
-            Command="$(ToolsExternalFoodCriticPath) -f any &quot;%(ChefCookbooksToAnalyze.FullPath)&quot;"
+            Command="$(ToolsExternalFoodCriticPath) -f any &quot;%(ChefCookbooks.FullPath)&quot;"
             IgnoreStandardErrorWarningFormat="true"
             WorkingDirectory="$(DirWorkspace)" />
     </Target>

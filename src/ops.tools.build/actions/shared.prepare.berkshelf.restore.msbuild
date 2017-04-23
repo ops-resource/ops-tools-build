@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="nBuildKit_Shared_Prepare_Berkshelf_Restore_Run"
+    ToolsVersion="14.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsSharedPrepareBerkshelfRestore>true</ExistsSharedPrepareBerkshelfRestore>
+    </PropertyGroup>
+
+    <Import
+        Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
+        Project="$(FileImports)" />
+
+    <PropertyGroup>
+        <FileNuGetRestoreComplete>$(DirBuildTemp)\nuget_restore.json</FileNuGetRestoreComplete>
+    </PropertyGroup>
+
+    <Target
+        Name="nBuildKit_Shared_Prepare_Berkshelf_Restore_Run">
+        <CallTarget Targets="_nBuildKit_Shared_Prepare_Berkshelf_Restore_Packages" />
+    </Target>
+
+    <Target
+        Condition=" '@(ChefCookbooks)' != '' "
+        Name="_nBuildKit_Shared_Prepare_Berkshelf_Restore_Packages"
+        Outputs="%(ChefCookbooks.Identity)">
+        <Error
+            Code="$(NBuildKitErrorCodeToolFileNotFound)"
+            Condition=" '$(ToolsExternalBerkshelfPath)' == '' "
+            HelpKeyword="$NBuildKitErrorIdToolFileNotFound)"
+            Text="No Berkshelf executable defined. Will not be able to restore the vendor cookbooks." />
+
+        <CreateProperty Value="%(ChefCookbooks.FullPath)">
+            <Output
+                PropertyName="ChefCookbookPath"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <CreateProperty Value="$([MSBuild]::MakeRelative($(ChefCookbookPath), $(DirVendorCookbooks)))">
+            <Output
+                PropertyName="DirRelativeVendor"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <Exec
+            Command="$(ToolsExternalBerkshelfPath) vendor $(DirRelativeVendor)"
+            WorkingDirectory="$(ChefCookbookPath)" />
+    </Target>
+ </Project>

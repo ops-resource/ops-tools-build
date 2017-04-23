@@ -170,6 +170,9 @@
 
         <!-- The directory that contains all the test files for the project -->
         <!-- <DirTest>$(DirWorkspace)\tests</DirTest> -->
+
+        <!-- The directory that contains all the vendor cookbooks -->
+        <!-- <DirVendorCookbooks>$(DirWorkspace)\berks\cookbooks</DirVendorCookbooks> -->
     </PropertyGroup>
 
     <!--
@@ -221,6 +224,21 @@
             Condition=" '$(DirWorkspace)' != '' "
             Include="$(DirWorkspace)\**\package.json"
             Exclude="$(DirBuild)\**\package.json;$(DirWorkspace)\**\bin\**\package.json;$(DirWorkspace)\**\obj\**\package.json;$(DirWorkspace)\**\bower_components\**\package.json;$(DirWorkspace)\**\node_modules\**\package.json" />
+        -->
+    </ItemGroup>
+
+
+    <!--
+        **** PREPARE - CHEF ****
+    -->
+    <!--
+        The collection of directories that contain cookbooks.
+    -->
+    <ItemGroup>
+        <!-->
+        <ChefCookbooks Include="">
+            <ChefSpecPattern>./*/spec/*_spec.rb</ChefSpecPattern>
+        </ChefCookbooks>
         -->
     </ItemGroup>
 

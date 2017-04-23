@@ -42,21 +42,6 @@
     </ItemGroup>
 
 
-    <!--
-        **** ANALYSE / UNIT TEST - CHEF ****
-    -->
-    <!--
-        The collection of directories that should be analyzed with Foodcritic and ChefSpec.
-    -->
-    <ItemGroup Condition=" '@(ChefCookbooksToAnalyze)' == '' ">
-        <!-->
-        <ChefCookbooksToAnalyze Include="">
-            <RSpecPattern>./*/spec/*_spec.rb</RSpecPattern>
-        </ChefCookbooksToAnalyze>
-        -->
-    </ItemGroup>
-
-
 
 
 
