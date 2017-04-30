@@ -19,7 +19,7 @@
         Hash values are stored in a file in the temp directory and can be retrieved with the
         'ReadHashFromFile' task
     -->
-    <ItemGroup Condition=" '@(FilesToHash)' == '' ">
+    <ItemGroup Condition=" '$(ShouldLoadFilesToHash)' == 'true' AND '@(FilesToHash)' == '' ">
         <!-->
         <FilesToHash Include="">
             <Algorithm></Algorithm>

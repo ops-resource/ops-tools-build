@@ -6,6 +6,9 @@
     <PropertyGroup>
         <ExistsBuildPackIso>true</ExistsBuildPackIso>
     </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadIsoPackageSpecs>true</ShouldLoadIsoPackageSpecs>
+    </PropertyGroup>
 
     <Import
         Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "

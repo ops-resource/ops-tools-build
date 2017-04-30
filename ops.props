@@ -235,14 +235,14 @@
             A flag that indicates whether or not the current build should assume that the GitFlow (http://nvie.com/posts/a-successful-git-branching-model/)
             workflow is being used.
         -->
-        <!-- <IsGitFlow>UNDEFINED</IsGitFlow> -->
+        <IsGitFlow>true</IsGitFlow>
     </PropertyGroup>
 
 
     <!--
         **** PREPARE - NUGET RESTORE ****
     -->
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadNuGetPackageFiles)' == 'true' ">
         <!--
         <NuGetPackageFiles
             Condition=" '$(DirWorkspace)' != '' "
@@ -259,7 +259,7 @@
     <!--
         **** PREPARE - NPM RESTORE ****
     -->
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadNpmPackageFiles)' == 'true' ">
         <!--
         <NpmPackageFiles
             Condition=" '$(DirWorkspace)' != '' "

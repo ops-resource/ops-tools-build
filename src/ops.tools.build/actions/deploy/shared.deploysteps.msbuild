@@ -11,7 +11,7 @@
     <PropertyGroup>
         <DeployStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</DeployStepsPrepareFileHashes>
     </PropertyGroup>
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(DeployStepsPrepareFileHashes)'))">
             <Description>
                 Calculate the hash of one or more files.

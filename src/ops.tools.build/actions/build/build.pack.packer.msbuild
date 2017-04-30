@@ -5,6 +5,9 @@
     <PropertyGroup>
         <ExistsBuildImagePacker>true</ExistsBuildImagePacker>
     </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadPackerImagesToBuild>true</ShouldLoadPackerImagesToBuild>
+    </PropertyGroup>
 
     <Import
         Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "

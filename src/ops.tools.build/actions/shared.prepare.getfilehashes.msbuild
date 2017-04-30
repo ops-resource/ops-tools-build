@@ -7,6 +7,9 @@
         <!-- Defines whether the current script file has been loaded / imported or not -->
         <ExistsSharedPrepareGetVersion>true</ExistsSharedPrepareGetVersion>
     </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadFilesToHash>true</ShouldLoadFilesToHash>
+    </PropertyGroup>
 
     <Import
         Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
