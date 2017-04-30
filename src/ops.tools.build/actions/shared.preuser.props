@@ -64,9 +64,10 @@
     <!-- Overrides for the tools paths -->
     <PropertyGroup>
         <!--
-            The full path to the berkshelf application. If not defined the packages directory is searched.
+            The full path to the berkshelf application. If not defined the Gems bin directory is searched.
         -->
-        <ToolsExternalBerkshelfPath Condition=" '$(ToolsExternalBerkshelfPath)' == '' ">berks</ToolsExternalBerkshelfPath>
+        <ToolsExternalBerkshelfPath Condition=" '$(ToolsExternalBerkshelfPath)' == '' ">UNDEFINED</ToolsExternalBerkshelfPath>
+
         <!--
             The full path to the Bundler application.
         -->

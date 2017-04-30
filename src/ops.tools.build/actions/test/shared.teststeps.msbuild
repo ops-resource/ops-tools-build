@@ -9,6 +9,8 @@
     </PropertyGroup>
     <PropertyGroup>
         <TestStepsPrepareRestoreGems>$(MSBuildThisFileDirectory)..\shared.prepare.bundler.restore.msbuild</TestStepsPrepareRestoreGems>
+        <TestStepsPrepareRestoreBerkshelf>$(MSBuildThisFileDirectory)..\shared.prepare.berkshelf.restore.msbuild</TestStepsPrepareRestoreBerkshelf>
+
         <TestStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</TestStepsPrepareFileHashes>
     </PropertyGroup>
     <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
@@ -19,6 +21,14 @@
             <Id>TestStepsPrepareRestoreGems</Id>
             <Name>Test - restore Ruby gems</Name>
             <Path>$(TestStepsPrepareRestoreGems)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsPrepareRestoreBerkshelf)'))">
+            <Description>
+                Restores the cookbook dependencies.
+            </Description>
+            <Id>TestStepsPrepareRestoreBerkshelf</Id>
+            <Name>Test - restore cookbook dependencies</Name>
+            <Path>$(TestStepsPrepareRestoreBerkshelf)</Path>
         </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsPrepareFileHashes)'))">
             <Description>

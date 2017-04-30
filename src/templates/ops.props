@@ -249,13 +249,11 @@
         **** PREPARE - CHEF ****
     -->
     <!--
-        The collection of directories that contain cookbooks.
+        The collection of cookbooks for which the dependencies should be restored with Berkshelf
     -->
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadChefCookbooksToRestore)' == 'true' ">
         <!-->
-        <ChefCookbooks Include="">
-            <ChefSpecPattern>./*/spec/*_spec.rb</ChefSpecPattern>
-        </ChefCookbooks>
+        <ChefCookbooksToRestore Include="" />
         -->
     </ItemGroup>
 
