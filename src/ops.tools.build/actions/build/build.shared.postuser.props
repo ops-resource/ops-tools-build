@@ -42,6 +42,18 @@
     </ItemGroup>
 
 
+    <!--
+        **** ANALYZE - FOODCRITIC ****
+    -->
+    <!--
+        The collection of cookbooks for which the dependencies should be restored with Berkshelf and that should be
+        analyzed with Foodcritic and ChefSpec.
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadChefCookbooksToAnalyze)' == 'true' AND '@(ChefCookbooksToAnalyze)' == '' ">
+        <!--
+        <ChefCookbooksToAnalyze Include="" />
+        -->
+    </ItemGroup>
 
 
 

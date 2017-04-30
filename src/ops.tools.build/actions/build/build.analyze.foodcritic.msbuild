@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0"
-         DefaultTargets="Build_Analyze_Foodcritic_Run"
+         DefaultTargets="OpsToolsBuild_Build_Analyze_Foodcritic_Run"
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <!-- Defines whether the current script file has been loaded / imported or not -->
         <ExistsBuildAnalyzeFoodcritic>true</ExistsBuildAnalyzeFoodcritic>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadChefCookbooksToAnalyze>true</ShouldLoadChefCookbooksToAnalyze>
     </PropertyGroup>
 
     <Import
@@ -12,11 +15,51 @@
         Project="$(FileImports)" />
 
     <Target
-        Name="Build_Analyze_Foodcritic_Run"
-        Outputs="%(ChefCookbooks.Identity)">
+        Name="_OpsToolsBuild_Build_Analyze_Foodcritic_GetToolPaths">
+        <CreateProperty
+            Condition=" '$(ToolsExternalFoodCriticPath)' == 'UNDEFINED' "
+            Value="$(DirGemsBin)\foodcritic">
+            <Output
+                PropertyName="ToolsExternalFoodCriticPath"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <GetToolFullPath
+            Condition=" '$(ToolsExternalFoodCriticPath)' != 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
+            Tool="$(ToolsExternalFoodCriticPath)">
+            <Output
+                PropertyName="ToolsExternalFoodCriticPath"
+                TaskParameter="Path" />
+        </GetToolFullPath>
+        <Message
+            Condition="Exists('$(ToolsExternalFoodCriticPath)') "
+            Importance="low"
+            Text="The foodcritic executable was found at: $(ToolsExternalFoodCriticPath)" />
+
+        <Error
+            Code="$(NBuildKitErrorCodeToolFileNotFound)"
+            Condition="!Exists('$(ToolsExternalFoodCriticPath)') "
+            HelpKeyword="$(NBuildKitErrorIdToolFileNotFound)"
+            Text="Could not locate the foodcritic executable path. Cannot analyze the Chef cookbooks." />
+    </Target>
+
+    <Target
+        DependsOnTargets="_OpsToolsBuild_Build_Analyze_Foodcritic_GetToolPaths"
+        Name="OpsToolsBuild_Build_Analyze_Foodcritic_Run"
+        Outputs="%(ChefCookbooksToAnalyze.Identity)">
+
+        <CreateProperty Value="%(ChefCookbooksToAnalyze.FullPath)">
+            <Output
+                PropertyName="CookbookPathForFoodCritic"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <CreateProperty Value="$(CookbookPathForFoodCritic.Replace('\', '/'))">
+            <Output
+                PropertyName="CookbookPathForFoodCriticEscaped"
+                TaskParameter="Value" />
+        </CreateProperty>
         <Exec
-            Command="$(ToolsExternalFoodCriticPath) -f any &quot;%(ChefCookbooks.FullPath)&quot;"
-            IgnoreStandardErrorWarningFormat="true"
-            WorkingDirectory="$(DirWorkspace)" />
+            Command="$(ToolsExternalFoodCriticPath) --epic-fail any --cookbook-path &quot;$(CookbookPathForFoodCriticEscaped)&quot;"
+            WorkingDirectory="$(CookbookPathForFoodCritic)" />
     </Target>
  </Project>

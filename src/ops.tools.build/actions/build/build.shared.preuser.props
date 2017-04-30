@@ -19,9 +19,10 @@
     <!-- Overrides for the tools paths -->
     <PropertyGroup>
         <!--
-            The full path and version to the foodcritic command line executable. If not defined the packages directory is searched.
+            The full path and version to the foodcritic command line executable. If not defined
+            the Gems binary directory is searched.
         -->
-        <ToolsExternalFoodCriticPath>foodcritic</ToolsExternalFoodCriticPath>
+        <ToolsExternalFoodCriticPath>UNDEFINED</ToolsExternalFoodCriticPath>
         <ToolsExternalFoodCriticVersion>UNDEFINED</ToolsExternalFoodCriticVersion>
 
         <!--

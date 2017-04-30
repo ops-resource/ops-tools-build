@@ -462,6 +462,19 @@
 
 
     <!--
+        **** ANALYZE - FOODCRITIC ****
+    -->
+    <!--
+        The collection of cookbooks that should be analyzed with Foodcritic
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadChefCookbooksToAnalyze)' == 'true' ">
+        <!--
+        <ChefCookbooksToAnalyze Include="" />
+        -->
+    </ItemGroup>
+
+
+    <!--
         **** PACK - NUGET ****
     -->
     <PropertyGroup>
