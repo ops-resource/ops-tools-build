@@ -44,9 +44,10 @@
         <ToolsExternalRSpecVersion>UNDEFINED</ToolsExternalRSpecVersion>
 
         <!--
-            The full path and version to the rubucop command line executable. If not defined the packages directory is searched.
+            The full path and version to the rubucop command line executable. If not defined
+            the Gems binary directory is searched.
         -->
-        <ToolsExternalRuboCopPath>rubocop</ToolsExternalRuboCopPath>
+        <ToolsExternalRuboCopPath>UNDEFINED</ToolsExternalRuboCopPath>
         <ToolsExternalRuboCopVersion>UNDEFINED</ToolsExternalRuboCopVersion>
     </PropertyGroup>
 

@@ -34,7 +34,7 @@
     <!--
         The collection of files that should be analyzed with Rubocop
     -->
-    <ItemGroup Condition=" '@(RubocopConfigurationFiles)' == '' ">
+    <ItemGroup Condition=" '$(ShouldLoadRubocopConfigurationFiles)' == 'true' AND '@(RubocopConfigurationFiles)' == '' ">
         <!-->
         <RubocopConfigurationFiles Include="">
         </RubocopConfigurationFiles>

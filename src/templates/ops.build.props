@@ -453,7 +453,7 @@
     <!--
         The collection of files that should be analyzed with Rubocop
     -->
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadRubocopConfigurationFiles)' == 'true' ">
         <!-->
         <RubocopConfigurationFiles Include="">
         </RubocopConfigurationFiles>
