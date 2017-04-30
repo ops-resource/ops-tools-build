@@ -58,8 +58,36 @@
                 PropertyName="CookbookPathForFoodCriticEscaped"
                 TaskParameter="Value" />
         </CreateProperty>
+
+        <CreateProperty Value="%(ChefCookbooksToAnalyze.RulesToExclude)">
+            <Output
+                PropertyName="RulesToExcludeAsProperty"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <CreateItem
+            Condition=" '$(RulesToExcludeAsProperty)' != '' "
+            Include="$(RulesToExcludeAsProperty.Split(';'))">
+            <Output
+                ItemName="RulesToExclude"
+                TaskParameter="Include" />
+        </CreateItem>
+        <CreateProperty
+            Condition=" '@(RulesToExclude)' != '' "
+            Value="@(RulesToExclude -> '~%(Identity)', ',')">
+            <Output
+                PropertyName="RulesToExclude"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <CreateProperty
+            Condition=" '$(RulesToExclude)' != '' "
+            Value="--tags $(RulesToExclude)">
+            <Output
+                PropertyName="RulesToExclude"
+                TaskParameter="Value" />
+        </CreateProperty>
+
         <Exec
-            Command="$(ToolsExternalFoodCriticPath) --epic-fail any --cookbook-path &quot;$(CookbookPathForFoodCriticEscaped)&quot;"
+            Command="$(ToolsExternalFoodCriticPath) $(RulesToExclude) --epic-fail any --cookbook-path &quot;$(CookbookPathForFoodCriticEscaped)&quot;"
             WorkingDirectory="$(CookbookPathForFoodCritic)" />
     </Target>
  </Project>

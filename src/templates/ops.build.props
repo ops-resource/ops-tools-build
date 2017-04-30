@@ -469,7 +469,9 @@
     -->
     <ItemGroup Condition=" '$(ShouldLoadChefCookbooksToAnalyze)' == 'true' ">
         <!--
-        <ChefCookbooksToAnalyze Include="" />
+        <ChefCookbooksToAnalyze Include="">
+            <RulesToExclude></RulesToExclude>
+        </ChefCookbooksToAnalyze>
         -->
     </ItemGroup>
 

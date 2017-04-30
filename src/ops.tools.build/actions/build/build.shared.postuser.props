@@ -51,7 +51,9 @@
     -->
     <ItemGroup Condition=" '$(ShouldLoadChefCookbooksToAnalyze)' == 'true' AND '@(ChefCookbooksToAnalyze)' == '' ">
         <!--
-        <ChefCookbooksToAnalyze Include="" />
+        <ChefCookbooksToAnalyze Include="">
+            <RulesToExclude></RulesToExclude>
+        </ChefCookbooksToAnalyze>
         -->
     </ItemGroup>
 
