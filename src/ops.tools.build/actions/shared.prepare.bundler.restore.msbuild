@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="OpsToolsBuild_Shared_Prepare_Bundler_Restore_Run"
+    ToolsVersion="14.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsSharedPrepareBundlerRestore>true</ExistsSharedPrepareBundlerRestore>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadBundlerGemFiles>true</ShouldLoadBundlerGemFiles>
+    </PropertyGroup>
+
+    <Import
+        Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
+        Project="$(FileImports)" />
+
+    <Target
+        Name="OpsToolsBuild_Shared_Prepare_Bundler_Restore_Run">
+        <CallTarget Targets="_OpsToolsBuild_Shared_Prepare_Bundler_Restore_Packages" />
+    </Target>
+
+    <Target
+        Condition=" '@(BundlerGemFiles)' != '' "
+        Name="_OpsToolsBuild_Shared_Prepare_Bundler_Restore_Packages"
+        Outputs="%(BundlerGemFiles.Identity)">
+        <Error
+            Code="$(NBuildKitErrorCodeToolFileNotFound)"
+            Condition=" '$(ToolsExternalBundlerPath)' == '' "
+            HelpKeyword="$NBuildKitErrorIdToolFileNotFound)"
+            Text="No Bundler executable defined. Will not be able to restore the ruby gems." />
+
+        <CreateProperty Value="%(BundlerGemFiles.FullPath)">
+            <Output
+                PropertyName="BundlerGemPath"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <Exec
+            Command="$(ToolsExternalBundlerPath) install --gemfile=&quot;$(BundlerGemPath)&quot; --path &quot;$(DirGems)&quot; --binstubs=&quot;$(DirGemsBin)&quot; --no-cache"
+            WorkingDirectory="$(DirWorkspace)" />
+    </Target>
+ </Project>

@@ -8,9 +8,18 @@
         <ExistsOpsToolsBuildTestSteps>true</ExistsOpsToolsBuildTestSteps>
     </PropertyGroup>
     <PropertyGroup>
+        <TestStepsPrepareRestoreGems>$(MSBuildThisFileDirectory)..\shared.prepare.bundler.restore.msbuild</TestStepsPrepareRestoreGems>
         <TestStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</TestStepsPrepareFileHashes>
     </PropertyGroup>
     <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsPrepareRestoreGems)'))">
+            <Description>
+                Restores the required Ruby Gems.
+            </Description>
+            <Id>TestStepsPrepareRestoreGems</Id>
+            <Name>Test - restore Ruby gems</Name>
+            <Path>$(TestStepsPrepareRestoreGems)</Path>
+        </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsPrepareFileHashes)'))">
             <Description>
                 Calculate the hash of one or more files.

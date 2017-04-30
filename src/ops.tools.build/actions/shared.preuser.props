@@ -29,10 +29,11 @@
         Directories
     -->
     <PropertyGroup>
-        <!--
-            NOTE: The 'DirWorkspace' property is always set prior to loading the current file. The variable is set
-            to the directory which contains the current file.
-        -->
+
+        <!-- The directory that contains all the ruby gems -->
+        <DirGems>$(DirWorkspace)\gems</DirGems>
+        <DirGemsBin>$(DirGems)\bin</DirGemsBin>
+
         <!-- The directory that contains all the vendor cookbooks -->
         <DirVendorCookbooks>$(DirWorkspace)\berks\cookbooks</DirVendorCookbooks>
     </PropertyGroup>
@@ -66,6 +67,10 @@
             The full path to the berkshelf application. If not defined the packages directory is searched.
         -->
         <ToolsExternalBerkshelfPath Condition=" '$(ToolsExternalBerkshelfPath)' == '' ">berks</ToolsExternalBerkshelfPath>
+        <!--
+            The full path to the Bundler application.
+        -->
+        <ToolsExternalBundlerPath Condition=" '$(ToolsExternalBundlerPath)' == '' ">bundle</ToolsExternalBundlerPath>
     </PropertyGroup>
 
 

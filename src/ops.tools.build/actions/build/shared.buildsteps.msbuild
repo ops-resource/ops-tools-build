@@ -6,6 +6,7 @@
         <ExistsOpsToolsBuildBuildSteps>true</ExistsOpsToolsBuildBuildSteps>
     </PropertyGroup>
     <PropertyGroup>
+        <BuildStepsPrepareRestoreGems>$(MSBuildThisFileDirectory)..\shared.prepare.bundler.restore.msbuild</BuildStepsPrepareRestoreGems>
         <BuildStepsPrepareRestoreBerkshelf>$(MSBuildThisFileDirectory)..\shared.prepare.berkshelf.restore.msbuild</BuildStepsPrepareRestoreBerkshelf>
         <BuildStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</BuildStepsPrepareFileHashes>
 
@@ -18,6 +19,14 @@
         <BuildStepsPackPacker>$(MSBuildThisFileDirectory)build.pack.packer.msbuild</BuildStepsPackPacker>
     </PropertyGroup>
     <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPrepareRestoreGems)'))">
+            <Description>
+                Restores the required Ruby Gems.
+            </Description>
+            <Id>BuildStepsPrepareRestoreGems</Id>
+            <Name>Build - restore Ruby gems</Name>
+            <Path>$(BuildStepsPrepareRestoreGems)</Path>
+        </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPrepareRestoreBerkshelf)'))">
             <Description>
                 Restores the cookbook dependencies.

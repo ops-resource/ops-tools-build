@@ -159,6 +159,10 @@
         <!-- The directory that will contain all the test files generated during the test process -->
         <!-- <DirBuildTest>$(DirBuild)\tests</DirBuildTest> -->
 
+        <!-- The directory that contains all the ruby gems -->
+        <!-- <DirGems>$(DirWorkspace)\gems</DirGems> -->
+        <!-- <DirGemsBin>$(DirGems)\bin</DirGemsBin> -->
+
         <!-- The directory that contains all the NuGet packages for the project -->
         <!-- <DirPackages>$(DirWorkspace)\packages</DirPackages> -->
 
@@ -224,6 +228,19 @@
             Condition=" '$(DirWorkspace)' != '' "
             Include="$(DirWorkspace)\**\package.json"
             Exclude="$(DirBuild)\**\package.json;$(DirWorkspace)\**\bin\**\package.json;$(DirWorkspace)\**\obj\**\package.json;$(DirWorkspace)\**\bower_components\**\package.json;$(DirWorkspace)\**\node_modules\**\package.json" />
+        -->
+    </ItemGroup>
+
+
+    <!--
+        **** PREPARE - BUNDLER RESTORE ****
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadBundlerGemFiles)' == 'true' ">
+        <!--
+        <BundlerGemFiles
+            Condition=" '$(DirWorkspace)' != '' "
+            Include="$(DirWorkspace)\**\Gemfile"
+            Exclude="$(DirBuild)\**\Gemfile;" />
         -->
     </ItemGroup>
 
