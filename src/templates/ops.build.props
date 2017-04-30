@@ -553,7 +553,7 @@
 
         Additionally any properties defined by the 'Properties' section are also pushed up.
     -->
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadBuildStepsToExecute)' == 'true' ">
         <BuildStepsToExecute Include="$(BuildStepsPrepareWorkspace)">
             <Properties>
             </Properties>
@@ -749,6 +749,19 @@
                 prepare;
                 prepare.restore;
                 prepare.restore.bower;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </BuildStepsToExecute>
+        <BuildStepsToExecute Include="$(BuildStepsPrepareRestoreGems)">
+            <Properties>
+            </Properties>
+            <Groups>
+                prepare;
+                prepare.restore;
+                prepare.restore.gems;
             </Groups>
             <PreSteps>
             </PreSteps>
