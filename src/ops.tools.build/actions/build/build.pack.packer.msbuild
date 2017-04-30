@@ -76,6 +76,7 @@
         <Packer
             ConfigurationFile="$(FilePackerConfiguration)"
             ErrorInformation="@(ErrorInformation)"
+            KeepImageOnError="$(PackerKeepImageOnError)"
             LogEnvironmentVariables="true"
             LogFile="$(DirBuildLogs)\$([System.IO.Path]::GetFileNameWithoutExtension('$(FilePackerConfiguration)'))_packer.log"
             TempDirectory="$(DirBuildTemp)"

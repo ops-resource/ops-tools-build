@@ -105,6 +105,11 @@ namespace Ops.Tools.Build.Tasks.Package
                             variableFile));
                 }
 
+                if (KeepImageOnError)
+                {
+                    arguments.Add("-on-error=abort");
+                }
+
                 arguments.Add(
                     string.Format(
                         CultureInfo.InvariantCulture,
@@ -144,6 +149,15 @@ namespace Ops.Tools.Build.Tasks.Package
             }
 
             return !Log.HasLoggedErrors;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Packer should keep the image if there is an error or not.
+        /// </summary>
+        public bool KeepImageOnError
+        {
+            get;
+            set;
         }
 
         /// <summary>
