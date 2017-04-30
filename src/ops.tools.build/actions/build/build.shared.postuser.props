@@ -56,6 +56,24 @@
     </ItemGroup>
 
 
+    <!--
+        **** TEST - CHEFSPEC ****
+    -->
+    <!--
+        The collection of cookbooks for which the dependencies should be restored with Berkshelf and that should be
+        analyzed with Foodcritic and ChefSpec.
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadChefCookbooksToTest)' == 'true' AND '@(ChefCookbooksToTest)' == '' ">
+        <!--
+        <ChefCookbooksToTest Include="">
+            <ChefSpecPattern>./spec/*_spec.rb</ChefSpecPattern>
+        </ChefCookbooksToTest>
+        -->
+    </ItemGroup>
+
+
+
+
 
     <!--
         *****************************************

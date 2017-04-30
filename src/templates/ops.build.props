@@ -475,6 +475,21 @@
 
 
     <!--
+        **** TEST - CHEFSPEC ****
+    -->
+    <!--
+        The collection of cookbooks that should be tested with ChefSpec.
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadChefCookbooksToTest)' == 'true' ">
+        <!--
+        <ChefCookbooksToTest Include="">
+            <ChefSpecPattern>./spec/*_spec.rb</ChefSpecPattern>
+        </ChefCookbooksToTest>
+        -->
+    </ItemGroup>
+
+
+    <!--
         **** PACK - NUGET ****
     -->
     <PropertyGroup>

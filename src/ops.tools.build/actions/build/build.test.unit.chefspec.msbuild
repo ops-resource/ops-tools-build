@@ -1,29 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0"
-         DefaultTargets="Test_Unit_ChefSpec_Run"
+         DefaultTargets="OpsToolsBuild_Test_Unit_ChefSpec_Run"
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <!-- Defines whether the current script file has been loaded / imported or not -->
         <ExistsBuildTestUnitChefSpec>true</ExistsBuildTestUnitChefSpec>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadChefCookbooksToTest>true</ShouldLoadChefCookbooksToTest>
     </PropertyGroup>
 
     <Import
         Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
         Project="$(FileImports)" />
 
-    <Target Name="Test_Unit_ChefSpec_Run">
-        <CallTarget Targets="_Test_Unit_ChefSpec_Execute" />
+    <Target Name="OpsToolsBuild_Test_Unit_ChefSpec_Run">
+        <CallTarget Targets="_OpsToolsBuild_Test_Unit_ChefSpec_Execute" />
     </Target>
 
     <Target
-        Name="_Test_Unit_ChefSpec_Execute"
-        Outputs="%(ChefCookbooks.Identity)">
-        <CreateProperty Value="%(ChefCookbooks.FullPath)">
+        Name="_OpsToolsBuild_Test_Unit_ChefSpec_GetToolPaths">
+        <CreateProperty
+            Condition=" '$(ToolsExternalRSpecPath)' == 'UNDEFINED' "
+            Value="$(DirGemsBin)\rspec">
+            <Output
+                PropertyName="ToolsExternalRSpecPath"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <GetToolFullPath
+            Condition=" '$(ToolsExternalRSpecPath)' != 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
+            Tool="$(ToolsExternalRSpecPath)">
+            <Output
+                PropertyName="ToolsExternalRSpecPath"
+                TaskParameter="Path" />
+        </GetToolFullPath>
+        <Message
+            Condition="Exists('$(ToolsExternalRSpecPath)') "
+            Importance="low"
+            Text="The rspec executable was found at: $(ToolsExternalRSpecPath)" />
+
+        <Error
+            Code="$(NBuildKitErrorCodeToolFileNotFound)"
+            Condition="!Exists('$(ToolsExternalRSpecPath)') "
+            HelpKeyword="$(NBuildKitErrorIdToolFileNotFound)"
+            Text="Could not locate the rspec executable path. Cannot execute the ChefSpec tests." />
+    </Target>
+
+    <Target
+        DependsOnTargets="_OpsToolsBuild_Test_Unit_ChefSpec_GetToolPaths"
+        Name="_OpsToolsBuild_Test_Unit_ChefSpec_Execute"
+        Outputs="%(ChefCookbooksToTest.Identity)">
+        <CreateProperty Value="%(ChefCookbooksToTest.FullPath)">
             <Output
                 PropertyName="ChefSpecWorkingDirectory"
                 TaskParameter="Value" />
         </CreateProperty>
-        <CreateProperty Value="%(ChefCookbooks.ChefSpecPattern)">
+        <CreateProperty Value="%(ChefCookbooksToTest.ChefSpecPattern)">
             <Output
                 PropertyName="RSpecPattern"
                 TaskParameter="Value" />
