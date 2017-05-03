@@ -314,7 +314,7 @@
 
         Any failure during the branching process will stop the build process.
     -->
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadBranchMergeTarget)' == 'true' ">
         <!-- GITFLOW: If the input branch (GitBranchExpected) is a feature branch then we merge to develop -->
         <!--
         <BranchMergeTarget Include="develop"
@@ -507,7 +507,7 @@
         Additional items that should be available for the template replacement.
         The default template parameters, as indicated at the top of this file, are always available.
     -->
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadTemplateTokens)' == 'true' ">
         <TemplateTokens Include="VersionNBuildKitMinimum">
             <ReplacementValue>$(PackageMinimumVersion)</ReplacementValue>
         </TemplateTokens>

@@ -7,6 +7,9 @@
     </PropertyGroup>
     <PropertyGroup>
         <ShouldLoadPackerImagesToBuild>true</ShouldLoadPackerImagesToBuild>
+        <ShouldLoadTemplateTokens>true</ShouldLoadTemplateTokens>
+        <ShouldLoadTemplateVersion>true</ShouldLoadTemplateVersion>
+        <ShouldLoadSystemTemplateVersion>true</ShouldLoadSystemTemplateVersion>
     </PropertyGroup>
 
     <Import

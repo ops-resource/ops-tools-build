@@ -8,6 +8,9 @@
     </PropertyGroup>
     <PropertyGroup>
         <ShouldLoadIsoPackageSpecs>true</ShouldLoadIsoPackageSpecs>
+        <ShouldLoadTemplateTokens>true</ShouldLoadTemplateTokens>
+        <ShouldLoadTemplateVersion>true</ShouldLoadTemplateVersion>
+        <ShouldLoadSystemTemplateVersion>true</ShouldLoadSystemTemplateVersion>
     </PropertyGroup>
 
     <Import
