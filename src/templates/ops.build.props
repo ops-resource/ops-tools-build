@@ -82,7 +82,7 @@
         </NuGetFilesToCopy>
         -->
     </ItemGroup>
-    <ItemGroup Condition=" '$(ShouldLoadHttpFilesToCopy)' == 'true' AND '@(HttpFilesToCopy)' == '' ">
+    <ItemGroup Condition=" '$(ShouldLoadHttpFilesToCopy)' == 'true' ">
         <!--
         <HttpFilesToCopy Include="">
             <Destination></Destination>
