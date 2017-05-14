@@ -80,19 +80,46 @@ namespace Ops.Tools.Build.Tasks.Package
         {
             if ((File == null) || string.IsNullOrWhiteSpace(File.ItemSpec))
             {
-                Log.LogError("Output path for the ISO file is not defined. Unable to create an ISO file.");
+                Log.LogError(
+                    string.Empty,
+                    ErrorCodeById(ErrorIdApplicationMissingArgument),
+                    ErrorIdApplicationMissingArgument,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "Output path for the ISO file is not defined. Unable to create an ISO file.");
                 return false;
             }
 
             if ((TemporaryDirectory == null) || string.IsNullOrWhiteSpace(TemporaryDirectory.ItemSpec))
             {
-                Log.LogError("The temporary directory is not defined. Unable to create an ISO file.");
+                Log.LogError(
+                    string.Empty,
+                    ErrorCodeById(ErrorIdApplicationMissingArgument),
+                    ErrorIdApplicationMissingArgument,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "The temporary directory is not defined. Unable to create an ISO file.");
                 return false;
             }
 
             if ((ToolPath == null) || string.IsNullOrWhiteSpace(ToolPath.ItemSpec))
             {
-                Log.LogError("The file path to the 'mkisofs' executable is not defined. Unable to create an ISO file.");
+                Log.LogError(
+                    string.Empty,
+                    ErrorCodeById(ErrorIdApplicationPathNotFound),
+                    ErrorIdApplicationPathNotFound,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "The file path to the 'mkisofs' executable is not defined. Unable to create an ISO file.");
                 return false;
             }
 
@@ -236,12 +263,28 @@ namespace Ops.Tools.Build.Tasks.Package
                 }
             };
 
-            InvokeCommandLineTool(
-                ToolPath,
+            var toolPath = GetFullToolPath(ToolPath);
+            var exitCode = InvokeCommandLineTool(
+                toolPath,
                 arguments,
-                WorkingDirectory,
+                workingDirectory,
                 DefaultDataHandler,
                 standardErrorHandler);
+            if (exitCode != 0)
+            {
+                Log.LogError(
+                    string.Empty,
+                    ErrorCodeById(ErrorIdApplicationNonzeroExitCode),
+                    ErrorIdApplicationNonzeroExitCode,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "{0} exited with a non-zero exit code. Exit code was: {1}",
+                    Path.GetFileName(toolPath),
+                    exitCode);
+            }
 
             return !Log.HasLoggedErrors;
         }

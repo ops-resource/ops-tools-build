@@ -6,6 +6,12 @@
     <PropertyGroup>
         <!-- Defines whether the current script file has been loaded / imported or not -->
         <ExistsSharedPrepareGetVersion>true</ExistsSharedPrepareGetVersion>
+
+        <!-- Don't load the template tokens, this script doesn't need them -->
+        <LoadTemplateTokens>false</LoadTemplateTokens>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadFilesToHash>true</ShouldLoadFilesToHash>
     </PropertyGroup>
 
     <Import
@@ -42,6 +48,7 @@
         </PropertyGroup>
         <InvokeStandaloneMsBuild
             Condition="Exists('$(DirNBuildKitMsBuildActions)\shared.templatetokens.msbuild')"
+            ErrorInformation="@(ErrorInformation)"
             Projects="$(DirNBuildKitMsBuildActions)\shared.templatetokens.msbuild"
             Properties="$(Locations);$(Files);$(DefaultProperties)"
             RunEachTargetSeparately="True"
@@ -64,6 +71,7 @@
 
         <CalculateFileHash
             Algorithm="%(FilesToHash.Algorithm)"
+            ErrorInformation="@(ErrorInformation)"
             Path="%(FilesToHash.FullPath)">
             <Output
                 PropertyName="Hash"

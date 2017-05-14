@@ -10,7 +10,7 @@
         The item group defining the location and contents of the ISO files that are generated during the build
         All file paths allow build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip.
     -->
-    <ItemGroup Condition=" '@(IsoPackageSpecs)' == '' ">
+    <ItemGroup Condition=" '$(ShouldLoadIsoPackageSpecs)' == 'true' AND '@(IsoPackageSpecs)' == '' ">
         <!--
         <IsoPackageSpecs
             Condition=" '$(DirWorkspace)' != '' "
@@ -29,7 +29,7 @@
 
         All file paths allow build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip.
     -->
-    <ItemGroup Condition=" '@(PackerImagesToBuild)' == '' ">
+    <ItemGroup Condition=" '$(ShouldLoadPackerImagesToBuild)' == 'true' AND '@(PackerImagesToBuild)' == '' ">
         <!--
         <PackerImagesToBuild
             Condition=" '$(DirWorkspace)' != '' "

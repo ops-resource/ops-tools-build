@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="OpsToolsBuild_Shared_Prepare_Berkshelf_Restore_Run"
+    ToolsVersion="14.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsSharedPrepareBerkshelfRestore>true</ExistsSharedPrepareBerkshelfRestore>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadChefCookbooksToRestore>true</ShouldLoadChefCookbooksToRestore>
+    </PropertyGroup>
+
+    <Import
+        Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
+        Project="$(FileImports)" />
+
+    <Target
+        Name="OpsToolsBuild_Shared_Prepare_Berkshelf_Restore_Run">
+        <CallTarget Targets="_OpsToolsBuild_Shared_Prepare_Berkshelf_Restore_Packages" />
+    </Target>
+
+    <Target
+        Name="_OpsToolsBuild_Shared_Prepare_Berkshelf_Restore_GetToolPaths">
+        <CreateProperty
+            Condition=" '$(ToolsExternalBerkshelfPath)' == 'UNDEFINED' "
+            Value="$(DirGemsBin)\berks">
+            <Output
+                PropertyName="ToolsExternalBerkshelfPath"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <GetToolFullPath
+            Condition=" '$(ToolsExternalBerkshelfPath)' != 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
+            Tool="$(ToolsExternalBerkshelfPath)">
+            <Output
+                PropertyName="ToolsExternalBerkshelfPath"
+                TaskParameter="Path" />
+        </GetToolFullPath>
+        <Message
+            Condition="Exists('$(ToolsExternalBerkshelfPath)') "
+            Importance="low"
+            Text="The berkshelf executable was found at: $(ToolsExternalBerkshelfPath)" />
+
+        <Error
+            Code="$(NBuildKitErrorCodeToolFileNotFound)"
+            Condition="!Exists('$(ToolsExternalBerkshelfPath)') "
+            HelpKeyword="$(NBuildKitErrorIdToolFileNotFound)"
+            Text="Could not locate the Berkshelf executable path. Cannot restore the Chef cookbooks packages." />
+    </Target>
+
+    <Target
+        Condition=" '@(ChefCookbooksToRestore)' != '' "
+        DependsOnTargets="_OpsToolsBuild_Shared_Prepare_Berkshelf_Restore_GetToolPaths"
+        Name="_OpsToolsBuild_Shared_Prepare_Berkshelf_Restore_Packages"
+        Outputs="%(ChefCookbooksToRestore.Identity)">
+        <CreateProperty Value="%(ChefCookbooksToRestore.FullPath)">
+            <Output
+                PropertyName="ChefCookbookPath"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <CreateProperty Value="$([MSBuild]::MakeRelative($(ChefCookbookPath), $(DirVendorCookbooks)))">
+            <Output
+                PropertyName="DirRelativeVendor"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <Exec
+            Command="$(ToolsExternalBerkshelfPath) vendor $(DirRelativeVendor)"
+            WorkingDirectory="$(ChefCookbookPath)" />
+    </Target>
+ </Project>

@@ -5,14 +5,22 @@
     <PropertyGroup>
         <ExistsBuildImagePacker>true</ExistsBuildImagePacker>
     </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadPackerImagesToBuild>true</ShouldLoadPackerImagesToBuild>
+        <ShouldLoadTemplateTokens>true</ShouldLoadTemplateTokens>
+        <ShouldLoadTemplateVersion>true</ShouldLoadTemplateVersion>
+        <ShouldLoadSystemTemplateVersion>true</ShouldLoadSystemTemplateVersion>
+    </PropertyGroup>
 
     <Import
         Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
         Project="$(FileImports)" />
 
-    <Target Name="_OpsToolsBuild_Build_Pack_Packer_RestoreDependencies">
+    <Target
+        Name="_OpsToolsBuild_Build_Pack_Packer_RestoreDependencies">
         <NuGetInstall
             Condition=" '$(ToolsExternalPackerPath)' == 'UNDEFINED'"
+            ErrorInformation="@(ErrorInformation)"
             ExcludeVersion="$(ShouldRestoreNuGetPackagesWithoutVersionInPath)"
             NuGetExecutablePath="$(ToolsExternalNuGetPath)"
             PackageName="Packer.Windows.x64"
@@ -21,46 +29,57 @@
             Sources="@(NuGetSources)"
             WorkingDirectory="$(DirWorkspace)" />
         <SearchPackagesDirectoryForToolPath
-            PackagesDirectory="$(DirPackages)"
+            Condition=" '$(ToolsExternalPackerPath)' == 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
             FileToLocate="packer.exe"
-            Condition=" '$(ToolsExternalPackerPath)' == 'UNDEFINED' ">
+            PackagesDirectory="$(DirPackages)">
             <Output TaskParameter="Path" PropertyName="ToolsExternalPackerPath" />
         </SearchPackagesDirectoryForToolPath>
         <GetToolFullPath
-            Tool="$(ToolsExternalPackerPath)"
-            Condition=" '$(ToolsExternalPackerPath)' != 'UNDEFINED' ">
+            Condition=" '$(ToolsExternalPackerPath)' != 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
+            Tool="$(ToolsExternalPackerPath)">
             <Output TaskParameter="Path" PropertyName="ToolsExternalPackerPath" />
         </GetToolFullPath>
         <Message
-            Text="The Packer executable was found at: $(ToolsExternalPackerPath)"
+            Condition="Exists('$(ToolsExternalPackerPath)') "
             Importance="low"
-            Condition="Exists('$(ToolsExternalPackerPath)') " />
+            Text="The Packer executable was found at: $(ToolsExternalPackerPath)" />
         <Error
+            Code="$(NBuildKitErrorCodeToolFileNotFound)"
             Text="Could not locate the Packer executable path. Cannot generate an image."
+            HelpKeyword="$(NBuildKitErrorIdToolFileNotFound)"
             Condition="!Exists('$(ToolsExternalPackerPath)') "/>
     </Target>
 
     <Target
         DependsOnTargets="_OpsToolsBuild_Build_Pack_Packer_RestoreDependencies"
-        Name="OpsToolsBuild_Build_Pack_Packer_Run"
         Condition=" '@(PackerImagesToBuild)' != '' "
+        Name="OpsToolsBuild_Build_Pack_Packer_Run"
         Outputs="%(PackerImagesToBuild.Identity)">
         <TemplateText
+            ErrorInformation="@(ErrorInformation)"
             Template="%(PackerImagesToBuild.FullPath)"
             Tokens="@(TemplateTokens)">
-            <Output TaskParameter="Result" PropertyName="FilePackerConfiguration" />
+            <Output
+                PropertyName="FilePackerConfiguration"
+                TaskParameter="Result" />
         </TemplateText>
 
         <Error
-            Text="Expected $(FilePackerConfiguration) to point to a valid path but it does not."
-            Condition="!Exists('$(FilePackerConfiguration)') " />
+            Code="$(NBuildKitErrorCodeFileNotFound)"
+            Condition="!Exists('$(FilePackerConfiguration)') "
+            HelpKeyword="$(NBuildKitErrorIdFileNotFound)"
+            Text="Expected $(FilePackerConfiguration) to point to a valid path but it does not." />
 
         <Message
-            Text="Building $(FilePackerConfiguration) ..."
-            Importance="normal"/>
+            Importance="normal"
+            Text="Building $(FilePackerConfiguration) ..." />
 
         <Packer
             ConfigurationFile="$(FilePackerConfiguration)"
+            ErrorInformation="@(ErrorInformation)"
+            KeepImageOnError="$(PackerKeepImageOnError)"
             LogEnvironmentVariables="true"
             LogFile="$(DirBuildLogs)\$([System.IO.Path]::GetFileNameWithoutExtension('$(FilePackerConfiguration)'))_packer.log"
             TempDirectory="$(DirBuildTemp)"

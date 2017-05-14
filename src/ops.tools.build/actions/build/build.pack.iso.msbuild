@@ -6,6 +6,12 @@
     <PropertyGroup>
         <ExistsBuildPackIso>true</ExistsBuildPackIso>
     </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadIsoPackageSpecs>true</ShouldLoadIsoPackageSpecs>
+        <ShouldLoadTemplateTokens>true</ShouldLoadTemplateTokens>
+        <ShouldLoadTemplateVersion>true</ShouldLoadTemplateVersion>
+        <ShouldLoadSystemTemplateVersion>true</ShouldLoadSystemTemplateVersion>
+    </PropertyGroup>
 
     <Import
         Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
@@ -13,11 +19,14 @@
 
     <Target Name="_OpsToolsBuild_Build_Pack_Iso_GetToolPaths">
         <Error
+            Code="$(NBuildKitErrorCodePackagesDirectoryNotFound)"
             Condition="!Exists('$(DirPackages)') "
+            HelpKeyword="$(NBuildKitErrorIdPackagesDirectoryNotFound)"
             Text="The packages directory does not exist. Cannot search for the ISO packing executables." />
 
         <NuGetInstall
             Condition=" '$(ToolsExternalMakeIsoFsPath)' == 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
             ExcludeVersion="$(ShouldRestoreNuGetPackagesWithoutVersionInPath)"
             NuGetExecutablePath="$(ToolsExternalNuGetPath)"
             PackagesDirectory="$(DirPackages)"
@@ -27,6 +36,7 @@
             WorkingDirectory="$(DirWorkspace)" />
         <SearchPackagesDirectoryForToolPath
             Condition=" '$(ToolsExternalMakeIsoFsPath)' == 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
             FileToLocate="mkisofs.exe"
             PackagesDirectory="$(DirPackages)">
             <Output
@@ -35,6 +45,7 @@
         </SearchPackagesDirectoryForToolPath>
         <GetToolFullPath
             Condition=" '$(ToolsExternalMakeIsoFsPath)' != 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
             Tool="$(ToolsExternalMakeIsoFsPath)">
             <Output
                 PropertyName="ToolsExternalMakeIsoFsPath"
@@ -45,7 +56,9 @@
             Importance="low"
             Text="The mkisofs executable was found at: $(ToolsExternalMakeIsoFsPath)" />
         <Error
+            Code="$(NBuildKitErrorCodeToolFileNotFound)"
             Condition="!Exists('$(ToolsExternalMakeIsoFsPath)') "
+            HelpKeyword="$(NBuildKitErrorIdToolFileNotFound)"
             Text="Could not locate the mkisofs executable path. Cannot create an ISO file." />
     </Target>
 
@@ -63,6 +76,7 @@
             Directories="$(DirBuildDeploy)" />
 
         <TemplateText
+            ErrorInformation="@(ErrorInformation)"
             Template="%(IsoPackageSpecs.Identity)"
             Tokens="@(TemplateTokens)">
             <Output
@@ -83,11 +97,13 @@
 
         <TemplateFile
             Encoding="UTF-8"
+            ErrorInformation="@(ErrorInformation)"
             OutputFileName="$(FileGenerateIsoSpec)"
             Template="$(FileIsoSpec)"
             Tokens="@(TemplateTokens)" />
 
         <Iso
+            ErrorInformation="@(ErrorInformation)"
             File="$(FileGenerateIsoSpec)"
             OutputDirectory="$(DirBuildDeploy)"
             OverwriteExistingFiles="true"

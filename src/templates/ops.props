@@ -159,6 +159,10 @@
         <!-- The directory that will contain all the test files generated during the test process -->
         <!-- <DirBuildTest>$(DirBuild)\tests</DirBuildTest> -->
 
+        <!-- The directory that contains all the ruby gems -->
+        <!-- <DirGems>$(DirWorkspace)\gems</DirGems> -->
+        <!-- <DirGemsBin>$(DirGems)\bin</DirGemsBin> -->
+
         <!-- The directory that contains all the NuGet packages for the project -->
         <!-- <DirPackages>$(DirWorkspace)\packages</DirPackages> -->
 
@@ -170,6 +174,9 @@
 
         <!-- The directory that contains all the test files for the project -->
         <!-- <DirTest>$(DirWorkspace)\tests</DirTest> -->
+
+        <!-- The directory that contains all the vendor cookbooks -->
+        <!-- <DirVendorCookbooks>$(DirWorkspace)\berks\cookbooks</DirVendorCookbooks> -->
     </PropertyGroup>
 
     <!--
@@ -198,7 +205,7 @@
     <!--
         **** PREPARE - NUGET RESTORE ****
     -->
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadNuGetPackageFiles)' == 'true' ">
         <!--
         <NuGetPackageFiles
             Condition=" '$(DirWorkspace)' != '' "
@@ -215,12 +222,38 @@
     <!--
         **** PREPARE - NPM RESTORE ****
     -->
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadNpmPackageFiles)' == 'true' ">
         <!--
         <NpmPackageFiles
             Condition=" '$(DirWorkspace)' != '' "
             Include="$(DirWorkspace)\**\package.json"
             Exclude="$(DirBuild)\**\package.json;$(DirWorkspace)\**\bin\**\package.json;$(DirWorkspace)\**\obj\**\package.json;$(DirWorkspace)\**\bower_components\**\package.json;$(DirWorkspace)\**\node_modules\**\package.json" />
+        -->
+    </ItemGroup>
+
+
+    <!--
+        **** PREPARE - BUNDLER RESTORE ****
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadBundlerGemFiles)' == 'true' ">
+        <!--
+        <BundlerGemFiles
+            Condition=" '$(DirWorkspace)' != '' "
+            Include="$(DirWorkspace)\**\Gemfile"
+            Exclude="$(DirBuild)\**\Gemfile;" />
+        -->
+    </ItemGroup>
+
+
+    <!--
+        **** PREPARE - CHEF ****
+    -->
+    <!--
+        The collection of cookbooks for which the dependencies should be restored with Berkshelf
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadChefCookbooksToRestore)' == 'true' ">
+        <!-->
+        <ChefCookbooksToRestore Include="" />
         -->
     </ItemGroup>
 
@@ -270,7 +303,7 @@
 
         Any failure during the branching process will stop the build process.
     -->
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadBranchMergeTarget)' == 'true' ">
         <!-- GITFLOW: If the input branch (GitBranchExpected) is a feature branch then we merge to develop -->
         <!--
         <BranchMergeTarget Include="develop"
@@ -463,7 +496,7 @@
         Additional items that should be available for the template replacement.
         The default template parameters, as indicated at the top of this file, are always available.
     -->
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadTemplateTokens)' == 'true' ">
         <!--
         <TemplateTokens Include="">
             <ReplacementValue></ReplacementValue>
@@ -550,7 +583,7 @@
         NuGet if no package is specified in the packages.config file.
     -->
     <PropertyGroup>
-        <PackageMinimumVersion Condition=" '$(PackageMinimumVersion)' == '' ">0.1.0</PackageMinimumVersion>
-        <PackageMaximumVersion Condition=" '$(PackageMaximumVersion)' == '' ">0.2.0</PackageMaximumVersion>
+        <PackageMinimumVersion Condition=" '$(PackageMinimumVersion)' == '' ">0.2.0</PackageMinimumVersion>
+        <PackageMaximumVersion Condition=" '$(PackageMaximumVersion)' == '' ">0.3.0</PackageMaximumVersion>
     </PropertyGroup>
 </Project>
