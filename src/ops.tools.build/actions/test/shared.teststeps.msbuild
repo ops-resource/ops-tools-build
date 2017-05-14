@@ -8,9 +8,28 @@
         <ExistsOpsToolsBuildTestSteps>true</ExistsOpsToolsBuildTestSteps>
     </PropertyGroup>
     <PropertyGroup>
+        <TestStepsPrepareRestoreGems>$(MSBuildThisFileDirectory)..\shared.prepare.bundler.restore.msbuild</TestStepsPrepareRestoreGems>
+        <TestStepsPrepareRestoreBerkshelf>$(MSBuildThisFileDirectory)..\shared.prepare.berkshelf.restore.msbuild</TestStepsPrepareRestoreBerkshelf>
+
         <TestStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</TestStepsPrepareFileHashes>
     </PropertyGroup>
-    <ItemGroup>
+    <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsPrepareRestoreGems)'))">
+            <Description>
+                Restores the required Ruby Gems.
+            </Description>
+            <Id>TestStepsPrepareRestoreGems</Id>
+            <Name>Test - restore Ruby gems</Name>
+            <Path>$(TestStepsPrepareRestoreGems)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsPrepareRestoreBerkshelf)'))">
+            <Description>
+                Restores the cookbook dependencies.
+            </Description>
+            <Id>TestStepsPrepareRestoreBerkshelf</Id>
+            <Name>Test - restore cookbook dependencies</Name>
+            <Path>$(TestStepsPrepareRestoreBerkshelf)</Path>
+        </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsPrepareFileHashes)'))">
             <Description>
                 Calculate the hash of one or more files.

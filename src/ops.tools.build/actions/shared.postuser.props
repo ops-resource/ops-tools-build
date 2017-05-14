@@ -3,7 +3,17 @@
     DefaultTargets="Run"
     ToolsVersion="14.0"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
+    <!--
+        **** PREPARE - CHEF ****
+    -->
+    <!--
+        The collection of cookbooks for which the dependencies should be restored with Berkshelf
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadChefCookbooksToRestore)' == 'true' AND '@(ChefCookbooksToRestore)' == '' ">
+        <!-->
+        <ChefCookbooksToRestore Include="" />
+        -->
+    </ItemGroup>
 
 
 

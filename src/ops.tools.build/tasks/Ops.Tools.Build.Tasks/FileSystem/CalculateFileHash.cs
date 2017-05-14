@@ -18,6 +18,8 @@ namespace Ops.Tools.Build.Tasks.FileSystem
     /// </summary>
     public sealed class CalculateFileHash : BaseTask
     {
+        private const string ErrorIdCalculationFailure = "OpsToolsBuild.Processing.CalculateHash.Failure";
+
         /// <summary>
         /// Gets or sets the algorithm that should be used to calculate the file hash.
         /// </summary>
@@ -32,7 +34,16 @@ namespace Ops.Tools.Build.Tasks.FileSystem
         {
             if ((Path == null) || string.IsNullOrWhiteSpace(Path.ItemSpec))
             {
-                Log.LogError("The file path is not defined. Unable to calculate the hash.");
+                Log.LogError(
+                    string.Empty,
+                    ErrorCodeById(ErrorIdFileNotFound),
+                    ErrorIdFileNotFound,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "The file path is not defined. Unable to calculate the hash.");
                 return false;
             }
 
@@ -40,6 +51,14 @@ namespace Ops.Tools.Build.Tasks.FileSystem
             if (!File.Exists(filePath))
             {
                 Log.LogError(
+                    string.Empty,
+                    ErrorCodeById(ErrorIdFileNotFound),
+                    ErrorIdFileNotFound,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
                     "The file was expected to be found at '{0}' but that path does not exist. Unable to calculate the hash of a non-existent file.",
                     filePath);
                 return false;
@@ -81,6 +100,14 @@ namespace Ops.Tools.Build.Tasks.FileSystem
             if (hashValue == null)
             {
                 Log.LogError(
+                    string.Empty,
+                    ErrorCodeById(ErrorIdCalculationFailure),
+                    ErrorIdCalculationFailure,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
                     "Failed to calculate a hash for the file at '{0}' with the specified hash algorithm of '{0}'.",
                     filePath,
                     algorithm);

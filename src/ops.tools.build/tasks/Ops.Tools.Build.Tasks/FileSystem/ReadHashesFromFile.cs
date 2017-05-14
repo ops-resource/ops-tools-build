@@ -25,7 +25,16 @@ namespace Ops.Tools.Build.Tasks.FileSystem
         {
             if ((Path == null) || string.IsNullOrWhiteSpace(Path.ItemSpec))
             {
-                Log.LogError("The file path is not defined. Unable to load hash information.");
+                Log.LogError(
+                    string.Empty,
+                    ErrorCodeById(ErrorIdFileNotFound),
+                    ErrorIdFileNotFound,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "The file path is not defined. Unable to load hash information.");
                 return false;
             }
 
@@ -33,6 +42,14 @@ namespace Ops.Tools.Build.Tasks.FileSystem
             if (!File.Exists(filePath))
             {
                 Log.LogError(
+                    string.Empty,
+                    ErrorCodeById(ErrorIdFileNotFound),
+                    ErrorIdFileNotFound,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
                     "The file was expected to be found at '{0}' but that path does not exist. Unable to load hash information.",
                     filePath);
                 return false;

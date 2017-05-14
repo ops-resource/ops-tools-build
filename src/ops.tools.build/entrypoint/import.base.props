@@ -113,6 +113,16 @@
         Condition="Exists('$(DirOpsToolsBuildActions)\shared.steps.msbuild') AND '$(ExistsOpsToolsBuildSharedSteps)' != 'true' "
         Project="$(DirOpsToolsBuildActions)\shared.steps.msbuild" />
 
+
+    <!-- Import the error codes -->
+    <Import
+        Condition="Exists('$(DirNBuildKitMsBuildActions)\shared.errorcodes.props') AND '$(ExistsSharedErrorCodes)' != 'true' "
+        Project="$(DirNBuildKitMsBuildActions)\shared.errorcodes.props" />
+    <Import
+        Condition="Exists('$(DirOpsToolsBuildActions)\shared.errorcodes.props') AND '$(ExistsOpsToolsBuildSharedErrorCodes)' != 'true' "
+        Project="$(DirOpsToolsBuildActions)\shared.errorcodes.props" />
+
+
     <!-- Import the settings files that has all the overriden settings -->
     <!--
         Note that we rely on loading the user settings file first so that the 'TemplateVersion' items created by the user are first in their list.
