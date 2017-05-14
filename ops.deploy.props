@@ -120,17 +120,15 @@
         except for the Repository allow the use of build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip
     -->
     <ItemGroup Condition=" '$(ShouldLoadPushToGitHubReleaseSpecs)' == 'true' ">
-        <!--
         <PushToGitHubReleaseSpecs Include="${VersionSemantic} - My release">
-             <Repository>MyCoolProject</Repository>
+             <Repository>$(GitHubRepositoryName)</Repository>
              <Description>${ReleaseNotes}</Description>
              <IncludedFiles>
-                $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip
+                $(DirBuildDeploy)\ops.tools.build.templates-${VersionSemantic}.zip
              </IncludedFiles>
              <ExcludedFiles>
              </ExcludedFiles>
         </PushToGitHubReleaseSpecs>
-        -->
     </ItemGroup>
 
 
@@ -145,11 +143,11 @@
         <!--
         <PushToGitBranchSpecs
             Condition=" '$(DirBuildDeploy)' != '' "
-            Include="$(DirBuildDeploy)\myarchive-${VersionSemantic}.zip">
+            Include="$(DirBuildDeploy)\ops.tools.build.doc-${VersionSemantic}.zip">
              <Repository>$(GitRemoteRepository)</Repository>
-             <Branch>master</Branch>
+             <Branch>gh-pages</Branch>
              <ExtractZipFiles>true</ExtractZipFiles>
-             <CommitMessage>New changes</CommitMessage>
+             <CommitMessage>Updating the documentation for ${VersionSemantic}</CommitMessage>
         </PushToGitBranchSpecs>
         -->
     </ItemGroup>
@@ -370,20 +368,7 @@
             </PostSteps>
         </DeployStepsToExecute>
         -->
-        <DeployStepsToExecute Include="$(DeployStepsPushToNuget)">
-            <Properties>
-                Configuration=$(ProductionConfiguration);
-                Platform=$(Platform);
-            </Properties>
-            <Groups>
-                deploy;
-                deploy.package.nuget;
-            </Groups>
-            <PreSteps>
-            </PreSteps>
-            <PostSteps>
-            </PostSteps>
-        </DeployStepsToExecute>
+
         <!--
         <DeployStepsToExecute Include="$(DeployStepsPushToDirectory)">
             <Properties>
@@ -413,6 +398,7 @@
             <PostSteps>
             </PostSteps>
         </DeployStepsToExecute>
+        -->
         <DeployStepsToExecute Include="$(DeployStepsPushToGitHubRelease)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
@@ -427,7 +413,6 @@
             <PostSteps>
             </PostSteps>
         </DeployStepsToExecute>
-        -->
         <DeployStepsToExecute Include="$(DeployStepsPushToGitBranch)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
@@ -442,6 +427,7 @@
             <PostSteps>
             </PostSteps>
         </DeployStepsToExecute>
+        <!--
         <DeployStepsToExecute Include="$(DeployStepsPushToGitRepository)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
@@ -450,6 +436,25 @@
             <Groups>
                 deploy;
                 deploy.vcs.git.repository;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </DeployStepsToExecute>
+        -->
+
+        <!--
+            Push to NuGet last because we can't revert that one.
+        -->
+        <DeployStepsToExecute Include="$(DeployStepsPushToNuget)">
+            <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform);
+            </Properties>
+            <Groups>
+                deploy;
+                deploy.package.nuget;
             </Groups>
             <PreSteps>
             </PreSteps>
