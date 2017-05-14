@@ -61,7 +61,7 @@ build_script: msbuild entrypoint.msbuild /t:build /v:normal /logger:"C:\Program 
 
 # to run your custom scripts instead of automatic tests
 # test_script:  msbuild entrypoint.msbuild /t:test /v:normal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-
+test: off
 
 #---------------------------------#
 #      artifacts configuration    #
