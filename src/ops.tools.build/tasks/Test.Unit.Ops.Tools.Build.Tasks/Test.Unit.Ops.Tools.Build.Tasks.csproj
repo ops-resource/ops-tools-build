@@ -86,8 +86,6 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileSystem\CalculateFileHashTest.cs" />
-    <Compile Include="FileSystem\ReadHashesFromFileTest.cs" />
     <Compile Include="Package\IsoTest.cs" />
     <Compile Include="Package\PackerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -68,8 +68,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileSystem\CalculateFileHash.cs" />
-    <Compile Include="FileSystem\ReadHashesFromFile.cs" />
     <Compile Include="Package\Iso.cs" />
     <Compile Include="Package\Packer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
