@@ -48,6 +48,7 @@
     </Target>
 
     <Target
+        Condition=" '@(ChefCookbooksToTest)' != '' "
         DependsOnTargets="_OpsToolsBuild_Test_Unit_ChefSpec_GetToolPaths"
         Name="_OpsToolsBuild_Test_Unit_ChefSpec_Execute"
         Outputs="%(ChefCookbooksToTest.Identity)">

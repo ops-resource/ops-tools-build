@@ -44,6 +44,7 @@
     </Target>
 
     <Target
+        Condition=" '@(ChefCookbooksToAnalyze)' != '' "
         DependsOnTargets="_OpsToolsBuild_Build_Analyze_Foodcritic_GetToolPaths"
         Name="OpsToolsBuild_Build_Analyze_Foodcritic_Run"
         Outputs="%(ChefCookbooksToAnalyze.Identity)">
