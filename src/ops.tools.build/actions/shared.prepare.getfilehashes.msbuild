@@ -19,7 +19,7 @@
         Project="$(FileImports)" />
 
     <Target
-        Condition="!Exists('$(FileHashes)')"
+        Condition="!Exists('$(FileHashes)') AND '@(FilesToHash)' != '' "
         Name="OpsToolsBuild_Shared_Prepare_GetFileHashes_Run">
         <CallTarget Targets="_OpsToolsBuild_Shared_Prepare_GetFileHashes_Calculate" />
 

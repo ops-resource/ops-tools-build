@@ -44,6 +44,7 @@
     </Target>
 
     <Target
+        Condition=" '@(RubocopConfigurationFiles)' != '' "
         DependsOnTargets="_OpsToolsBuild_Build_Analyze_RuboCop_GetToolPaths"
         Name="OpsToolsBuild_Build_Analyze_RuboCop_Run"
         Outputs="%(RubocopConfigurationFiles.Identity)">
