@@ -1092,6 +1092,20 @@
             <PostSteps>
             </PostSteps>
         </BuildStepsToExecute>
+        <BuildStepsToExecute Include="$(BuildStepsPackDocker)">
+            <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform)
+            </Properties>
+            <Groups>
+                package;
+                package.docker;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </BuildStepsToExecute>
         <BuildStepsToExecute Include="$(BuildStepsPackNuGet)">
             <Properties>
                 Configuration=$(ProductionConfiguration);

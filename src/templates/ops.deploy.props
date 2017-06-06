@@ -469,6 +469,24 @@
             <PostSteps>
             </PostSteps>
         </DeployStepsToExecute>
+        -->
+
+        <DeployStepsToExecute Include="$(DeployStepsPushToDockerRepository)">
+            <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform);
+            </Properties>
+            <Groups>
+                deploy;
+                deploy.docker;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </DeployStepsToExecute>
+
+        <!--
         <DeployStepsToExecute Include="$(DeployStepsPushToGitHubRelease)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
