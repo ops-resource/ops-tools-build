@@ -66,8 +66,25 @@ namespace Ops.Tools.Build.Tasks.Package
         /// <inheritdoc/>
         public override bool Execute()
         {
+            if ((BuildContext == null) || string.IsNullOrWhiteSpace(BuildContext.ItemSpec))
+            {
+                Log.LogError(
+                    string.Empty,
+                    ErrorCodeById(ErrorIdApplicationMissingArgument),
+                    ErrorIdApplicationMissingArgument,
+                    string.Empty,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "The build context was not provided. Cannot invoke docker build.");
+                return false;
+            }
+
             var arguments = new List<string>();
             {
+                arguments.Add("build");
+
                 if (AlwaysRemoveIntermediateLayers)
                 {
                     arguments.Add("--force-rm");
@@ -97,16 +114,22 @@ namespace Ops.Tools.Build.Tasks.Package
                             Isolation));
                 }
 
-                foreach (var tag in Tags)
+                if (Tags != null)
                 {
-                    arguments.Add(
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "--tag \"{0}\"",
-                            tag));
+                    foreach (var tag in Tags)
+                    {
+                        if (!string.IsNullOrWhiteSpace(tag))
+                        {
+                            arguments.Add(
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "--tag \"{0}\"",
+                                    tag));
+                        }
+                    }
                 }
 
-                if (!string.IsNullOrWhiteSpace(DockerFile.ItemSpec))
+                if ((DockerFile != null) && !string.IsNullOrWhiteSpace(DockerFile.ItemSpec))
                 {
                     arguments.Add(
                         string.Format(
@@ -118,21 +141,25 @@ namespace Ops.Tools.Build.Tasks.Package
                 arguments.Add(GetAbsolutePath(BuildContext).TrimEnd('\\'));
             }
 
-            var exitCode = InvokeDocker(arguments);
+            var exitCode = InvokeDocker(BuildContext, arguments);
             if (exitCode != 0)
             {
-                Log.LogError(
-                    string.Empty,
-                    ErrorCodeById(ErrorIdApplicationNonzeroExitCode),
-                    ErrorIdApplicationNonzeroExitCode,
-                    string.Empty,
-                    0,
-                    0,
-                    0,
-                    0,
-                    "{0} exited with a non-zero exit code. Exit code was: {1}",
-                    Path.GetFileName(DockerExecutablePath.ItemSpec),
-                    exitCode);
+                if (DockerExecutablePath != null)
+                {
+                    Log.LogError(
+                        string.Empty,
+                        ErrorCodeById(ErrorIdApplicationNonzeroExitCode),
+                        ErrorIdApplicationNonzeroExitCode,
+                        string.Empty,
+                        0,
+                        0,
+                        0,
+                        0,
+                        "{0} exited with a non-zero exit code. Exit code was: {1}",
+                        Path.GetFileName(DockerExecutablePath.ItemSpec),
+                        exitCode);
+                }
+
                 return false;
             }
 

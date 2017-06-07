@@ -89,6 +89,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Package\DockerBuildTest.cs" />
+    <Compile Include="Package\DockerPushTest.cs" />
     <Compile Include="Package\IsoTest.cs" />
     <Compile Include="Package\PackerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -29,13 +29,14 @@ namespace Ops.Tools.Build.Tasks.Package
         /// <summary>
         /// Invokes the Docker command line tool with the given arguments in the provided workspace directory.
         /// </summary>
+        /// <param name="workingDirectory">The directory from which the docker command should be invoked.</param>
         /// <param name="arguments">The collection of arguments.</param>
         /// <param name="standardOutputHandler">
         ///     The event handler that handles the standard output stream of the command line application. If no value is provided
         ///     then all messages are logged.
         /// </param>
         /// <returns>The output of the GIT process</returns>
-        protected int InvokeDocker(IEnumerable<string> arguments, DataReceivedEventHandler standardOutputHandler = null)
+        protected int InvokeDocker(ITaskItem workingDirectory, IEnumerable<string> arguments, DataReceivedEventHandler standardOutputHandler = null)
         {
             if (standardOutputHandler == null)
             {
@@ -51,7 +52,7 @@ namespace Ops.Tools.Build.Tasks.Package
             var exitCode = InvokeCommandLineTool(
                 DockerExecutablePath,
                 arguments,
-                WorkingDirectory,
+                workingDirectory,
                 standardOutputHandler: standardOutputHandler,
                 standardErrorHandler: DefaultErrorHandler);
             return exitCode;
@@ -62,16 +63,6 @@ namespace Ops.Tools.Build.Tasks.Package
         /// </summary>
         [Required]
         public ITaskItem DockerExecutablePath
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the full path to the working directory
-        /// </summary>
-        [Required]
-        public ITaskItem WorkingDirectory
         {
             get;
             set;
