@@ -3,6 +3,14 @@
     DefaultTargets="Run"
     ToolsVersion="14.0"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+        **** PUSHTO - DOCKER ****
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadDockerImagesToPush)' == 'true' AND '@(DockerImagesToPush)' == '' ">
+        <!--
+        <DockerImagesToPush Include="" />
+        -->
+    </ItemGroup>
 
 
 

@@ -164,6 +164,16 @@
 
 
     <!--
+        **** PUSHTO - DOCKER ****
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadDockerImagesToPush)' == 'true' ">
+        <!--
+        <DockerImagesToPush Include="" />
+        -->
+    </ItemGroup>
+
+
+    <!--
         **** PUSHTO - GIT BRANCH ****
     -->
     <!--
