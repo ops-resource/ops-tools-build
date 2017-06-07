@@ -49,6 +49,25 @@
     </ItemGroup>
 
 
+    <!--
+        **** DOCKER - PACK ****
+    -->
+    <!--
+        The collection describing the build contexts from which docker images that should be created.
+
+        The build context can either be a directory or a URL.
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadDockerImagesToBuild)' == 'true' AND '@(DockerImagesToBuild)' == '' ">
+        <!--
+        <DockerImagesToBuild Include="">
+            <DockerFile></DockerFile>
+            <IsolationLevel></IsolationLevel>
+            <Tags></Tags>
+        </DockerImagesToBuild>
+        -->
+    </ItemGroup>
+
+
 
 
 

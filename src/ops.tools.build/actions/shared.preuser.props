@@ -66,12 +66,17 @@
         <!--
             The full path to the berkshelf application. If not defined the Gems bin directory is searched.
         -->
-        <ToolsExternalBerkshelfPath Condition=" '$(ToolsExternalBerkshelfPath)' == '' ">UNDEFINED</ToolsExternalBerkshelfPath>
+        <ToolsExternalBerkshelfPath>UNDEFINED</ToolsExternalBerkshelfPath>
 
         <!--
             The full path to the Bundler application.
         -->
-        <ToolsExternalBundlerPath Condition=" '$(ToolsExternalBundlerPath)' == '' ">bundle</ToolsExternalBundlerPath>
+        <ToolsExternalBundlerPath>bundle</ToolsExternalBundlerPath>
+
+        <!--
+            The full path of the Docker command line executable.
+        -->
+        <ToolsExternalDockerPath>docker</ToolsExternalDockerPath>
     </PropertyGroup>
 
 

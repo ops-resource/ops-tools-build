@@ -500,6 +500,30 @@
 
 
     <!--
+        **** DOCKER - PACK ****
+    -->
+    <PropertyGroup>
+        <!-- Indicate that docker should ignore cached images if possible. -->
+        <!-- <DockerIgnoreCache>true</DockerIgnoreCache> -->
+
+        <!-- Indicate that docker should always pull images if possible -->
+        <!-- <DockerAlwaysPull>true</DockerAlwaysPull> -->
+
+        <!-- Indicate that docker should squash intermediate layers when creating an image -->
+        <!-- <DockerSquashImages>true</DockerSquashImages> -->
+    </PropertyGroup>
+    <ItemGroup Condition=" '$(ShouldLoadDockerImagesToBuild)' == 'true' ">
+        <!--
+        <DockerImagesToBuild Include="">
+            <DockerFile></DockerFile>
+            <IsolationLevel></IsolationLevel>
+            <Tags></Tags>
+        </DockerImagesToBuild>
+        -->
+    </ItemGroup>
+
+
+    <!--
         **** PACK - NUGET ****
     -->
     <PropertyGroup>
