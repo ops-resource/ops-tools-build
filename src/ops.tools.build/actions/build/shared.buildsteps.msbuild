@@ -8,7 +8,6 @@
     <PropertyGroup>
         <BuildStepsPrepareRestoreGems>$(MSBuildThisFileDirectory)..\shared.prepare.bundler.restore.msbuild</BuildStepsPrepareRestoreGems>
         <BuildStepsPrepareRestoreBerkshelf>$(MSBuildThisFileDirectory)..\shared.prepare.berkshelf.restore.msbuild</BuildStepsPrepareRestoreBerkshelf>
-        <BuildStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</BuildStepsPrepareFileHashes>
 
         <BuildStepsAnalyzeRuboCop>$(MSBuildThisFileDirectory)build.analyze.rubocop.msbuild</BuildStepsAnalyzeRuboCop>
         <BuildStepsAnalyzeFoodCritic>$(MSBuildThisFileDirectory)build.analyze.foodcritic.msbuild</BuildStepsAnalyzeFoodCritic>
@@ -36,14 +35,6 @@
             <Id>BuildStepsPrepareRestoreBerkshelf</Id>
             <Name>Build - restore cookbook dependencies</Name>
             <Path>$(BuildStepsPrepareRestoreBerkshelf)</Path>
-        </AvailableStepMetadata>
-        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPrepareFileHashes)'))">
-            <Description>
-                Calculate the hash of one or more files.
-            </Description>
-            <Id>BuildStepsPrepareFileHashes</Id>
-            <Name>Build - Calculate file hashes</Name>
-            <Path>$(BuildStepsPrepareFileHashes)</Path>
         </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsAnalyzeRuboCop)'))">
             <Description>
