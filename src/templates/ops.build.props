@@ -86,7 +86,12 @@
         <!--
         <HttpFilesToCopy Include="">
             <Destination></Destination>
+            <GpgKey></GpgKey>
+            <Hash></Hash>
+            <HashAlgorithm></HashAlgorithm>
+            <HashFile></HashFile>
             <Password></Password>
+            <SignatureFile></SignatureFile>
             <UseDefaultCredentials></UseDefaultCredentials>
             <UserName></UserName>
             <Unzip></Unzip>
@@ -104,6 +109,11 @@
         <!--
         <ArchiveFilesToCopy Include="">
             <Destination></Destination>
+            <GpgKey></GpgKey>
+            <Hash></Hash>
+            <HashAlgorithm></HashAlgorithm>
+            <HashFile></HashFile>
+            <SignatureFile></SignatureFile>
         </ArchiveFilesToCopy>
         -->
     </ItemGroup>
@@ -512,15 +522,6 @@
         <!-- Indicate that docker should squash intermediate layers when creating an image -->
         <!-- <DockerSquashImages>true</DockerSquashImages> -->
     </PropertyGroup>
-    <ItemGroup Condition=" '$(ShouldLoadDockerImagesToBuild)' == 'true' ">
-        <!--
-        <DockerImagesToBuild Include="">
-            <DockerFile></DockerFile>
-            <IsolationLevel></IsolationLevel>
-            <Tags></Tags>
-        </DockerImagesToBuild>
-        -->
-    </ItemGroup>
 
 
     <!--
