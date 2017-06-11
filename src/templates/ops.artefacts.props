@@ -155,6 +155,20 @@
     </ItemGroup>
 
 
+    <!--
+        **** DOCKER - PACK ****
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadDockerImagesToBuild)' == 'true' ">
+        <!--
+        <DockerImagesToBuild Include="">
+            <DockerFile></DockerFile>
+            <IsolationLevel></IsolationLevel>
+            <Tags></Tags>
+        </DockerImagesToBuild>
+        -->
+    </ItemGroup>
+
+
 
 
 
