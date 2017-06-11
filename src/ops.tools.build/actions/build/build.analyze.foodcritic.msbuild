@@ -73,14 +73,7 @@
         </CreateItem>
         <CreateProperty
             Condition=" '@(RulesToExclude)' != '' "
-            Value="@(RulesToExclude -> '~%(Identity)', ',')">
-            <Output
-                PropertyName="RulesToExclude"
-                TaskParameter="Value" />
-        </CreateProperty>
-        <CreateProperty
-            Condition=" '$(RulesToExclude)' != '' "
-            Value="--tags $(RulesToExclude)">
+            Value="@(RulesToExclude -> '--tags ~%(Identity)', ' ')">
             <Output
                 PropertyName="RulesToExclude"
                 TaskParameter="Value" />
