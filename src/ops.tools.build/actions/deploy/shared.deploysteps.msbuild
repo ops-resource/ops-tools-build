@@ -9,7 +9,6 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <DeployStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</DeployStepsPrepareFileHashes>
         <DeployStepsPushToDockerRepository>$(MSBuildThisFileDirectory)deploy.pushto.docker.repository.msbuild</DeployStepsPushToDockerRepository>
     </PropertyGroup>
     <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
@@ -21,8 +20,6 @@
             <Name>Deploy - calculate file hashes</Name>
             <Path>$(DeployStepsPrepareFileHashes)</Path>
         </AvailableStepMetadata>
-    </ItemGroup>
-    <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(DeployStepsPushToDockerRepository)'))">
             <Description>
                 Push zero or more Docker containers to a Docker repository.
