@@ -29,7 +29,7 @@
             Text="No docker executable defined. Will not be able to push Docker containers." />
 
         <TemplateText
-            Condition=" '@(NuGetPackagesToPush)' != '' "
+            Condition=" '@(DockerImagesToPush)' != '' "
             ErrorInformation="@(ErrorInformation)"
             Template="%(DockerImagesToPush.Identity)"
             Tokens="@(TemplateTokens)">
