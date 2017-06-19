@@ -8,7 +8,6 @@
     <PropertyGroup>
         <BuildStepsPrepareRestoreGems>$(MSBuildThisFileDirectory)..\shared.prepare.bundler.restore.msbuild</BuildStepsPrepareRestoreGems>
         <BuildStepsPrepareRestoreBerkshelf>$(MSBuildThisFileDirectory)..\shared.prepare.berkshelf.restore.msbuild</BuildStepsPrepareRestoreBerkshelf>
-        <BuildStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</BuildStepsPrepareFileHashes>
 
         <BuildStepsAnalyzeRuboCop>$(MSBuildThisFileDirectory)build.analyze.rubocop.msbuild</BuildStepsAnalyzeRuboCop>
         <BuildStepsAnalyzeFoodCritic>$(MSBuildThisFileDirectory)build.analyze.foodcritic.msbuild</BuildStepsAnalyzeFoodCritic>
@@ -17,6 +16,8 @@
 
         <BuildStepsPackIso>$(MSBuildThisFileDirectory)build.pack.iso.msbuild</BuildStepsPackIso>
         <BuildStepsPackPacker>$(MSBuildThisFileDirectory)build.pack.packer.msbuild</BuildStepsPackPacker>
+
+        <BuildStepsPackDocker>$(MSBuildThisFileDirectory)build.pack.docker.msbuild</BuildStepsPackDocker>
     </PropertyGroup>
     <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPrepareRestoreGems)'))">
@@ -34,14 +35,6 @@
             <Id>BuildStepsPrepareRestoreBerkshelf</Id>
             <Name>Build - restore cookbook dependencies</Name>
             <Path>$(BuildStepsPrepareRestoreBerkshelf)</Path>
-        </AvailableStepMetadata>
-        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPrepareFileHashes)'))">
-            <Description>
-                Calculate the hash of one or more files.
-            </Description>
-            <Id>BuildStepsPrepareFileHashes</Id>
-            <Name>Build - Calculate file hashes</Name>
-            <Path>$(BuildStepsPrepareFileHashes)</Path>
         </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsAnalyzeRuboCop)'))">
             <Description>
@@ -82,6 +75,14 @@
             <Id>BuildStepsPackPacker</Id>
             <Name>Build - Create Packer file</Name>
             <Path>$(BuildStepsPackPacker)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPackDocker)'))">
+            <Description>
+                Create an Docker container from a given set of Docker configuration files.
+            </Description>
+            <Id>BuildStepsPackDocker</Id>
+            <Name>Build - Create Docker container</Name>
+            <Path>$(BuildStepsPackDocker)</Path>
         </AvailableStepMetadata>
     </ItemGroup>
 </Project>

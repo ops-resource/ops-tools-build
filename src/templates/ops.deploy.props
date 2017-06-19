@@ -42,7 +42,12 @@
         <!--
         <HttpFilesToCopy Include="">
             <Destination></Destination>
+            <GpgKey></GpgKey>
+            <Hash></Hash>
+            <HashAlgorithm></HashAlgorithm>
+            <HashFile></HashFile>
             <Password></Password>
+            <SignatureFile></SignatureFile>
             <UseDefaultCredentials></UseDefaultCredentials>
             <UserName></UserName>
             <Unzip></Unzip>
@@ -60,6 +65,11 @@
         <!--
         <ArchiveFilesToCopy Include="">
             <Destination></Destination>
+            <GpgKey></GpgKey>
+            <Hash></Hash>
+            <HashAlgorithm></HashAlgorithm>
+            <HashFile></HashFile>
+            <SignatureFile></SignatureFile>
         </ArchiveFilesToCopy>
         -->
     </ItemGroup>
@@ -159,6 +169,16 @@
              <ExcludedFiles>
              </ExcludedFiles>
         </PushToGitHubReleaseSpecs>
+        -->
+    </ItemGroup>
+
+
+    <!--
+        **** PUSHTO - DOCKER ****
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadDockerImagesToPush)' == 'true' ">
+        <!--
+        <DockerImagesToPush Include="" />
         -->
     </ItemGroup>
 
@@ -469,6 +489,24 @@
             <PostSteps>
             </PostSteps>
         </DeployStepsToExecute>
+        -->
+
+        <DeployStepsToExecute Include="$(DeployStepsPushToDockerRepository)">
+            <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform);
+            </Properties>
+            <Groups>
+                deploy;
+                deploy.docker;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </DeployStepsToExecute>
+
+        <!--
         <DeployStepsToExecute Include="$(DeployStepsPushToGitHubRelease)">
             <Properties>
                 Configuration=$(ProductionConfiguration);

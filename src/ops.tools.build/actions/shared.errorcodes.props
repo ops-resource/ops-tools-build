@@ -30,9 +30,6 @@
 
         <!-- Processing -->
         <!-- Error codes from 0700 to 0899 -->
-        <OpsToolsBuildErrorIdCalculateHashFailure>OpsToolsBuild.Processing.CalculateHash.Failure</OpsToolsBuildErrorIdCalculateHashFailure>
-        <OpsToolsBuildErrorCodeCalculateHashFailure>OTB0721</OpsToolsBuildErrorCodeCalculateHashFailure>
-
     </PropertyGroup>
 
     <ItemGroup>
@@ -43,9 +40,5 @@
         </ErrorInformation>
 
         <!-- Processing -->
-        <ErrorInformation Include="$(OpsToolsBuildErrorIdCalculateHashFailure)">
-            <Code>$(OpsToolsBuildErrorCodeCalculateHashFailure)</Code>
-            <Description>Failed to calculate the hash.</Description>
-        </ErrorInformation>
     </ItemGroup>
 </Project>
