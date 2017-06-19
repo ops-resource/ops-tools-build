@@ -4,6 +4,15 @@
     ToolsVersion="14.0"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <!--
+        **** PACKER - PACK ****
+    -->
+    <PropertyGroup>
+        <!-- Indicate that packer should keep the image if an error occurs. -->
+        <PackerKeepImageOnError>false</PackerKeepImageOnError>
+    </PropertyGroup>
+
+
+    <!--
         **** DOCKER - PACK ****
     -->
     <PropertyGroup>
