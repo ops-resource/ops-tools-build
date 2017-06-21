@@ -155,6 +155,28 @@
 
 
     <!--
+        **** INTEGRATION - PACKER ****
+    -->
+    <!--
+        The item group defining the location and contents of the Packer files that are used during the test
+        to validate the Packer images.
+
+        All file paths allow build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip.
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadPackerImagesToTest)' == 'true' ">
+        <!--
+        <PackerImagesToTest
+            Condition=" '$(DirWorkspace)' != '' "
+            Include="$(DirWorkspace)\**\*.json">
+            <Variables>
+                $(DirBuildTemp)\variables.json
+            </Variables>
+        </PackerImagesToTest>
+        -->
+    </ItemGroup>
+
+
+    <!--
         **** TEST STEPS ****
     -->
     <!--
@@ -431,6 +453,19 @@
                 test;
                 test.pester;
                 test.pester.integration;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </TestStepsToExecute>
+        <TestStepsToExecute Include="$(TestStepsIntegrationPacker)">
+            <Properties>
+            </Properties>
+            <Groups>
+                test;
+                test.packer;
+                test.packer.integration;
             </Groups>
             <PreSteps>
             </PreSteps>

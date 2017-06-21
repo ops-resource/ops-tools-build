@@ -10,6 +10,8 @@
     <PropertyGroup>
         <TestStepsPrepareRestoreGems>$(MSBuildThisFileDirectory)..\shared.prepare.bundler.restore.msbuild</TestStepsPrepareRestoreGems>
         <TestStepsPrepareRestoreBerkshelf>$(MSBuildThisFileDirectory)..\shared.prepare.berkshelf.restore.msbuild</TestStepsPrepareRestoreBerkshelf>
+
+        <TestStepsIntegrationPacker>$(MSBuildThisFileDirectory)test.integration.packer.msbuild</TestStepsIntegrationPacker>
     </PropertyGroup>
     <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsPrepareRestoreGems)'))">
@@ -27,6 +29,14 @@
             <Id>TestStepsPrepareRestoreBerkshelf</Id>
             <Name>Test - restore cookbook dependencies</Name>
             <Path>$(TestStepsPrepareRestoreBerkshelf)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsIntegrationPacker)'))">
+            <Description>
+                Execute a packer build to test a given image.
+            </Description>
+            <Id>TestStepsIntegrationPacker</Id>
+            <Name>Test - execute a Packer build to test a given image.</Name>
+            <Path>$(TestStepsIntegrationPacker)</Path>
         </AvailableStepMetadata>
     </ItemGroup>
 </Project>

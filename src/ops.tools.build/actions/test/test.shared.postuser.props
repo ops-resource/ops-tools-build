@@ -3,7 +3,26 @@
     DefaultTargets="Run"
     ToolsVersion="14.0"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+        **** INTEGRATION - PACKER ****
+    -->
+    <!--
+        The item group defining the location and contents of the Packer files that are used during the test
+        to validate the Packer images.
 
+        All file paths allow build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip.
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadPackerImagesToTest)' == 'true' AND '@(PackerImagesToTest)' == '' ">
+        <!--
+        <PackerImagesToTest
+            Condition=" '$(DirWorkspace)' != '' "
+            Include="$(DirWorkspace)\**\*.json">
+            <Variables>
+                $(DirBuildTemp)\variables.json
+            </Variables>
+        </PackerImagesToTest>
+        -->
+    </ItemGroup>
 
 
 
