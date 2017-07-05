@@ -48,12 +48,6 @@
         <ToolsExternalFoodCriticVersion>UNDEFINED</ToolsExternalFoodCriticVersion>
 
         <!--
-            The full path and version to the mkisofs command line executable. If not defined the packages directory is searched.
-        -->
-        <ToolsExternalMakeIsoFsPath>UNDEFINED</ToolsExternalMakeIsoFsPath>
-        <ToolsExternalMkIsoFsVersion>3.2.7.0</ToolsExternalMkIsoFsVersion>
-
-        <!--
             The full path and version to the rspec command line executable. If not defined
             the Gems binary directory is searched.
         -->

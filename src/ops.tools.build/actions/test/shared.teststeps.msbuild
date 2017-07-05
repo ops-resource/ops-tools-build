@@ -11,6 +11,7 @@
         <TestStepsPrepareRestoreGems>$(MSBuildThisFileDirectory)..\shared.prepare.bundler.restore.msbuild</TestStepsPrepareRestoreGems>
         <TestStepsPrepareRestoreBerkshelf>$(MSBuildThisFileDirectory)..\shared.prepare.berkshelf.restore.msbuild</TestStepsPrepareRestoreBerkshelf>
 
+        <TestStepsPackIso>$(MSBuildThisFileDirectory)test.integration.pack.iso.msbuild</TestStepsPackIso>
         <TestStepsIntegrationPacker>$(MSBuildThisFileDirectory)test.integration.packer.msbuild</TestStepsIntegrationPacker>
     </PropertyGroup>
     <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
@@ -29,6 +30,14 @@
             <Id>TestStepsPrepareRestoreBerkshelf</Id>
             <Name>Test - restore cookbook dependencies</Name>
             <Path>$(TestStepsPrepareRestoreBerkshelf)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsPackIso)'))">
+            <Description>
+                Create an ISO file from a given set of files and directories.
+            </Description>
+            <Id>TestStepsPackIso</Id>
+            <Name>Test - Create ISO file</Name>
+            <Path>$(TestStepsPackIso)</Path>
         </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsIntegrationPacker)'))">
             <Description>
