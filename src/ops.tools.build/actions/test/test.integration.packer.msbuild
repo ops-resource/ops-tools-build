@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0"
+         DefaultTargets="OpsToolsBuild_Test_Integration_Packer_Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ExistsTestIntegrationPacker>true</ExistsTestIntegrationPacker>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadPackerImagesToTest>true</ShouldLoadPackerImagesToTest>
+        <ShouldLoadTemplateTokens>true</ShouldLoadTemplateTokens>
+        <ShouldLoadTemplateVersion>true</ShouldLoadTemplateVersion>
+        <ShouldLoadSystemTemplateVersion>true</ShouldLoadSystemTemplateVersion>
+    </PropertyGroup>
+
+    <Import
+        Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
+        Project="$(FileImports)" />
+
+    <Target
+        Name="_OpsToolsBuild_Test_Integration_Packer_RestoreDependencies">
+        <NuGetInstall
+            Condition=" '$(ToolsExternalPackerPath)' == 'UNDEFINED'"
+            ErrorInformation="@(ErrorInformation)"
+            ExcludeVersion="$(ShouldRestoreNuGetPackagesWithoutVersionInPath)"
+            NuGetExecutablePath="$(ToolsExternalNuGetPath)"
+            PackageName="Packer.Windows.x64"
+            PackageVersion="$(ToolsExternalPackerVersion)"
+            PackagesDirectory="$(DirPackages)"
+            Sources="@(NuGetSources)"
+            WorkingDirectory="$(DirWorkspace)" />
+        <SearchPackagesDirectoryForToolPath
+            Condition=" '$(ToolsExternalPackerPath)' == 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
+            FileToLocate="packer.exe"
+            PackagesDirectory="$(DirPackages)">
+            <Output TaskParameter="Path" PropertyName="ToolsExternalPackerPath" />
+        </SearchPackagesDirectoryForToolPath>
+        <GetToolFullPath
+            Condition=" '$(ToolsExternalPackerPath)' != 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
+            Tool="$(ToolsExternalPackerPath)">
+            <Output TaskParameter="Path" PropertyName="ToolsExternalPackerPath" />
+        </GetToolFullPath>
+        <Message
+            Condition="Exists('$(ToolsExternalPackerPath)') "
+            Importance="low"
+            Text="The Packer executable was found at: $(ToolsExternalPackerPath)" />
+        <Error
+            Code="$(NBuildKitErrorCodeToolFileNotFound)"
+            Text="Could not locate the Packer executable path. Cannot generate an image."
+            HelpKeyword="$(NBuildKitErrorIdToolFileNotFound)"
+            Condition="!Exists('$(ToolsExternalPackerPath)') "/>
+    </Target>
+
+    <Target
+        Condition=" '@(PackerImagesToTest)' != '' "
+        DependsOnTargets="_OpsToolsBuild_Test_Integration_Packer_RestoreDependencies"
+        Name="OpsToolsBuild_Test_Integration_Packer_Run"
+        Outputs="%(PackerImagesToTest.Identity)">
+        <TemplateText
+            ErrorInformation="@(ErrorInformation)"
+            Template="%(PackerImagesToTest.FullPath)"
+            Tokens="@(TemplateTokens)">
+            <Output
+                PropertyName="FilePackerConfiguration"
+                TaskParameter="Result" />
+        </TemplateText>
+
+        <Error
+            Code="$(NBuildKitErrorCodeFileNotFound)"
+            Condition="!Exists('$(FilePackerConfiguration)') "
+            HelpKeyword="$(NBuildKitErrorIdFileNotFound)"
+            Text="Expected $(FilePackerConfiguration) to point to a valid path but it does not." />
+
+        <Message
+            Importance="normal"
+            Text="Testing image defined in $(FilePackerConfiguration) ..." />
+
+        <Packer
+            ConfigurationFile="$(FilePackerConfiguration)"
+            ErrorInformation="@(ErrorInformation)"
+            KeepImageOnError="$(PackerKeepImageOnError)"
+            LogEnvironmentVariables="true"
+            LogFile="$(DirBuildLogs)\$([System.IO.Path]::GetFileNameWithoutExtension('$(FilePackerConfiguration)'))_packer.log"
+            TempDirectory="$(DirBuildTemp)"
+            ToolPath="$(ToolsExternalPackerPath)"
+            VariableFile="%(PackerImagesToTest.Variables)"
+            WorkingDirectory="$(DirBuildTemp)" />
+    </Target>
+</Project>
