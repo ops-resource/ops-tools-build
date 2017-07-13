@@ -3,6 +3,28 @@
     DefaultTargets="Run"
     ToolsVersion="14.0"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+        **** PACKER - PACK ****
+    -->
+    <PropertyGroup>
+        <!-- Indicate that packer should keep the image if an error occurs. -->
+        <PackerKeepImageOnError>false</PackerKeepImageOnError>
+    </PropertyGroup>
+
+
+    <!--
+        **** DOCKER - PACK ****
+    -->
+    <PropertyGroup>
+        <!-- Indicate that docker should ignore cached images if possible. -->
+        <DockerIgnoreCache>true</DockerIgnoreCache>
+
+        <!-- Indicate that docker should always pull images if possible -->
+        <DockerAlwaysPull>true</DockerAlwaysPull>
+
+        <!-- Indicate that docker should squash intermediate layers when creating an image -->
+        <DockerSquashImages>true</DockerSquashImages>
+    </PropertyGroup>
 
 
 
@@ -24,18 +46,6 @@
         -->
         <ToolsExternalFoodCriticPath>UNDEFINED</ToolsExternalFoodCriticPath>
         <ToolsExternalFoodCriticVersion>UNDEFINED</ToolsExternalFoodCriticVersion>
-
-        <!--
-            The full path and version to the mkisofs command line executable. If not defined the packages directory is searched.
-        -->
-        <ToolsExternalMakeIsoFsPath>UNDEFINED</ToolsExternalMakeIsoFsPath>
-        <ToolsExternalMkIsoFsVersion>3.2.7.0</ToolsExternalMkIsoFsVersion>
-
-        <!--
-            The full path and version to the packer command line executable. If not defined the packages directory is searched.
-        -->
-        <ToolsExternalPackerPath>UNDEFINED</ToolsExternalPackerPath>
-        <ToolsExternalPackerVersion>1.0.0</ToolsExternalPackerVersion>
 
         <!--
             The full path and version to the rspec command line executable. If not defined

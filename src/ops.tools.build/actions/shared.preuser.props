@@ -66,12 +66,29 @@
         <!--
             The full path to the berkshelf application. If not defined the Gems bin directory is searched.
         -->
-        <ToolsExternalBerkshelfPath Condition=" '$(ToolsExternalBerkshelfPath)' == '' ">UNDEFINED</ToolsExternalBerkshelfPath>
+        <ToolsExternalBerkshelfPath>UNDEFINED</ToolsExternalBerkshelfPath>
 
         <!--
             The full path to the Bundler application.
         -->
-        <ToolsExternalBundlerPath Condition=" '$(ToolsExternalBundlerPath)' == '' ">bundle</ToolsExternalBundlerPath>
+        <ToolsExternalBundlerPath>bundle</ToolsExternalBundlerPath>
+
+        <!--
+            The full path of the Docker command line executable.
+        -->
+        <ToolsExternalDockerPath>docker</ToolsExternalDockerPath>
+
+        <!--
+            The full path and version to the mkisofs command line executable. If not defined the packages directory is searched.
+        -->
+        <ToolsExternalMakeIsoFsPath>UNDEFINED</ToolsExternalMakeIsoFsPath>
+        <ToolsExternalMkIsoFsVersion>3.2.7.0</ToolsExternalMkIsoFsVersion>
+
+        <!--
+            The full path and version to the packer command line executable. If not defined the packages directory is searched.
+        -->
+        <ToolsExternalPackerPath>UNDEFINED</ToolsExternalPackerPath>
+        <ToolsExternalPackerVersion>1.0.0</ToolsExternalPackerVersion>
     </PropertyGroup>
 
 

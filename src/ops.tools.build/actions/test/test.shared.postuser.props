@@ -4,29 +4,25 @@
     ToolsVersion="14.0"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <!--
-        **** PREPARE - CALCULATE HASHES ****
+        **** INTEGRATION - PACKER ****
     -->
     <!--
-        The collection of files for which the hashes need to be calculated. The available hash algorithms
-        are:
+        The item group defining the location and contents of the Packer files that are used during the test
+        to validate the Packer images.
 
-        - MD5
-        - SHA1
-        - SHA256
-        - SHA384
-        - SHA512
-
-        Hash values are stored in a file in the temp directory and can be retrieved with the
-        'ReadHashFromFile' task
+        All file paths allow build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip.
     -->
-    <ItemGroup Condition=" '$(ShouldLoadFilesToHash)' == 'true' AND '@(FilesToHash)' == '' ">
-        <!-->
-        <FilesToHash Include="">
-            <Algorithm></Algorithm>
-        </FilesToHash>
+    <ItemGroup Condition=" '$(ShouldLoadPackerImagesToTest)' == 'true' AND '@(PackerImagesToTest)' == '' ">
+        <!--
+        <PackerImagesToTest
+            Condition=" '$(DirWorkspace)' != '' "
+            Include="$(DirWorkspace)\**\*.json">
+            <Variables>
+                $(DirBuildTemp)\variables.json
+            </Variables>
+        </PackerImagesToTest>
         -->
     </ItemGroup>
-
 
 
 

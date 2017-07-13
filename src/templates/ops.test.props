@@ -68,7 +68,12 @@
         <!--
         <HttpFilesToCopy Include="">
             <Destination></Destination>
+            <GpgKey></GpgKey>
+            <Hash></Hash>
+            <HashAlgorithm></HashAlgorithm>
+            <HashFile></HashFile>
             <Password></Password>
+            <SignatureFile></SignatureFile>
             <UseDefaultCredentials></UseDefaultCredentials>
             <UserName></UserName>
             <Unzip></Unzip>
@@ -86,6 +91,11 @@
         <!--
         <ArchiveFilesToCopy Include="">
             <Destination></Destination>
+            <GpgKey></GpgKey>
+            <Hash></Hash>
+            <HashAlgorithm></HashAlgorithm>
+            <HashFile></HashFile>
+            <SignatureFile></SignatureFile>
         </ArchiveFilesToCopy>
         -->
     </ItemGroup>
@@ -140,6 +150,28 @@
         <PesterTestArguments Include="">
             <Value></Value>
         </PesterTestArguments>
+        -->
+    </ItemGroup>
+
+
+    <!--
+        **** INTEGRATION - PACKER ****
+    -->
+    <!--
+        The item group defining the location and contents of the Packer files that are used during the test
+        to validate the Packer images.
+
+        All file paths allow build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip.
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadPackerImagesToTest)' == 'true' ">
+        <!--
+        <PackerImagesToTest
+            Condition=" '$(DirWorkspace)' != '' "
+            Include="$(DirWorkspace)\**\*.json">
+            <Variables>
+                $(DirBuildTemp)\variables.json
+            </Variables>
+        </PackerImagesToTest>
         -->
     </ItemGroup>
 
@@ -421,6 +453,34 @@
                 test;
                 test.pester;
                 test.pester.integration;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </TestStepsToExecute>
+        <TestStepsToExecute Include="$(TestStepsPackIso)">
+            <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform)
+            </Properties>
+            <Groups>
+                test;
+                test.iso;
+                test.iso.integration;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </TestStepsToExecute>
+        <TestStepsToExecute Include="$(TestStepsIntegrationPacker)">
+            <Properties>
+            </Properties>
+            <Groups>
+                test;
+                test.packer;
+                test.packer.integration;
             </Groups>
             <PreSteps>
             </PreSteps>

@@ -11,7 +11,8 @@
         <TestStepsPrepareRestoreGems>$(MSBuildThisFileDirectory)..\shared.prepare.bundler.restore.msbuild</TestStepsPrepareRestoreGems>
         <TestStepsPrepareRestoreBerkshelf>$(MSBuildThisFileDirectory)..\shared.prepare.berkshelf.restore.msbuild</TestStepsPrepareRestoreBerkshelf>
 
-        <TestStepsPrepareFileHashes>$(MSBuildThisFileDirectory)..\shared.prepare.getfilehashes.msbuild</TestStepsPrepareFileHashes>
+        <TestStepsPackIso>$(MSBuildThisFileDirectory)test.integration.pack.iso.msbuild</TestStepsPackIso>
+        <TestStepsIntegrationPacker>$(MSBuildThisFileDirectory)test.integration.packer.msbuild</TestStepsIntegrationPacker>
     </PropertyGroup>
     <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsPrepareRestoreGems)'))">
@@ -30,13 +31,21 @@
             <Name>Test - restore cookbook dependencies</Name>
             <Path>$(TestStepsPrepareRestoreBerkshelf)</Path>
         </AvailableStepMetadata>
-        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsPrepareFileHashes)'))">
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsPackIso)'))">
             <Description>
-                Calculate the hash of one or more files.
+                Create an ISO file from a given set of files and directories.
             </Description>
-            <Id>TestStepsPrepareFileHashes</Id>
-            <Name>Test - calculate file hashes</Name>
-            <Path>$(TestStepsPrepareFileHashes)</Path>
+            <Id>TestStepsPackIso</Id>
+            <Name>Test - Create ISO file</Name>
+            <Path>$(TestStepsPackIso)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(TestStepsIntegrationPacker)'))">
+            <Description>
+                Execute a packer build to test a given image.
+            </Description>
+            <Id>TestStepsIntegrationPacker</Id>
+            <Name>Test - execute a Packer build to test a given image.</Name>
+            <Path>$(TestStepsIntegrationPacker)</Path>
         </AvailableStepMetadata>
     </ItemGroup>
 </Project>

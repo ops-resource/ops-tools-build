@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+    DefaultTargets="OpsToolsBuild_Test_Integration_Pack_Iso_Run"
+    ToolsVersion="14.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ExistsTestIntegrationPackIso>true</ExistsTestIntegrationPackIso>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadIsoPackageSpecs>true</ShouldLoadIsoPackageSpecs>
+        <ShouldLoadTemplateTokens>true</ShouldLoadTemplateTokens>
+        <ShouldLoadTemplateVersion>true</ShouldLoadTemplateVersion>
+        <ShouldLoadSystemTemplateVersion>true</ShouldLoadSystemTemplateVersion>
+    </PropertyGroup>
+
+    <Import
+        Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
+        Project="$(FileImports)" />
+
+    <Target Name="_OpsToolsBuild_Test_Integration_Pack_Iso_GetToolPaths">
+        <Error
+            Code="$(NBuildKitErrorCodePackagesDirectoryNotFound)"
+            Condition="!Exists('$(DirPackages)') "
+            HelpKeyword="$(NBuildKitErrorIdPackagesDirectoryNotFound)"
+            Text="The packages directory does not exist. Cannot search for the ISO packing executables." />
+
+        <NuGetInstall
+            Condition=" '$(ToolsExternalMakeIsoFsPath)' == 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
+            ExcludeVersion="$(ShouldRestoreNuGetPackagesWithoutVersionInPath)"
+            NuGetExecutablePath="$(ToolsExternalNuGetPath)"
+            PackagesDirectory="$(DirPackages)"
+            PackageName="MkIsoFs.Windows.x86"
+            PackageVersion="$(ToolsExternalMkIsoFsVersion)"
+            Sources="@(NuGetSources)"
+            WorkingDirectory="$(DirWorkspace)" />
+        <SearchPackagesDirectoryForToolPath
+            Condition=" '$(ToolsExternalMakeIsoFsPath)' == 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
+            FileToLocate="mkisofs.exe"
+            PackagesDirectory="$(DirPackages)">
+            <Output
+                PropertyName="ToolsExternalMakeIsoFsPath"
+                TaskParameter="Path" />
+        </SearchPackagesDirectoryForToolPath>
+        <GetToolFullPath
+            Condition=" '$(ToolsExternalMakeIsoFsPath)' != 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
+            Tool="$(ToolsExternalMakeIsoFsPath)">
+            <Output
+                PropertyName="ToolsExternalMakeIsoFsPath"
+                TaskParameter="Path" />
+        </GetToolFullPath>
+        <Message
+            Condition="Exists('$(ToolsExternalMakeIsoFsPath)') "
+            Importance="low"
+            Text="The mkisofs executable was found at: $(ToolsExternalMakeIsoFsPath)" />
+        <Error
+            Code="$(NBuildKitErrorCodeToolFileNotFound)"
+            Condition="!Exists('$(ToolsExternalMakeIsoFsPath)') "
+            HelpKeyword="$(NBuildKitErrorIdToolFileNotFound)"
+            Text="Could not locate the mkisofs executable path. Cannot create an ISO file." />
+    </Target>
+
+    <Target
+        Condition=" '@(IsoPackageSpecs)' != '' "
+        DependsOnTargets="_OpsToolsBuild_Test_Integration_Pack_Iso_GetToolPaths"
+        Name="OpsToolsBuild_Test_Integration_Pack_Iso_Run"
+        Outputs="%(IsoPackageSpecs.Identity)">
+        <Message
+            Importance="low"
+            Text="Resolving build templates for: %(IsoPackageSpecs.Identity)" />
+
+        <MakeDir
+            Condition="!Exists('$(DirBuildDeploy)')"
+            Directories="$(DirBuildDeploy)" />
+
+        <TemplateText
+            ErrorInformation="@(ErrorInformation)"
+            Template="%(IsoPackageSpecs.Identity)"
+            Tokens="@(TemplateTokens)">
+            <Output
+                PropertyName="FileIsoSpec"
+                TaskParameter="Result" />
+        </TemplateText>
+
+        <CreateProperty Value="$([System.IO.Path]::GetFileName('$(FileIsoSpec)'))" >
+            <Output
+                PropertyName="FileNameIsoSpec"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <CreateProperty Value="$(DirBuildTemp)\$(FileNameIsoSpec)" >
+            <Output
+                PropertyName="FileGenerateIsoSpec"
+                TaskParameter="Value" />
+        </CreateProperty>
+
+        <TemplateFile
+            Encoding="UTF-8"
+            ErrorInformation="@(ErrorInformation)"
+            OutputFileName="$(FileGenerateIsoSpec)"
+            Template="$(FileIsoSpec)"
+            Tokens="@(TemplateTokens)" />
+
+        <Iso
+            ErrorInformation="@(ErrorInformation)"
+            File="$(FileGenerateIsoSpec)"
+            OutputDirectory="$(DirBuildDeploy)"
+            OverwriteExistingFiles="true"
+            TemporaryDirectory="$(DirBuildTemp)\iso_$([System.IO.Path]::GetFileNameWithoutExtension('$(FileIsoSpec)'))"
+            ToolPath="$(ToolsExternalMakeIsoFsPath)"
+            WorkingDirectory="$(DirWorkspace)" />
+    </Target>
+ </Project>

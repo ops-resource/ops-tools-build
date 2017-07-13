@@ -4,31 +4,6 @@
     ToolsVersion="14.0"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <!--
-        **** PREPARE - CALCULATE HASHES ****
-    -->
-    <!--
-        The collection of files for which the hashes need to be calculated. The available hash algorithms
-        are:
-
-        - MD5
-        - SHA1
-        - SHA256
-        - SHA384
-        - SHA512
-
-        Hash values are stored in a file in the temp directory and can be retrieved with the
-        'ReadHashFromFile' task
-    -->
-    <ItemGroup Condition=" '$(ShouldLoadFilesToHash)' == 'true' AND '@(FilesToHash)' == '' ">
-        <!-->
-        <FilesToHash Include="">
-            <Algorithm></Algorithm>
-        </FilesToHash>
-        -->
-    </ItemGroup>
-
-
-    <!--
         **** ANALYZE - RUBOCOP ****
     -->
     <!--
@@ -70,6 +45,25 @@
         <ChefCookbooksToTest Include="">
             <ChefSpecPattern>./spec/*_spec.rb</ChefSpecPattern>
         </ChefCookbooksToTest>
+        -->
+    </ItemGroup>
+
+
+    <!--
+        **** DOCKER - PACK ****
+    -->
+    <!--
+        The collection describing the build contexts from which docker images that should be created.
+
+        The build context can either be a directory or a URL.
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadDockerImagesToBuild)' == 'true' AND '@(DockerImagesToBuild)' == '' ">
+        <!--
+        <DockerImagesToBuild Include="">
+            <DockerFile></DockerFile>
+            <IsolationLevel></IsolationLevel>
+            <Tags></Tags>
+        </DockerImagesToBuild>
         -->
     </ItemGroup>
 

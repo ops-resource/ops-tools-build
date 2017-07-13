@@ -537,29 +537,6 @@
 
     <!-- Overrides for the tools paths -->
     <PropertyGroup>
-        <!--
-            The full path and version of the Bower command line executable. If not defined the packages directory is searched.
-        -->
-        <!-- <ToolsExternalBowerPath>bower</ToolsExternalBowerPath>
-        <ToolsExternalBowerVersion>1.3.11</ToolsExternalBowerVersion> -->
-
-        <!--
-            The full path and version of the Node.js command line executable. If not defined the packages directory is searched.
-        -->
-        <!-- <ToolsExternalNodeJsPath>node</ToolsExternalNodeJsPath>
-        <ToolsExternalNodeJsVersion>4.2.3</ToolsExternalNodeJsVersion> -->
-
-        <!--
-            The full path and version of the NPM command line executable. If not defined the packages directory is searched.
-        -->
-        <!-- <ToolsExternalNpmPath>npm</ToolsExternalNpmPath>
-        <ToolsExternalNpmVersion>3.5.2</ToolsExternalNpmVersion> -->
-
-        <!--
-            The full path and version of the python command line executable. If not defined the packages directory is searched.
-        -->
-        <!-- <ToolsExternalPythonPath>UNDEFINED</ToolsExternalPythonPath>
-        <ToolsExternalPythonVersion>2.7.9</ToolsExternalPythonVersion> -->
     </PropertyGroup>
 
 
@@ -583,7 +560,7 @@
         NuGet if no package is specified in the packages.config file.
     -->
     <PropertyGroup>
-        <PackageMinimumVersion Condition=" '$(PackageMinimumVersion)' == '' ">0.2.0</PackageMinimumVersion>
-        <PackageMaximumVersion Condition=" '$(PackageMaximumVersion)' == '' ">0.3.0</PackageMaximumVersion>
+        <PackageMinimumVersion Condition=" '$(PackageMinimumVersion)' == '' ">0.3.0</PackageMinimumVersion>
+        <PackageMaximumVersion Condition=" '$(PackageMaximumVersion)' == '' ">0.4.0</PackageMaximumVersion>
     </PropertyGroup>
 </Project>

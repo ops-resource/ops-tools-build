@@ -135,20 +135,21 @@ namespace Ops.Tools.Build.Tasks.Package
             Assert.AreEqual(Assembly.GetExecutingAssembly().LocalFilePath(), invokedPath);
             Assert.AreEqual(directory, invokedWorkingDirectory);
 
-            Assert.AreEqual(3, invokedArgs.Count);
+            Assert.AreEqual(4, invokedArgs.Count);
             Assert.AreEqual("build", invokedArgs[0]);
+            Assert.AreEqual("-color=false", invokedArgs[1]);
             Assert.AreEqual(
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "-var-file=\"{0}\"",
                     variableFile),
-                invokedArgs[1]);
+                invokedArgs[2]);
             Assert.AreEqual(
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "\"{0}\"",
                     configurationFile),
-                invokedArgs[2]);
+                invokedArgs[3]);
 
             var environmentVariables = new StringDictionary();
             environmentVariableBuilder(environmentVariables);
@@ -216,20 +217,21 @@ namespace Ops.Tools.Build.Tasks.Package
             Assert.AreEqual(Assembly.GetExecutingAssembly().LocalFilePath(), invokedPath);
             Assert.AreEqual(directory, invokedWorkingDirectory);
 
-            Assert.AreEqual(3, invokedArgs.Count);
+            Assert.AreEqual(4, invokedArgs.Count);
             Assert.AreEqual("build", invokedArgs[0]);
+            Assert.AreEqual("-color=false", invokedArgs[1]);
             Assert.AreEqual(
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "-var-file=\"{0}\"",
                     variableFile),
-                invokedArgs[1]);
+                invokedArgs[2]);
             Assert.AreEqual(
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "\"{0}\"",
                     configurationFile),
-                invokedArgs[2]);
+                invokedArgs[3]);
 
             var environmentVariables = new StringDictionary();
             environmentVariableBuilder(environmentVariables);
@@ -341,14 +343,15 @@ namespace Ops.Tools.Build.Tasks.Package
             Assert.AreEqual(Assembly.GetExecutingAssembly().LocalFilePath(), invokedPath);
             Assert.AreEqual(directory, invokedWorkingDirectory);
 
-            Assert.AreEqual(2, invokedArgs.Count);
+            Assert.AreEqual(3, invokedArgs.Count);
             Assert.AreEqual("build", invokedArgs[0]);
+            Assert.AreEqual("-color=false", invokedArgs[1]);
             Assert.AreEqual(
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "\"{0}\"",
                     configurationFile),
-                invokedArgs[1]);
+                invokedArgs[2]);
 
             var environmentVariables = new StringDictionary();
             environmentVariableBuilder(environmentVariables);

@@ -94,6 +94,7 @@ namespace Ops.Tools.Build.Tasks.Package
             var arguments = new List<string>();
             {
                 arguments.Add("build");
+                arguments.Add("-color=false");
 
                 var variableFile = GetAbsolutePath(VariableFile);
                 if (File.Exists(variableFile))
