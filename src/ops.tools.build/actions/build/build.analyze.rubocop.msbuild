@@ -55,7 +55,7 @@
         </CreateProperty>
 
         <Exec
-            Command="$(ToolsExternalRuboCopPath) --config $(RuboCopConfigurationFile) --format progress --format offenses --format json --out $(DirBuildLogs)/rubocop_$([System.IO.Path]::GetFileNameWithoutExtension('$(RuboCopConfigurationFile)')).json"
+            Command="$(ToolsExternalRuboCopPath) --config $(RuboCopConfigurationFile) --format progress --format offenses --format json --out $(DirBuildLogs)\rubocop_$([System.IO.Path]::GetFileNameWithoutExtension('$(RuboCopConfigurationFile)')).json"
             WorkingDirectory="$(DirWorkspace)" />
     </Target>
  </Project>
