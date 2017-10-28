@@ -736,6 +736,8 @@
 
         <BuildStepsToExecute Include="$(BuildStepsPrepareAssemblyInfo)">
             <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform)
             </Properties>
             <Groups>
                 prepare;
@@ -976,6 +978,6 @@
     -->
 
     <PropertyGroup>
-        <OpsConfigurationVersion>0.1</OpsConfigurationVersion>
+        <OpsConfigurationVersion>0.3</OpsConfigurationVersion>
     </PropertyGroup>
 </Project>

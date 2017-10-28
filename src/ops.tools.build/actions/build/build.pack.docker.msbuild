@@ -19,7 +19,7 @@
     <Target
         Condition=" '@(DockerImagesToBuild)' != '' "
         Name="OpsToolsBuild_Build_Pack_Docker_Run"
-        Outputs="%(DockerImagesToBuild.Identity)">
+        Outputs="%(DockerImagesToBuild.DockerFile)">
         <Error
             Code="$(NBuildKitErrorCodeToolFileNotFound)"
             Condition=" '$(ToolsExternalDockerPath)' == '' "
