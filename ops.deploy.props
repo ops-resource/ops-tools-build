@@ -133,6 +133,26 @@
 
 
     <!--
+        **** PUSHTO - DOCKER ****
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadDockerImagesToPush)' == 'true' ">
+        <!--
+        <DockerImagesToPush Include="" />
+        -->
+    </ItemGroup>
+
+
+    <!--
+        **** PUSHTO - CONSUL K-V ****
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadConsulKVFilesToPush)' == 'true' AND '@(ConsulKVFilesToPush)' == '' ">
+        <!--
+        <ConsulKVFilesToPush Include="" />
+        -->
+    </ItemGroup>
+
+
+    <!--
         **** PUSHTO - GIT BRANCH ****
     -->
     <!--
@@ -404,6 +424,37 @@
             <Groups>
                 deploy;
                 deploy.package.symbols;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </DeployStepsToExecute>
+
+        <DeployStepsToExecute Include="$(DeployStepsPushToDockerRepository)">
+            <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform);
+            </Properties>
+            <Groups>
+                deploy;
+                deploy.docker;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </DeployStepsToExecute>
+
+        <DeployStepsToExecute Include="$(DeployStepsPushToConsulKV)">
+            <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform);
+            </Properties>
+            <Groups>
+                deploy;
+                deploy.consul;
+                deploy.consul.kv;
             </Groups>
             <PreSteps>
             </PreSteps>

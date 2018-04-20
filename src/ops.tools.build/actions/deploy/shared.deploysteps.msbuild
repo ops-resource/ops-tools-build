@@ -10,16 +10,9 @@
 
     <PropertyGroup>
         <DeployStepsPushToDockerRepository>$(MSBuildThisFileDirectory)deploy.pushto.docker.repository.msbuild</DeployStepsPushToDockerRepository>
+        <DeployStepsPushToConsulKV>$(MSBuildThisFileDirectory)deploy.pushto.consul.kv.msbuild</DeployStepsPushToConsulKV>
     </PropertyGroup>
     <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
-        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(DeployStepsPrepareFileHashes)'))">
-            <Description>
-                Calculate the hash of one or more files.
-            </Description>
-            <Id>DeployStepsPrepareFileHashes</Id>
-            <Name>Deploy - calculate file hashes</Name>
-            <Path>$(DeployStepsPrepareFileHashes)</Path>
-        </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(DeployStepsPushToDockerRepository)'))">
             <Description>
                 Push zero or more Docker containers to a Docker repository.
@@ -27,6 +20,14 @@
             <Id>DeployStepsPushToDockerRepository</Id>
             <Name>Deploy - push to a Docker repository</Name>
             <Path>$(DeployStepsPushToDockerRepository)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(DeployStepsPushToConsulKV)'))">
+            <Description>
+                Push configuration values from YAML files to the Consul key - value store.
+            </Description>
+            <Id>DeployStepsPushToConsulKV</Id>
+            <Name>Deploy - push to the Consul key - value store</Name>
+            <Path>$(DeployStepsPushToConsulKV)</Path>
         </AvailableStepMetadata>
     </ItemGroup>
 </Project>
