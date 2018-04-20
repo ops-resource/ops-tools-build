@@ -140,7 +140,6 @@
         allow the use of build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip
     -->
     <ItemGroup Condition=" '$(ShouldLoadPushToGitBranchSpecs)' == 'true' ">
-        <!--
         <PushToGitBranchSpecs
             Condition=" '$(DirBuildDeploy)' != '' "
             Include="$(DirBuildDeploy)\ops.tools.build.doc-${VersionSemantic}.zip">
@@ -149,7 +148,6 @@
              <ExtractZipFiles>true</ExtractZipFiles>
              <CommitMessage>Updating the documentation for ${VersionSemantic}</CommitMessage>
         </PushToGitBranchSpecs>
-        -->
     </ItemGroup>
 
 
@@ -429,7 +427,9 @@
             <PostSteps>
             </PostSteps>
         </DeployStepsToExecute>
-        <DeployStepsToExecute Include="$(DeployStepsPushToGitBranch)">
+        <DeployStepsToExecute
+            Condition=" '$(IsMasterBranch)' == 'true' "
+            Include="$(DeployStepsPushToGitBranch)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
                 Platform=$(Platform);
@@ -463,7 +463,9 @@
         <!--
             Push to NuGet last because we can't revert that one.
         -->
-        <DeployStepsToExecute Include="$(DeployStepsPushToNuget)">
+        <DeployStepsToExecute
+            Condition=" '$(IsMasterBranch)' == 'true' "
+            Include="$(DeployStepsPushToNuget)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
                 Platform=$(Platform);
