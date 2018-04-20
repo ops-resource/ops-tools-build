@@ -120,7 +120,7 @@
         except for the Repository allow the use of build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip
     -->
     <ItemGroup Condition=" '$(ShouldLoadPushToGitHubReleaseSpecs)' == 'true' ">
-        <PushToGitHubReleaseSpecs Include="${VersionSemantic} - My release">
+        <PushToGitHubReleaseSpecs Include="${VersionSemantic}">
              <Repository>$(GitHubRepositoryName)</Repository>
              <Description>${ReleaseNotes}</Description>
              <IncludedFiles>
@@ -413,7 +413,9 @@
             </PostSteps>
         </DeployStepsToExecute>
         -->
-        <DeployStepsToExecute Include="$(DeployStepsPushToGitHubRelease)">
+        <DeployStepsToExecute
+            Condition=" '$(IsMasterBranch)' == 'true' "
+            Include="$(DeployStepsPushToGitHubRelease)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
                 Platform=$(Platform);
