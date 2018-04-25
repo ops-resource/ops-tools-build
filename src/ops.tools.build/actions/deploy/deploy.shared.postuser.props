@@ -13,6 +13,16 @@
     </ItemGroup>
 
 
+    <!--
+        **** PUSHTO - CONSUL K-V ****
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadConsulKVFilesToPush)' == 'true' AND '@(ConsulKVFilesToPush)' == '' ">
+        <!--
+        <ConsulKVFilesToPush Include="" />
+        -->
+    </ItemGroup>
+
+
 
 
 

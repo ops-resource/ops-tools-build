@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0"
+         DefaultTargets="OpsToolsBuild_Deploy_PushTo_Consul_KV_Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Defines whether the current script file has been loaded / imported or not -->
+        <ExistsDeployPushToConsulKV>true</ExistsDeployPushToConsulKV>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadConsulKVFilesToPush>true</ShouldLoadConsulKVFilesToPush>
+        <ShouldLoadTemplateTokens>true</ShouldLoadTemplateTokens>
+        <ShouldLoadTemplateVersion>true</ShouldLoadTemplateVersion>
+        <ShouldLoadSystemTemplateVersion>true</ShouldLoadSystemTemplateVersion>
+    </PropertyGroup>
+
+    <Import
+        Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
+        Project="$(FileImports)" />
+
+    <Target
+        Condition=" '@(ConsulKVFilesToPush)' != '' "
+        Name="OpsToolsBuild_Deploy_PushTo_Consul_KV_Run">
+
+        <ConsulKV
+            Address="http://localhost:8500"
+            Condition=" '@(ConsulKVFilesToPush)' != '' "
+            Datacenter="$(Datacenter)"
+            Items="@(ConsulKVFilesToPush)"/>
+    </Target>
+</Project>
