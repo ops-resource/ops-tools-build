@@ -590,7 +590,7 @@
         NuGet if no package is specified in the packages.config file.
     -->
     <PropertyGroup>
-        <PackageMinimumVersion Condition=" '$(PackageMinimumVersion)' == '' ">0.10.3</PackageMinimumVersion>
+        <PackageMinimumVersion Condition=" '$(PackageMinimumVersion)' == '' ">0.10.7</PackageMinimumVersion>
         <PackageMaximumVersion Condition=" '$(PackageMaximumVersion)' == '' ">0.11.0</PackageMaximumVersion>
     </PropertyGroup>
 
