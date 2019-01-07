@@ -59,8 +59,8 @@ namespace Ops.Tools.Build.Tasks.Package
             {
                 Log.LogError(
                     string.Empty,
-                    ErrorCodeById(ErrorIdFileNotFound),
-                    ErrorIdFileNotFound,
+                    ErrorCodeById(NBuildKit.MsBuild.Tasks.Core.ErrorInformation.ErrorIdFileNotFound),
+                    NBuildKit.MsBuild.Tasks.Core.ErrorInformation.ErrorIdFileNotFound,
                     string.Empty,
                     0,
                     0,
@@ -74,8 +74,8 @@ namespace Ops.Tools.Build.Tasks.Package
             {
                 Log.LogError(
                     string.Empty,
-                    ErrorCodeById(ErrorIdApplicationPathNotFound),
-                    ErrorIdApplicationPathNotFound,
+                    ErrorCodeById(NBuildKit.MsBuild.Tasks.Core.ErrorInformation.ErrorIdApplicationPathNotFound),
+                    NBuildKit.MsBuild.Tasks.Core.ErrorInformation.ErrorIdApplicationPathNotFound,
                     string.Empty,
                     0,
                     0,
@@ -137,8 +137,8 @@ namespace Ops.Tools.Build.Tasks.Package
             {
                 Log.LogError(
                     string.Empty,
-                    ErrorCodeById(ErrorIdApplicationNonzeroExitCode),
-                    ErrorIdApplicationNonzeroExitCode,
+                    ErrorCodeById(NBuildKit.MsBuild.Tasks.Core.ErrorInformation.ErrorIdApplicationNonzeroExitCode),
+                    NBuildKit.MsBuild.Tasks.Core.ErrorInformation.ErrorIdApplicationNonzeroExitCode,
                     string.Empty,
                     0,
                     0,
