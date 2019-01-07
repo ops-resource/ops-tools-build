@@ -70,8 +70,8 @@ namespace Ops.Tools.Build.Tasks.Package
             {
                 Log.LogError(
                     string.Empty,
-                    ErrorCodeById(ErrorIdApplicationMissingArgument),
-                    ErrorIdApplicationMissingArgument,
+                    ErrorCodeById(NBuildKit.MsBuild.Tasks.Core.ErrorInformation.ErrorIdApplicationMissingArgument),
+                    NBuildKit.MsBuild.Tasks.Core.ErrorInformation.ErrorIdApplicationMissingArgument,
                     string.Empty,
                     0,
                     0,
@@ -148,8 +148,8 @@ namespace Ops.Tools.Build.Tasks.Package
                 {
                     Log.LogError(
                         string.Empty,
-                        ErrorCodeById(ErrorIdApplicationNonzeroExitCode),
-                        ErrorIdApplicationNonzeroExitCode,
+                        ErrorCodeById(NBuildKit.MsBuild.Tasks.Core.ErrorInformation.ErrorIdApplicationNonzeroExitCode),
+                        NBuildKit.MsBuild.Tasks.Core.ErrorInformation.ErrorIdApplicationNonzeroExitCode,
                         string.Empty,
                         0,
                         0,
