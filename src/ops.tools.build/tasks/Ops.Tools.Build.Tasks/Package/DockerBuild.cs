@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using Microsoft.Build.Framework;
@@ -205,6 +206,10 @@ namespace Ops.Tools.Build.Tasks.Package
         /// <summary>
         /// Gets or sets the tags for the container.
         /// </summary>
+        [SuppressMessage(
+           "Microsoft.Performance",
+           "CA1819:PropertiesShouldNotReturnArrays",
+           Justification = "MsBuild does not understand collections")]
         public string[] Tags
         {
             get;

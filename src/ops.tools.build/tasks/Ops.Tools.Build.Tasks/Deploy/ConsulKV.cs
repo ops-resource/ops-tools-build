@@ -35,8 +35,10 @@ namespace Ops.Tools.Build.Tasks.Deploy
 
         private static KeyValueEntryList GetEntryList(string path, Deserializer builder)
         {
-            var input = new StringReader(File.ReadAllText(path));
-            return builder.Deserialize<KeyValueEntryList>(input);
+            using (var input = new StringReader(File.ReadAllText(path)))
+            {
+                return builder.Deserialize<KeyValueEntryList>(input);
+            }
         }
 
         /// <summary>
@@ -63,6 +65,10 @@ namespace Ops.Tools.Build.Tasks.Deploy
         /// Gets or sets the collection of files that contain Consul k-v values.
         /// </summary>
         [Required]
+        [SuppressMessage(
+           "Microsoft.Performance",
+           "CA1819:PropertiesShouldNotReturnArrays",
+           Justification = "MsBuild does not understand collections")]
         public ITaskItem[] Items
         {
             get;
