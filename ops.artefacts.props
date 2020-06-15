@@ -64,12 +64,14 @@
     <ItemGroup Condition=" '$(ShouldLoadAssembliesToMerge)' == 'true' ">
         <AssembliesToMerge
             Condition=" '$(DirSrc)' != '' "
-            Include="$(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\Ops.Tools.Build.Tasks.dll">
+            Include="$(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\net472\Ops.Tools.Build.Tasks.dll">
             <AssembliesToExclude>
-                $(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\Microsoft.Build*.dll
+                $(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\net472\Microsoft.Build*.dll;
+                $(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\net472\Microsoft.VisualStudio*.dll;
+                $(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\net472\System.Collections.Immutable.dll;
             </AssembliesToExclude>
             <AssembliesToInclude>
-                $(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\*.dll
+                $(DirSrc)\ops.tools.build\tasks\Ops.Tools.Build.Tasks\bin\$(Configuration)\net472\*.dll
             </AssembliesToInclude>
             <Destination>
                 $(DirBuildBinPlatformConfig)\Ops.Tools.Build.Tasks.dll
