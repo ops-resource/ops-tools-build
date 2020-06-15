@@ -7,8 +7,11 @@
         **** PACKER - PACK ****
     -->
     <PropertyGroup>
+        <!-- Indicate that packer should remove an existing image before building the new image. -->
+        <PackerForceRemoveOldImage Condition=" '$(PackerForceRemoveOldImage)' == '' ">false</PackerForceRemoveOldImage>
+
         <!-- Indicate that packer should keep the image if an error occurs. -->
-        <PackerKeepImageOnError>false</PackerKeepImageOnError>
+        <PackerKeepImageOnError Condition=" '$(PackerKeepImageOnError)' == '' ">false</PackerKeepImageOnError>
     </PropertyGroup>
 
 

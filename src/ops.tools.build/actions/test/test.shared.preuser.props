@@ -3,7 +3,16 @@
     DefaultTargets="Run"
     ToolsVersion="14.0"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+        **** PACKER - PACK ****
+    -->
+    <PropertyGroup>
+        <!-- Indicate that packer should remove an existing image before building the new image. -->
+        <PackerForceRemoveOldImage Condition=" '$(PackerForceRemoveOldImage)' == '' ">false</PackerForceRemoveOldImage>
 
+        <!-- Indicate that packer should keep the image if an error occurs. -->
+        <PackerKeepImageOnError Condition=" '$(PackerKeepImageOnError)' == '' ">false</PackerKeepImageOnError>
+    </PropertyGroup>
 
 
 

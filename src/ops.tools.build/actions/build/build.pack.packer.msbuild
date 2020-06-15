@@ -79,6 +79,7 @@
         <Packer
             ConfigurationFile="$(FilePackerConfiguration)"
             ErrorInformation="@(ErrorInformation)"
+            Force="$(PackerForceRemoveOldImage)"
             KeepImageOnError="$(PackerKeepImageOnError)"
             LogEnvironmentVariables="true"
             LogFile="$(DirBuildLogs)\$([System.IO.Path]::GetFileNameWithoutExtension('$(FilePackerConfiguration)'))_packer.log"
