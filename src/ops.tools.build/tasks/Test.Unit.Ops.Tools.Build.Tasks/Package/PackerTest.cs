@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,10 @@ using NUnit.Framework;
 namespace Ops.Tools.Build.Tasks.Package
 {
     [TestFixture]
+    [SuppressMessage(
+        "Microsoft.StyleCop.CSharp.DocumentationRules",
+        "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
     public sealed class PackerTest : TaskTest
     {
         [Test]
@@ -89,7 +94,10 @@ namespace Ops.Tools.Build.Tasks.Package
             var variableFile = Path.Combine(directory, "v.json");
             if (!File.Exists(variableFile))
             {
-                File.Create(variableFile);
+                using (var file = File.Create(variableFile))
+                {
+                    // Do nothing. We just want the file to exist.
+                }
             }
 
             InitializeBuildEngine();
@@ -172,7 +180,10 @@ namespace Ops.Tools.Build.Tasks.Package
             var variableFile = Path.Combine(directory, "v.json");
             if (!File.Exists(variableFile))
             {
-                File.Create(variableFile);
+                using (var file = File.Create(variableFile))
+                {
+                    // Do nothing. We just want the file to exist.
+                }
             }
 
             InitializeBuildEngine();

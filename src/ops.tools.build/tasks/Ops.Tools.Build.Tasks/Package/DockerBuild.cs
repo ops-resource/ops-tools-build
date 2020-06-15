@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using Microsoft.Build.Framework;
@@ -45,7 +46,7 @@ namespace Ops.Tools.Build.Tasks.Package
         }
 
         /// <summary>
-        /// Gets or sets the build context. The build context is either a directory or a URL
+        /// Gets or sets the build context. The build context is either a directory or a URL.
         /// </summary>
         [Required]
         public ITaskItem BuildContext
@@ -55,7 +56,7 @@ namespace Ops.Tools.Build.Tasks.Package
         }
 
         /// <summary>
-        /// Gets or sets the path to the docker file
+        /// Gets or sets the path to the docker file.
         /// </summary>
         public ITaskItem DockerFile
         {
@@ -205,6 +206,10 @@ namespace Ops.Tools.Build.Tasks.Package
         /// <summary>
         /// Gets or sets the tags for the container.
         /// </summary>
+        [SuppressMessage(
+           "Microsoft.Performance",
+           "CA1819:PropertiesShouldNotReturnArrays",
+           Justification = "MsBuild does not understand collections")]
         public string[] Tags
         {
             get;

@@ -7,8 +7,11 @@
         **** PACKER - PACK ****
     -->
     <PropertyGroup>
+        <!-- Indicate that packer should remove an existing image before building the new image. -->
+        <PackerForceRemoveOldImage Condition=" '$(PackerForceRemoveOldImage)' == '' ">false</PackerForceRemoveOldImage>
+
         <!-- Indicate that packer should keep the image if an error occurs. -->
-        <PackerKeepImageOnError>false</PackerKeepImageOnError>
+        <PackerKeepImageOnError Condition=" '$(PackerKeepImageOnError)' == '' ">false</PackerKeepImageOnError>
     </PropertyGroup>
 
 
@@ -17,13 +20,13 @@
     -->
     <PropertyGroup>
         <!-- Indicate that docker should ignore cached images if possible. -->
-        <DockerIgnoreCache>true</DockerIgnoreCache>
+        <DockerIgnoreCache Condition=" '$(DockerIgnoreCache)' == '' ">true</DockerIgnoreCache>
 
         <!-- Indicate that docker should always pull images if possible -->
-        <DockerAlwaysPull>true</DockerAlwaysPull>
+        <DockerAlwaysPull Condition=" '$(DockerAlwaysPull)' == '' ">true</DockerAlwaysPull>
 
         <!-- Indicate that docker should squash intermediate layers when creating an image -->
-        <DockerSquashImages>true</DockerSquashImages>
+        <DockerSquashImages Condition=" '$(DockerSquashImages)' == '' ">true</DockerSquashImages>
     </PropertyGroup>
 
 
@@ -44,22 +47,22 @@
             The full path and version to the foodcritic command line executable. If not defined
             the Gems binary directory is searched.
         -->
-        <ToolsExternalFoodCriticPath>UNDEFINED</ToolsExternalFoodCriticPath>
-        <ToolsExternalFoodCriticVersion>UNDEFINED</ToolsExternalFoodCriticVersion>
+        <ToolsExternalFoodCriticPath Condition=" '$(ToolsExternalFoodCriticPath)' == '' ">UNDEFINED</ToolsExternalFoodCriticPath>
+        <ToolsExternalFoodCriticVersion Condition=" '$(ToolsExternalFoodCriticVersion)' == '' ">UNDEFINED</ToolsExternalFoodCriticVersion>
 
         <!--
             The full path and version to the rspec command line executable. If not defined
             the Gems binary directory is searched.
         -->
-        <ToolsExternalRSpecPath>UNDEFINED</ToolsExternalRSpecPath>
-        <ToolsExternalRSpecVersion>UNDEFINED</ToolsExternalRSpecVersion>
+        <ToolsExternalRSpecPath Condition=" '$(ToolsExternalRSpecPath)' == '' ">UNDEFINED</ToolsExternalRSpecPath>
+        <ToolsExternalRSpecVersion Condition=" '$(ToolsExternalRSpecVersion)' == '' ">UNDEFINED</ToolsExternalRSpecVersion>
 
         <!--
             The full path and version to the rubucop command line executable. If not defined
             the Gems binary directory is searched.
         -->
-        <ToolsExternalRuboCopPath>UNDEFINED</ToolsExternalRuboCopPath>
-        <ToolsExternalRuboCopVersion>UNDEFINED</ToolsExternalRuboCopVersion>
+        <ToolsExternalRuboCopPath Condition=" '$(ToolsExternalRuboCopPath)' == '' ">UNDEFINED</ToolsExternalRuboCopPath>
+        <ToolsExternalRuboCopVersion Condition=" '$(ToolsExternalRuboCopVersion)' == '' ">UNDEFINED</ToolsExternalRuboCopVersion>
     </PropertyGroup>
 
 

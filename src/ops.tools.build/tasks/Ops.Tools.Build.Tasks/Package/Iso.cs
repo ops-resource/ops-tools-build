@@ -131,8 +131,20 @@ namespace Ops.Tools.Build.Tasks.Package
 
             var inputPath = GetAbsolutePath(File);
 
-            var xmlDoc = new XmlDocument();
-            xmlDoc.Load(inputPath);
+            var xmlDoc = new XmlDocument
+            {
+                XmlResolver = null,
+            };
+
+            var reader = new XmlTextReader(new StreamReader(GetAbsolutePath(inputPath)))
+            {
+                DtdProcessing = DtdProcessing.Prohibit,
+            };
+            using (reader)
+            {
+                xmlDoc.Load(reader);
+            }
+
             var name = xmlDoc.SelectSingleNode("//iso/name/text()").InnerText;
             var outputFilePath = Path.Combine(GetAbsolutePath(OutputDirectory), string.Format(CultureInfo.InvariantCulture, "{0}.iso", name));
 
