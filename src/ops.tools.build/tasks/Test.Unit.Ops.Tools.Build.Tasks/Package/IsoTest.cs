@@ -504,7 +504,7 @@ namespace Ops.Tools.Build.Tasks.Package
                     string.Format(
                         CultureInfo.InvariantCulture,
                         "{0}.pdb",
-                        Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().LocalFilePath())))
+                        Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().LocalFilePath()))),
             };
             Assert.That(files, Is.EquivalentTo(expectedFiles));
         }
