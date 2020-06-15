@@ -35,7 +35,7 @@ namespace Ops.Tools.Build.Tasks.Package
         ///     The event handler that handles the standard output stream of the command line application. If no value is provided
         ///     then all messages are logged.
         /// </param>
-        /// <returns>The output of the GIT process</returns>
+        /// <returns>The output of the GIT process.</returns>
         protected int InvokeDocker(ITaskItem workingDirectory, IEnumerable<string> arguments, DataReceivedEventHandler standardOutputHandler = null)
         {
             if (standardOutputHandler == null)

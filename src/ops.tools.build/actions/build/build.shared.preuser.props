@@ -20,13 +20,13 @@
     -->
     <PropertyGroup>
         <!-- Indicate that docker should ignore cached images if possible. -->
-        <DockerIgnoreCache>true</DockerIgnoreCache>
+        <DockerIgnoreCache Condition=" '$(DockerIgnoreCache)' == '' ">true</DockerIgnoreCache>
 
         <!-- Indicate that docker should always pull images if possible -->
-        <DockerAlwaysPull>true</DockerAlwaysPull>
+        <DockerAlwaysPull Condition=" '$(DockerAlwaysPull)' == '' ">true</DockerAlwaysPull>
 
         <!-- Indicate that docker should squash intermediate layers when creating an image -->
-        <DockerSquashImages>true</DockerSquashImages>
+        <DockerSquashImages Condition=" '$(DockerSquashImages)' == '' ">true</DockerSquashImages>
     </PropertyGroup>
 
 
