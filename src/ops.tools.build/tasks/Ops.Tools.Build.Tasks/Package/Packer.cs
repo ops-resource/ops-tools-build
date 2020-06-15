@@ -96,6 +96,11 @@ namespace Ops.Tools.Build.Tasks.Package
                 arguments.Add("build");
                 arguments.Add("-color=false");
 
+                if (Force)
+                {
+                    arguments.Add("-force");
+                }
+
                 var variableFile = GetAbsolutePath(VariableFile);
                 if (File.Exists(variableFile))
                 {
@@ -150,6 +155,16 @@ namespace Ops.Tools.Build.Tasks.Package
             }
 
             return !Log.HasLoggedErrors;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the Force flag should be set on the Packer commandline. The
+        /// Force flag generally tells the provisioner to remove the existing images before creating the new image.
+        /// </summary>
+        public bool Force
+        {
+            get;
+            set;
         }
 
         /// <summary>

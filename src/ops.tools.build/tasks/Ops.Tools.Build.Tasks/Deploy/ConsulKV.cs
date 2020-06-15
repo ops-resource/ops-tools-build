@@ -22,9 +22,9 @@ namespace Ops.Tools.Build.Tasks.Deploy
     /// </summary>
     public sealed class ConsulKV : BaseTask
     {
-        private static Deserializer CreateYamlDeserializer()
+        private static IDeserializer CreateYamlDeserializer()
         {
-            var namingConvention = new CamelCaseNamingConvention();
+            var namingConvention = CamelCaseNamingConvention.Instance;
 
             var builder = new DeserializerBuilder()
                 .WithNamingConvention(namingConvention)
@@ -33,10 +33,12 @@ namespace Ops.Tools.Build.Tasks.Deploy
             return builder;
         }
 
-        private static KeyValueEntryList GetEntryList(string path, Deserializer builder)
+        private static KeyValueEntryList GetEntryList(string path, IDeserializer builder)
         {
-            var input = new StringReader(File.ReadAllText(path));
-            return builder.Deserialize<KeyValueEntryList>(input);
+            using (var input = new StringReader(File.ReadAllText(path)))
+            {
+                return builder.Deserialize<KeyValueEntryList>(input);
+            }
         }
 
         /// <summary>
@@ -63,6 +65,10 @@ namespace Ops.Tools.Build.Tasks.Deploy
         /// Gets or sets the collection of files that contain Consul k-v values.
         /// </summary>
         [Required]
+        [SuppressMessage(
+           "Microsoft.Performance",
+           "CA1819:PropertiesShouldNotReturnArrays",
+           Justification = "MsBuild does not understand collections")]
         public ITaskItem[] Items
         {
             get;
