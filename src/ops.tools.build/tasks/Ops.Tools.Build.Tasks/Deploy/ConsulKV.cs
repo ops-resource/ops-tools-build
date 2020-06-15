@@ -22,9 +22,9 @@ namespace Ops.Tools.Build.Tasks.Deploy
     /// </summary>
     public sealed class ConsulKV : BaseTask
     {
-        private static Deserializer CreateYamlDeserializer()
+        private static IDeserializer CreateYamlDeserializer()
         {
-            var namingConvention = new CamelCaseNamingConvention();
+            var namingConvention = CamelCaseNamingConvention.Instance;
 
             var builder = new DeserializerBuilder()
                 .WithNamingConvention(namingConvention)
@@ -33,7 +33,7 @@ namespace Ops.Tools.Build.Tasks.Deploy
             return builder;
         }
 
-        private static KeyValueEntryList GetEntryList(string path, Deserializer builder)
+        private static KeyValueEntryList GetEntryList(string path, IDeserializer builder)
         {
             using (var input = new StringReader(File.ReadAllText(path)))
             {
