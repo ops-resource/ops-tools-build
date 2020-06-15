@@ -18,26 +18,23 @@
   </PropertyGroup>
   <Import Project="$(MSBuildThisFileDirectory)/../base.props" />
   <ItemGroup>
-    <PackageReference Include="Castle.Core" version="3.3.3" />
-    <PackageReference Include="Consul" version="0.6.4.7" />
+    <PackageReference Include="Castle.Core" version="4.4.1" />
+    <PackageReference Include="Consul" version="0.7.2.6" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" version="2.9.8" >
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       </PackageReference>
-    <PackageReference Include="Moq" version="4.5.30" />
-    <PackageReference Include="nBuildKit.MsBuild.Tasks.Core" version="1.0.0" />
-    <PackageReference Include="nBuildKit.MsBuild.Tasks.Tests" version="1.0.0" />
-    <PackageReference Include="Nuclei" version="0.9.2" />
-    <PackageReference Include="Nuclei.Build" version="0.9.0" />
-    <PackageReference Include="Nuclei.Configuration" version="0.9.0" />
-    <PackageReference Include="Nuclei.Diagnostics" version="0.10.0" />
-    <PackageReference Include="Nuclei.Nunit.Extensions" version="2.6.2" />
-    <PackageReference Include="NUnit" version="2.6.2" />
-    <PackageReference Include="StyleCop.Analyzers" version="1.0.2">
+    <PackageReference Include="Moq" version="4.14.1" />
+    <PackageReference Include="nBuildKit.MsBuild.Tasks.Core" version="1.1.0" />
+    <PackageReference Include="nBuildKit.MsBuild.Tasks.Tests" version="1.1.0" />
+    <PackageReference Include="Nuclei.Build" version="2.0.0" />
+    <PackageReference Include="Nuclei.Nunit.Extensions" version="3.12.0" />
+    <PackageReference Include="NUnit" version="3.12.0" />
+    <PackageReference Include="StyleCop.Analyzers" version="1.1.118">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       </PackageReference>
-    <PackageReference Include="System.IO.Abstractions" version="2.0.0.140" />
+    <PackageReference Include="System.IO.Abstractions" version="11.0.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ops.Tools.Build.Tasks\Ops.Tools.Build.Tasks.csproj" />
