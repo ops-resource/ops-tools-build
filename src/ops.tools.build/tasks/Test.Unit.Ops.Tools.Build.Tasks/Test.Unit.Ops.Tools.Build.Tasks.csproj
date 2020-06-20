@@ -15,12 +15,13 @@
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <RootNamespace>Ops.Tools.Build.Tasks</RootNamespace>
   </PropertyGroup>
   <Import Project="$(MSBuildThisFileDirectory)/../base.props" />
   <ItemGroup>
     <PackageReference Include="Castle.Core" version="4.4.1" />
     <PackageReference Include="Consul" version="0.7.2.6" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" version="2.9.8" >
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" version="2.9.8">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       </PackageReference>
