@@ -238,7 +238,7 @@ namespace Ops.Tools.Build.Tasks.Package
         }
 
         /// <summary>
-        /// Gets or sets the path to the working directory.
+        /// Gets or sets the path to the temp directory.
         /// </summary>
         [Required]
         public ITaskItem TempDirectory
