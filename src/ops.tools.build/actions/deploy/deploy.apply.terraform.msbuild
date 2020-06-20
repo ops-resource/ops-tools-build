@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0"
+         DefaultTargets="OpsToolsBuild_Deploy_Apply_Terraform_Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ExistsBuildImagePacker>true</ExistsBuildImagePacker>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ShouldLoadTerraformPlansToBuild>true</ShouldLoadTerraformPlansToBuild>
+        <ShouldLoadTemplateTokens>true</ShouldLoadTemplateTokens>
+        <ShouldLoadTemplateVersion>true</ShouldLoadTemplateVersion>
+        <ShouldLoadSystemTemplateVersion>true</ShouldLoadSystemTemplateVersion>
+    </PropertyGroup>
+
+    <Import
+        Condition="Exists('$(FileImports)') AND '$(ExistsFileImports)' != 'true' "
+        Project="$(FileImports)" />
+
+    <Target
+        Name="_OpsToolsBuild_Deploy_Apply_Terraform_RestoreDependencies">
+        <NuGetInstall
+            Condition=" '$(ToolsExternalTerraformPath)' == 'UNDEFINED'"
+            ErrorInformation="@(ErrorInformation)"
+            ExcludeVersion="$(ShouldRestoreNuGetPackagesWithoutVersionInPath)"
+            NuGetExecutablePath="$(ToolsExternalNuGetPath)"
+            PackageName="Terraform.Windows.x64"
+            PackageVersion="$(ToolsExternalTerraformVersion)"
+            PackagesDirectory="$(DirPackages)"
+            Sources="@(NuGetSources)"
+            WorkingDirectory="$(DirWorkspace)" />
+        <SearchPackagesDirectoryForToolPath
+            Condition=" '$(ToolsExternalTerraformPath)' == 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
+            FileToLocate="terraform.exe"
+            PackagesDirectory="$(DirPackages)">
+            <Output TaskParameter="Path" PropertyName="ToolsExternalTerraformPath" />
+        </SearchPackagesDirectoryForToolPath>
+        <GetToolFullPath
+            Condition=" '$(ToolsExternalTerraformPath)' != 'UNDEFINED' "
+            ErrorInformation="@(ErrorInformation)"
+            Tool="$(ToolsExternalTerraformPath)">
+            <Output TaskParameter="Path" PropertyName="ToolsExternalTerraformPath" />
+        </GetToolFullPath>
+        <Message
+            Condition="Exists('$(ToolsExternalTerraformPath)') "
+            Importance="low"
+            Text="The Packer executable was found at: $(ToolsExternalTerraformPath)" />
+        <Error
+            Code="$(NBuildKitErrorCodeToolFileNotFound)"
+            Text="Could not locate the Terraform executable path. Cannot generate an image."
+            HelpKeyword="$(NBuildKitErrorIdToolFileNotFound)"
+            Condition="!Exists('$(ToolsExternalTerraformPath)') "/>
+    </Target>
+
+    <Target
+        DependsOnTargets="_OpsToolsBuild_Deploy_Apply_Terraform_RestoreDependencies"
+        Condition=" '@(TerraformPlansToBuild)' != '' "
+        Name="OpsToolsBuild_Deploy_Apply_Terraform_Run"
+        Outputs="%(TerraformPlansToBuild.Identity)">
+
+        <TerraformApply
+            ErrorInformation="@(ErrorInformation)"
+            DeployDirectory="$(DirBuildDeploy)"
+            LogFile="$(DirBuildLogs)\terraform_init.log"
+            Settings="@(TerraformPlansToBuild)"
+            TerraformExecutablePath="$(ToolsExternalTerraformPath)"
+            WorkingDirectory="$(DirSrc)" />
+    </Target>
+</Project>
