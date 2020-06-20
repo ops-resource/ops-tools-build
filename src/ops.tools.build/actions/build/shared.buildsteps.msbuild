@@ -8,6 +8,7 @@
     <PropertyGroup>
         <BuildStepsPrepareRestoreGems>$(MSBuildThisFileDirectory)..\shared.prepare.bundler.restore.msbuild</BuildStepsPrepareRestoreGems>
         <BuildStepsPrepareRestoreBerkshelf>$(MSBuildThisFileDirectory)..\shared.prepare.berkshelf.restore.msbuild</BuildStepsPrepareRestoreBerkshelf>
+        <BuildStepsPrepareTerraformInit>$(MSBuildThisFileDirectory)..\shared.prepare.terraform.init.msbuild</BuildStepsPrepareTerraformInit>
 
         <BuildStepsAnalyzeRuboCop>$(MSBuildThisFileDirectory)build.analyze.rubocop.msbuild</BuildStepsAnalyzeRuboCop>
         <BuildStepsAnalyzeFoodCritic>$(MSBuildThisFileDirectory)build.analyze.foodcritic.msbuild</BuildStepsAnalyzeFoodCritic>
@@ -16,6 +17,8 @@
 
         <BuildStepsPackIso>$(MSBuildThisFileDirectory)build.pack.iso.msbuild</BuildStepsPackIso>
         <BuildStepsPackPacker>$(MSBuildThisFileDirectory)build.pack.packer.msbuild</BuildStepsPackPacker>
+
+        <BuildStepsPlanTerraform>$(MSBuildThisFileDirectory)build.plan.terraform.msbuild</BuildStepsPlanTerraform>
 
         <BuildStepsPackDocker>$(MSBuildThisFileDirectory)build.pack.docker.msbuild</BuildStepsPackDocker>
     </PropertyGroup>
@@ -35,6 +38,14 @@
             <Id>BuildStepsPrepareRestoreBerkshelf</Id>
             <Name>Build - restore cookbook dependencies</Name>
             <Path>$(BuildStepsPrepareRestoreBerkshelf)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPrepareTerraformInit)'))">
+            <Description>
+                Initialize a Terraform workspace.
+            </Description>
+            <Id>BuildStepsPrepareTerraformInit</Id>
+            <Name>Build - Terraform init</Name>
+            <Path>$(BuildStepsPrepareTerraformInit)</Path>
         </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsAnalyzeRuboCop)'))">
             <Description>
@@ -75,6 +86,14 @@
             <Id>BuildStepsPackPacker</Id>
             <Name>Build - Create Packer file</Name>
             <Path>$(BuildStepsPackPacker)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPlanTerraform)'))">
+            <Description>
+                Create a Terraform plan from a given set of Terraform configuration files.
+            </Description>
+            <Id>BuildStepsPlanTerraform</Id>
+            <Name>Build - Plan Terraform</Name>
+            <Path>$(BuildStepsPlanTerraform)</Path>
         </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(BuildStepsPackDocker)'))">
             <Description>

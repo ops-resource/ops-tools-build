@@ -9,10 +9,20 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <DeployStepsPrepareTerraformInit>$(MSBuildThisFileDirectory)..\shared.prepare.terraform.init.msbuild</DeployStepsPrepareTerraformInit>
         <DeployStepsPushToDockerRepository>$(MSBuildThisFileDirectory)deploy.pushto.docker.repository.msbuild</DeployStepsPushToDockerRepository>
         <DeployStepsPushToConsulKV>$(MSBuildThisFileDirectory)deploy.pushto.consul.kv.msbuild</DeployStepsPushToConsulKV>
+        <DeployStepsApplyTerraform>$(MSBuildThisFileDirectory)deploy.apply.terraform.msbuild</DeployStepsApplyTerraform>
     </PropertyGroup>
     <ItemGroup Condition=" '$(ShouldLoadAvailableStepMetadata)' == 'true' ">
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(DeployStepsPrepareTerraformInit)'))">
+            <Description>
+                Initialize a Terraform workspace.
+            </Description>
+            <Id>DeployStepsPrepareTerraformInit</Id>
+            <Name>Build - Terraform init</Name>
+            <Path>$(DeployStepsPrepareTerraformInit)</Path>
+        </AvailableStepMetadata>
         <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(DeployStepsPushToDockerRepository)'))">
             <Description>
                 Push zero or more Docker containers to a Docker repository.
@@ -28,6 +38,14 @@
             <Id>DeployStepsPushToConsulKV</Id>
             <Name>Deploy - push to the Consul key - value store</Name>
             <Path>$(DeployStepsPushToConsulKV)</Path>
+        </AvailableStepMetadata>
+        <AvailableStepMetadata Include="$([System.IO.Path]::GetFileName('$(DeployStepsApplyTerraform)'))">
+            <Description>
+                Apply a given Terraform plan.
+            </Description>
+            <Id>DeployStepsApplyTerraform</Id>
+            <Name>Deploy - apply a Terraform plan</Name>
+            <Path>$(DeployStepsApplyTerraform)</Path>
         </AvailableStepMetadata>
     </ItemGroup>
 </Project>

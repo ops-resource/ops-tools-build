@@ -1140,6 +1140,22 @@
             <PostSteps>
             </PostSteps>
         </BuildStepsToExecute>
+
+        <BuildStepsToExecute Include="$(BuildStepsPlanTerraform)">
+            <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform)
+            </Properties>
+            <Groups>
+                plan;
+                plan.terraform;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </BuildStepsToExecute>
+
         <BuildStepsToExecute Include="$(BuildStepsPackNuGet)">
             <Properties>
                 Configuration=$(ProductionConfiguration);

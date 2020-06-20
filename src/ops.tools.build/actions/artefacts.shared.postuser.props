@@ -45,6 +45,26 @@
 
 
 
+    <!--
+        **** TERRAFORM - PLAN ****
+    -->
+    <!--
+        The collection describing the build contexts from which Terraform plans that should be created.
+
+        The build context can either be a directory or a URL.
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadTerraformPlansToBuild)' == 'true' AND '@(TerraformPlansToBuild)' == '' ">
+        <!--
+        <TerraformPlansToBuild Include="">
+            <Variable1>Value_1</Variable1>
+        </TerraformPlansToBuild>
+        -->
+    </ItemGroup>
+
+
+
+
+
 
     <!--
         *****************************************
