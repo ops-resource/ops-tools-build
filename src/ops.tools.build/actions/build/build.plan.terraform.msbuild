@@ -58,11 +58,28 @@
         Name="OpsToolsBuild_Build_Plan_Terraform_Run"
         Outputs="%(TerraformPlansToBuild.Identity)">
 
+       <CreateProperty Value="$([System.IO.Path]::GetDirectoryName('%(TerraformPlansToBuild.FullPath)'))">
+            <Output
+                PropertyName="DirToCreate"
+                TaskParameter="Value" />
+        </CreateProperty>
+        <MakeDir
+            Condition="!Exists('$(DirToCreate)') "
+            Directories="$(DirToCreate)" />
+
+        <TemplateItemGroup
+            Items="@(TerraformPlansToBuild)"
+            Tokens="@(TemplateTokens)">
+            <Output
+                ItemName="TransformedTerraformPlansToBuild"
+                TaskParameter="UpdatedItems" />
+        </TemplateItemGroup>
+
         <TerraformPlan
             ErrorInformation="@(ErrorInformation)"
             DeployDirectory="$(DirBuildDeploy)"
             LogFile="$(DirBuildLogs)\terraform_init.log"
-            Settings="@(TerraformPlansToBuild)"
+            Settings="@(TransformedTerraformPlansToBuild)"
             TerraformExecutablePath="$(ToolsExternalTerraformPath)"
             WorkingDirectory="$(DirSrc)" />
     </Target>

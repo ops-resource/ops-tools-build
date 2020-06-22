@@ -58,11 +58,19 @@
         Name="OpsToolsBuild_Deploy_Apply_Terraform_Run"
         Outputs="%(TerraformPlansToBuild.Identity)">
 
+        <TemplateItemGroup
+            Items="@(TerraformPlansToBuild)"
+            Tokens="@(TemplateTokens)">
+            <Output
+                ItemName="TransformedTerraformPlansToBuild"
+                TaskParameter="UpdatedItems" />
+        </TemplateItemGroup>
+
         <TerraformApply
             ErrorInformation="@(ErrorInformation)"
             DeployDirectory="$(DirBuildDeploy)"
             LogFile="$(DirBuildLogs)\terraform_init.log"
-            Settings="@(TerraformPlansToBuild)"
+            Settings="@(TransformedTerraformPlansToBuild)"
             TerraformExecutablePath="$(ToolsExternalTerraformPath)"
             WorkingDirectory="$(DirSrc)" />
     </Target>
