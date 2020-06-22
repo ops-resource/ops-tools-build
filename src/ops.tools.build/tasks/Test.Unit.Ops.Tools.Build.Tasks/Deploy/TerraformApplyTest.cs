@@ -65,7 +65,7 @@ namespace Ops.Tools.Build.Tasks.Deploy
 
             var task = new TerraformApply(invoker.Object);
             task.BuildEngine = BuildEngine.Object;
-            task.DeployDirectory = new TaskItem(deployDirectory);
+            task.TerraformDataDirectory = new TaskItem(deployDirectory);
             task.LogFile = new TaskItem(logFile);
             task.TerraformExecutablePath = new TaskItem(Assembly.GetExecutingAssembly().LocalFilePath());
             task.WorkingDirectory = new TaskItem(directory);
@@ -176,7 +176,7 @@ namespace Ops.Tools.Build.Tasks.Deploy
 
             var task = new TerraformApply(invoker.Object);
             task.BuildEngine = BuildEngine.Object;
-            task.DeployDirectory = new TaskItem(deployDirectory);
+            task.TerraformDataDirectory = new TaskItem(deployDirectory);
             task.LogFile = new TaskItem(logFile);
             task.Settings = new TaskItem(planFile);
             task.TerraformExecutablePath = new TaskItem(Assembly.GetExecutingAssembly().LocalFilePath());
@@ -242,7 +242,7 @@ namespace Ops.Tools.Build.Tasks.Deploy
 
             var task = new TerraformApply(invoker.Object);
             task.BuildEngine = BuildEngine.Object;
-            task.DeployDirectory = new TaskItem(deployDirectory);
+            task.TerraformDataDirectory = new TaskItem(deployDirectory);
             task.LogFile = new TaskItem(logFile);
             task.TerraformExecutablePath = new TaskItem(Assembly.GetExecutingAssembly().LocalFilePath());
             task.WorkingDirectory = new TaskItem(directory);

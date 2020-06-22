@@ -63,7 +63,7 @@ namespace Ops.Tools.Build.Tasks
 
             var task = new TerraformInit(invoker.Object);
             task.BuildEngine = BuildEngine.Object;
-            task.DeployDirectory = new TaskItem(deployDirectory);
+            task.TerraformDataDirectory = new TaskItem(deployDirectory);
             task.LogFile = new TaskItem(logFile);
             task.TerraformExecutablePath = new TaskItem(Assembly.GetExecutingAssembly().LocalFilePath());
             task.WorkingDirectory = new TaskItem(directory);

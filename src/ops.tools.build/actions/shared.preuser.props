@@ -36,6 +36,9 @@
 
         <!-- The directory that contains all the vendor cookbooks -->
         <DirVendorCookbooks>$(DirWorkspace)\berks\cookbooks</DirVendorCookbooks>
+
+        <!-- The directory that contains the terraform data -->
+        <DirBuildTerraform>$(DirBuild)\terraform</DirBuildTerraform>
     </PropertyGroup>
 
 

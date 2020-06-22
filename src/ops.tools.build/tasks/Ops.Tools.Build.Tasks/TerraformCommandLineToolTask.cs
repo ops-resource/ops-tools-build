@@ -28,10 +28,10 @@ namespace Ops.Tools.Build.Tasks
         }
 
         /// <summary>
-        /// Gets or sets the path to the deploy directory.
+        /// Gets or sets the path to the terraform data directory.
         /// </summary>
         [Required]
-        public ITaskItem DeployDirectory
+        public ITaskItem TerraformDataDirectory
         {
             get;
             set;
@@ -124,9 +124,9 @@ namespace Ops.Tools.Build.Tasks
                 }
 
                 const string TerraformDataDir = "TF_DATA_DIR";
-                if (!environmentVariables.ContainsKey(TerraformDataDir) && (DeployDirectory != null))
+                if (!environmentVariables.ContainsKey(TerraformDataDir) && (TerraformDataDirectory != null))
                 {
-                    environmentVariables.Add(TerraformDataDir, DeployDirectory.ItemSpec);
+                    environmentVariables.Add(TerraformDataDir, TerraformDataDirectory.ItemSpec);
                 }
             }
 

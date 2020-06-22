@@ -52,7 +52,7 @@
 
         <TerraformInit
             ErrorInformation="@(ErrorInformation)"
-            DeployDirectory="$(DirBuildDeploy)"
+            TerraformDataDirectory="$(DirBuildTerraform)"
             LogFile="$(DirBuildLogs)\terraform_init.log"
             TerraformExecutablePath="$(ToolsExternalTerraformPath)"
             WorkingDirectory="$(DirSrc)" />

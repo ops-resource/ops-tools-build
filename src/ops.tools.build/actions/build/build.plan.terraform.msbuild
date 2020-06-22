@@ -77,7 +77,7 @@
 
         <TerraformPlan
             ErrorInformation="@(ErrorInformation)"
-            DeployDirectory="$(DirBuildDeploy)"
+            TerraformDataDirectory="$(DirBuildTerraform)"
             LogFile="$(DirBuildLogs)\terraform_init.log"
             Settings="@(TransformedTerraformPlansToBuild)"
             TerraformExecutablePath="$(ToolsExternalTerraformPath)"
