@@ -69,7 +69,7 @@ namespace Ops.Tools.Build.Tasks.Package
                     arguments.Add(
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            "-var '{0}={1}'",
+                            "-var {0}={1}",
                             pair.Key,
                             pair.Value));
                 }

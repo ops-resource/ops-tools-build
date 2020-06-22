@@ -268,7 +268,7 @@ namespace Ops.Tools.Build.Tasks.Package
             Assert.AreEqual(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    "-var '{0}={1}'",
+                    "-var {0}={1}",
                     variableName,
                     variableValue),
                 invokedArgs[1]);
