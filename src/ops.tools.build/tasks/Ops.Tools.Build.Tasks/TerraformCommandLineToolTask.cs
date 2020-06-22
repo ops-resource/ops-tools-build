@@ -114,7 +114,7 @@ namespace Ops.Tools.Build.Tasks
                 const string TerraformLog = "TF_LOG";
                 if (!environmentVariables.ContainsKey(TerraformLog))
                 {
-                    environmentVariables.Add(TerraformLog, "DEBUG");
+                    environmentVariables.Add(TerraformLog, "TRACE");
                 }
 
                 const string TerraformLogPath = "TF_LOG_PATH";
