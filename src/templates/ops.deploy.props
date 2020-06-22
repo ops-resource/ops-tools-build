@@ -454,6 +454,20 @@
             </PostSteps>
         </DeployStepsToExecute>
 
+        <DeployStepsToExecute Include="$(DeployStepsPrepareTerraformInit)">
+            <Properties>
+                Configuration=$(ProductionConfiguration);
+                Platform=$(Platform);
+            </Properties>
+            <Groups>
+                deploy;
+                deploy.apply.terraform;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </DeployStepsToExecute>
         <DeployStepsToExecute Include="$(DeployStepsApplyTerraform)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
