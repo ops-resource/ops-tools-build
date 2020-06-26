@@ -69,7 +69,7 @@
         <TerraformApply
             ErrorInformation="@(ErrorInformation)"
             TerraformDataDirectory="$(DirBuildTerraform)"
-            LogFile="$(DirBuildLogs)\terraform_init.log"
+            LogFile="$(DirBuildLogs)\terraform_apply.log"
             Settings="@(TransformedTerraformPlansToBuild)"
             TerraformExecutablePath="$(ToolsExternalTerraformPath)"
             WorkingDirectory="$(DirSrc)" />
