@@ -81,6 +81,11 @@ namespace Ops.Tools.Build.Tasks.Package
                         Settings.ItemSpec));
             }
 
+            if (SourceDirectory != null)
+            {
+                arguments.Add(SourceDirectory.ItemSpec);
+            }
+
             var exitCode = InvokeTerraform(WorkingDirectory, arguments);
             if (exitCode != 0)
             {

@@ -64,17 +64,6 @@ namespace Ops.Tools.Build.Tasks.Deploy
 
             if (Settings != null)
             {
-                var dict = Settings.CloneCustomMetadata();
-                foreach (DictionaryEntry pair in dict)
-                {
-                    arguments.Add(
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "-var {0}={1}",
-                            pair.Key,
-                            pair.Value));
-                }
-
                 arguments.Add(Settings.ItemSpec);
             }
 

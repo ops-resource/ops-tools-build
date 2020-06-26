@@ -54,7 +54,8 @@
             ErrorInformation="@(ErrorInformation)"
             TerraformDataDirectory="$(DirBuildTerraform)"
             LogFile="$(DirBuildLogs)\terraform_init.log"
+            SourceDirectory="$(TerraformSourceDirectory)"
             TerraformExecutablePath="$(ToolsExternalTerraformPath)"
-            WorkingDirectory="$(DirSrc)" />
+            WorkingDirectory="$(DirWorkspace)" />
     </Target>
 </Project>

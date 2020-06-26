@@ -204,7 +204,80 @@ namespace Ops.Tools.Build.Tasks.Package
             Assert.AreEqual("true", environmentVariables["TF_IN_AUTOMATION"]);
             Assert.AreEqual("false", environmentVariables["TF_INPUT"]);
             Assert.AreEqual("-no-color", environmentVariables["TF_CLI_ARGS"]);
-            Assert.AreEqual("DEBUG", environmentVariables["TF_LOG"]);
+            Assert.AreEqual("TRACE", environmentVariables["TF_LOG"]);
+            Assert.AreEqual(logFile, environmentVariables["TF_LOG_PATH"]);
+            Assert.AreEqual(deployDirectory, environmentVariables["TF_DATA_DIR"]);
+        }
+
+        [Test]
+        public void ExecuteWithoutVariablesAndWithSourceDirectory()
+        {
+            var directory = Assembly.GetExecutingAssembly().LocalDirectoryPath();
+            var deployDirectory = Path.Combine(directory, "deploy");
+            var logFile = Path.Combine(directory, "a.log");
+            var planFile = Path.Combine(deployDirectory, "plan");
+            var sourceDirectory = Path.Combine(directory, "src");
+
+            InitializeBuildEngine();
+
+            var invokedPath = string.Empty;
+            var invokedArgs = new List<string>();
+            var invokedWorkingDirectory = string.Empty;
+            Action<StringDictionary> environmentVariableBuilder = null;
+            var invoker = new Mock<IApplicationInvoker>();
+            {
+                invoker.Setup(
+                    i => i.Invoke(
+                        It.IsAny<string>(),
+                        It.IsAny<IEnumerable<string>>(),
+                        It.IsAny<string>(),
+                        It.IsAny<Action<StringDictionary>>(),
+                        It.IsAny<DataReceivedEventHandler>(),
+                        It.IsAny<DataReceivedEventHandler>(),
+                        It.IsAny<bool>()))
+                    .Callback<string, IEnumerable<string>, string, Action<StringDictionary>, DataReceivedEventHandler, DataReceivedEventHandler, bool>(
+                        (path, args, dir, e, o, err, f) =>
+                        {
+                            invokedPath = path;
+                            invokedArgs.AddRange(args);
+                            invokedWorkingDirectory = dir;
+                            environmentVariableBuilder = e;
+                        });
+            }
+
+            var task = new TerraformPlan(invoker.Object);
+            task.BuildEngine = BuildEngine.Object;
+            task.TerraformDataDirectory = new TaskItem(deployDirectory);
+            task.LogFile = new TaskItem(logFile);
+            task.Settings = new TaskItem(planFile);
+            task.SourceDirectory = new TaskItem(sourceDirectory);
+            task.TerraformExecutablePath = new TaskItem(Assembly.GetExecutingAssembly().LocalFilePath());
+            task.WorkingDirectory = new TaskItem(directory);
+
+            var result = task.Execute();
+            Assert.IsTrue(result, "The task should have executed successfully.");
+
+            Assert.AreEqual(Assembly.GetExecutingAssembly().LocalFilePath(), invokedPath);
+            Assert.AreEqual(directory, invokedWorkingDirectory);
+
+            Assert.AreEqual(3, invokedArgs.Count);
+            Assert.AreEqual("plan", invokedArgs[0]);
+            Assert.AreEqual(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "-out={0}",
+                    planFile),
+                invokedArgs[1]);
+            Assert.AreEqual(sourceDirectory, invokedArgs[2]);
+
+            var environmentVariables = new StringDictionary();
+            environmentVariableBuilder(environmentVariables);
+
+            Assert.AreEqual(6, environmentVariables.Count);
+            Assert.AreEqual("true", environmentVariables["TF_IN_AUTOMATION"]);
+            Assert.AreEqual("false", environmentVariables["TF_INPUT"]);
+            Assert.AreEqual("-no-color", environmentVariables["TF_CLI_ARGS"]);
+            Assert.AreEqual("TRACE", environmentVariables["TF_LOG"]);
             Assert.AreEqual(logFile, environmentVariables["TF_LOG_PATH"]);
             Assert.AreEqual(deployDirectory, environmentVariables["TF_DATA_DIR"]);
         }
@@ -286,7 +359,95 @@ namespace Ops.Tools.Build.Tasks.Package
             Assert.AreEqual("true", environmentVariables["TF_IN_AUTOMATION"]);
             Assert.AreEqual("false", environmentVariables["TF_INPUT"]);
             Assert.AreEqual("-no-color", environmentVariables["TF_CLI_ARGS"]);
-            Assert.AreEqual("DEBUG", environmentVariables["TF_LOG"]);
+            Assert.AreEqual("TRACE", environmentVariables["TF_LOG"]);
+            Assert.AreEqual(logFile, environmentVariables["TF_LOG_PATH"]);
+            Assert.AreEqual(deployDirectory, environmentVariables["TF_DATA_DIR"]);
+        }
+
+        [Test]
+        public void ExecuteWithVariablesAndSourceDirectory()
+        {
+            var directory = Assembly.GetExecutingAssembly().LocalDirectoryPath();
+            var deployDirectory = Path.Combine(directory, "deploy");
+            var logFile = Path.Combine(directory, "a.log");
+            var planFile = Path.Combine(deployDirectory, "plan");
+            var sourceDirectory = Path.Combine(directory, "src");
+
+            InitializeBuildEngine();
+
+            var invokedPath = string.Empty;
+            var invokedArgs = new List<string>();
+            var invokedWorkingDirectory = string.Empty;
+            Action<StringDictionary> environmentVariableBuilder = null;
+            var invoker = new Mock<IApplicationInvoker>();
+            {
+                invoker.Setup(
+                    i => i.Invoke(
+                        It.IsAny<string>(),
+                        It.IsAny<IEnumerable<string>>(),
+                        It.IsAny<string>(),
+                        It.IsAny<Action<StringDictionary>>(),
+                        It.IsAny<DataReceivedEventHandler>(),
+                        It.IsAny<DataReceivedEventHandler>(),
+                        It.IsAny<bool>()))
+                    .Callback<string, IEnumerable<string>, string, Action<StringDictionary>, DataReceivedEventHandler, DataReceivedEventHandler, bool>(
+                        (path, args, dir, e, o, err, f) =>
+                        {
+                            invokedPath = path;
+                            invokedArgs.AddRange(args);
+                            invokedWorkingDirectory = dir;
+                            environmentVariableBuilder = e;
+                        });
+            }
+
+            var task = new TerraformPlan(invoker.Object);
+            task.BuildEngine = BuildEngine.Object;
+            task.TerraformDataDirectory = new TaskItem(deployDirectory);
+            task.LogFile = new TaskItem(logFile);
+            task.SourceDirectory = new TaskItem(sourceDirectory);
+            task.TerraformExecutablePath = new TaskItem(Assembly.GetExecutingAssembly().LocalFilePath());
+            task.WorkingDirectory = new TaskItem(directory);
+
+            task.Settings = new TaskItem(planFile);
+
+            var variableName1 = "name";
+            var variableValue1 = "value1";
+            task.Settings.SetMetadata(variableName1, variableValue1);
+
+            var result = task.Execute();
+            Assert.IsTrue(result, "The task should have executed successfully.");
+
+            Assert.AreEqual(Assembly.GetExecutingAssembly().LocalFilePath(), invokedPath);
+            Assert.AreEqual(directory, invokedWorkingDirectory);
+
+            Assert.AreEqual(4, invokedArgs.Count);
+            Assert.AreEqual("plan", invokedArgs[0]);
+            Assert.AreEqual(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "-var {0}={1}",
+                    variableName1,
+                    variableValue1),
+                invokedArgs[1]);
+            Assert.AreEqual(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "-out={0}",
+                    planFile),
+                invokedArgs[2]);
+
+            Assert.AreEqual(
+                sourceDirectory,
+                invokedArgs[3]);
+
+            var environmentVariables = new StringDictionary();
+            environmentVariableBuilder(environmentVariables);
+
+            Assert.AreEqual(6, environmentVariables.Count);
+            Assert.AreEqual("true", environmentVariables["TF_IN_AUTOMATION"]);
+            Assert.AreEqual("false", environmentVariables["TF_INPUT"]);
+            Assert.AreEqual("-no-color", environmentVariables["TF_CLI_ARGS"]);
+            Assert.AreEqual("TRACE", environmentVariables["TF_LOG"]);
             Assert.AreEqual(logFile, environmentVariables["TF_LOG_PATH"]);
             Assert.AreEqual(deployDirectory, environmentVariables["TF_DATA_DIR"]);
         }

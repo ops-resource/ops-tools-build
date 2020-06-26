@@ -200,7 +200,7 @@ namespace Ops.Tools.Build.Tasks.Deploy
             Assert.AreEqual("true", environmentVariables["TF_IN_AUTOMATION"]);
             Assert.AreEqual("false", environmentVariables["TF_INPUT"]);
             Assert.AreEqual("-no-color", environmentVariables["TF_CLI_ARGS"]);
-            Assert.AreEqual("DEBUG", environmentVariables["TF_LOG"]);
+            Assert.AreEqual("TRACE", environmentVariables["TF_LOG"]);
             Assert.AreEqual(logFile, environmentVariables["TF_LOG_PATH"]);
             Assert.AreEqual(deployDirectory, environmentVariables["TF_DATA_DIR"]);
         }
@@ -259,17 +259,10 @@ namespace Ops.Tools.Build.Tasks.Deploy
             Assert.AreEqual(Assembly.GetExecutingAssembly().LocalFilePath(), invokedPath);
             Assert.AreEqual(directory, invokedWorkingDirectory);
 
-            Assert.AreEqual(4, invokedArgs.Count);
+            Assert.AreEqual(3, invokedArgs.Count);
             Assert.AreEqual("apply", invokedArgs[0]);
             Assert.AreEqual("-auto-approve", invokedArgs[1]);
-            Assert.AreEqual(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "-var {0}={1}",
-                    variableName,
-                    variableValue),
-                invokedArgs[2]);
-            Assert.AreEqual(planFile, invokedArgs[3]);
+            Assert.AreEqual(planFile, invokedArgs[2]);
 
             var environmentVariables = new StringDictionary();
             environmentVariableBuilder(environmentVariables);
@@ -278,7 +271,7 @@ namespace Ops.Tools.Build.Tasks.Deploy
             Assert.AreEqual("true", environmentVariables["TF_IN_AUTOMATION"]);
             Assert.AreEqual("false", environmentVariables["TF_INPUT"]);
             Assert.AreEqual("-no-color", environmentVariables["TF_CLI_ARGS"]);
-            Assert.AreEqual("DEBUG", environmentVariables["TF_LOG"]);
+            Assert.AreEqual("TRACE", environmentVariables["TF_LOG"]);
             Assert.AreEqual(logFile, environmentVariables["TF_LOG_PATH"]);
             Assert.AreEqual(deployDirectory, environmentVariables["TF_DATA_DIR"]);
         }

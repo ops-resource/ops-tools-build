@@ -53,6 +53,9 @@
 
         The build context can either be a directory or a URL.
     -->
+    <PropertyGroup>
+        <TerraformSourceDirectory Condition=" '$(TerraformSourceDirectory)' == '' ">$(DirSrc)</TerraformSourceDirectory>
+    </PropertyGroup>
     <ItemGroup Condition=" '$(ShouldLoadTerraformPlansToBuild)' == 'true' AND '@(TerraformPlansToBuild)' == '' ">
         <!--
         <TerraformPlansToBuild Include="">

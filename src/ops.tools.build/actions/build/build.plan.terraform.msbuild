@@ -80,7 +80,8 @@
             TerraformDataDirectory="$(DirBuildTerraform)"
             LogFile="$(DirBuildLogs)\terraform_plan.log"
             Settings="@(TransformedTerraformPlansToBuild)"
+            SourceDirectory="$(TerraformSourceDirectory)"
             TerraformExecutablePath="$(ToolsExternalTerraformPath)"
-            WorkingDirectory="$(DirSrc)" />
+            WorkingDirectory="$(DirWorkspace)" />
     </Target>
 </Project>

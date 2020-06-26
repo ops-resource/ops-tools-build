@@ -41,6 +41,11 @@ namespace Ops.Tools.Build.Tasks
             var arguments = new List<string>();
             {
                 arguments.Add("init");
+
+                if (SourceDirectory != null)
+                {
+                    arguments.Add(SourceDirectory.ItemSpec);
+                }
             }
 
             var exitCode = InvokeTerraform(WorkingDirectory, arguments);

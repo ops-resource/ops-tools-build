@@ -79,6 +79,15 @@ namespace Ops.Tools.Build.Tasks
         }
 
         /// <summary>
+        /// Gets or sets the directory containing the terraform source files.
+        /// </summary>
+        public ITaskItem SourceDirectory
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets the path to the Terraform command line executable.
         /// </summary>
         [Required]
